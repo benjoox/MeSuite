@@ -1,50 +1,65 @@
 import React, { useState } from 'react'
 import { Tabs, Tab, Row, Col, Card } from 'react-bootstrap'
+import SecurityTab from './SecurityTab';
 
 export default function TradeSummary(props) {
-    const [key, setKey] = useState();
+    const [key, setKey] = useState('total');
     const assetList = Object.entries(props.assetList)
-    console.log('assetList ', assetList[0][0])
+    function createSecurityTab(assetList) {
+        return assetList.map(asset => 
+            <Tab 
+                eventKey={asset[0]} 
+                key={asset[0]} 
+                title={asset[0]} 
+                style={{ padding: '20px', borderLeft: 'solid 1px #dee2e6', borderRight: 'solid 1px #dee2e6' }}
+            >
+                <SecurityTab security={{...asset[1], code: asset[0]}}/>
+            </Tab>
+        )
+    }
+
+    function calculateProfitAndLoss() {
+        // To do 
+    }
+  
+    function calculateProfitAndLoss() {
+        // To do 
+
+    }
+    const assets = props.assetList
+    let security = {
+        tabList: [],
+        profitAndLoss: 0,
+        totalBrokerageFee: 0
+    }
+    for(var k in assets) {
+        security = { 
+            ...security,
+            tabList: () => createSecurityTab(assetList),
+            totalBuyCost: assets[k].totalBuyCost ? assets[k].totalBuyCost : 0,
+            totalSellCost: assets[k].totalSellCost ? assets[k].totalSellCost : 0,
+            totalNumberBuy: assets[k].totalNumberBuy ? assets[k].totalNumberBuy : 0,
+            totalNumberSell: assets[k].totalNumberSell ? assets[k].totalNumberSell : 0,
+            totalFees: assets[k].totalFees ? assets[k].totalFees : 0,
+            [k]: ""
+        }
+    }
     return (
         <section style={{ textAlign: 'left'}}>
             <Tabs
                 id="controlled-tab-example"
                 activeKey={key}
                 onSelect={(k) => setKey(k)}
-            >
-                { assetList.map(el => 
-                    <Tab eventKey={el[0]} title={el[0]} style={{ padding: '20px', borderLeft: 'solid 1px #dee2e6', borderRight: 'solid 1px #dee2e6' }}>
-                        <Row className="justify-content-around">
-                            <Col>
-                                    
-                                    <div>
-                                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total buy cost: &nbsp'}} />
-                                        <span>{el[1].totalBuyCost}</span>
-                                    </div>
-                                    <div>
-                                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total number bought: &nbsp'}} />
-                                        <span>{el[1].totalNumberBuy}</span>
-                                    </div>
-                            </Col>
-                            <Col>
-                                    <div>
-                                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total sell cost: &nbsp'}} />
-                                        <span>{el[1].totalSellCost}</span>
-                                    </div>
-                                    <div>
-                                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total number sold: &nbsp'}} />
-                                        <span>{el[1].totalNumberSell}</span>
-                                    </div>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total borkerage paid: &nbsp'}} />
-                                <span>{el[1].totalBrokerageCost}</span>
-                            </Col>
-                        </Row>
-                    </Tab>
-                )}
+            >   
+                { security.tabList(assetList) }
+
+                <Tab eventKey='total' title='Total' style={{ padding: '20px', borderLeft: 'solid 1px #dee2e6', borderRight: 'solid 1px #dee2e6' }}>
+                    <div>{security.totalBuyCost}</div>
+                    <div>{security.totalSellCost}</div>
+                    <div>{security.totalNumberBuy}</div>
+                    <div>{security.totalNumberSell}</div>
+                    <div>{security.totalFees.toFixed(2)}</div>
+                </Tab>
             </Tabs>
         </section>
     )

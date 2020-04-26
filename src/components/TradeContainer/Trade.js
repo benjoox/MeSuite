@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 
 export default function Trade (props) {
     const trade={}
@@ -10,14 +10,18 @@ export default function Trade (props) {
             trade[key.toLowerCase()] = props[key] ? props[key] : ''
     }
     return (<tr style={{ fontSize: '13px' }}>
+                <td style={{ marginBottom: 0 }}>
+                    <Form.Group style={{ padding: '0.25rem' }}>
+                        <Form.Check type="checkbox" onChange={() => props.select(trade)}/>
+                    </Form.Group>
+                </td>
                 <td style={{ padding: '0.25rem' }} >{trade.code}</td>
                 <td style={{ padding: '0.25rem' }}>{trade.units}</td>
-                <td style={{ padding: '0.25rem' }}>{trade.sell}</td>
-                <td style={{ padding: '0.25rem' }}>{trade.buy}</td>
-                <td style={{ padding: '0.25rem' }}>{trade.purchase}</td>
-                <td style={{ padding: '0.25rem' }}>{trade.buydDate}</td>
-                <td style={{ padding: '0.25rem' }}>{trade.brokerage}</td>
-                <td style={{ padding: '0.25rem' }}>{parseFloat(trade.units) * parseFloat(trade.purchase) + trade.brokerage}</td>
+                <td style={{ padding: '0.25rem' }}>{trade.type}</td>
+                <td style={{ padding: '0.25rem' }}>{trade.fees}</td>
+                <td style={{ padding: '0.25rem' }}>{trade.price}</td>
+                <td style={{ padding: '0.25rem' }}>{trade.date}</td>
+                <td style={{ padding: '0.25rem' }}>{parseFloat(trade.units) * parseFloat(trade.price) + trade.fees}</td>
             </tr>
     )
 }

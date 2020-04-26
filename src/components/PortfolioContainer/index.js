@@ -41,8 +41,6 @@ export default function PortfolioContainer() {
         try {
             const response = await fetch('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=cba.ax&interval=5min&apikey=TYTH6WSR5AYPF032')
             const data = await response.json()
-            console.log("the prices are ", data['Meta Data'])
-            console.log("the prices are ", data['Time Series (5min)'])
             constructData(data['Time Series (5min)'])
         } catch(err) {
             console.error(err)
@@ -103,7 +101,7 @@ export default function PortfolioContainer() {
                                     type="switch"
                                     id="custom-switch"
                                     label={priceChangeMode ? "Percentage" : "Dollar value" }
-                                    status={priceChangeMode}
+                                    status={0}
                                     onChange={toggleMode}
                                 />
                             </InputWithSlider>

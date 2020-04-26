@@ -2,52 +2,33 @@ import React, { useState } from 'react'
 import { Table, Row, Col, Button } from 'react-bootstrap'
 import Trade from './Trade'
 
+export default function TradeTable(props) {
 
-export default function TradeTable() {
-    const [collapse, setCollapse] = useState(false)
-    const list = trades
-
-    function add() {
-        console.log('add')
-    }
-
-    function edit() {
-        console.log('edit')
-    }
-    
-    function remove() {
-        console.log('remove')
-    }
     return( 
-          <Table striped bordered hover>
+          <Table striped bordered hover 
+            style={{ 
+              display: props.collapse ? 'none' :'table-row-group',
+              overflow: 'hidden'
+            }}
+          >
             <thead>
                 <tr>
+                    <th>Select</th>
                     <th>Code</th>
                     <th>Units</th>
-                    <th>Sell</th>
-                    <th>BUY</th>
-                    <th>Purchase price ($)</th>
-                    <th>Buy date</th>
-                    <th>Sell date</th>
-                    <th>Brokerage fee</th>
-                    <th>Total buy cost</th>
-                    <th>Total sale before</th>
-                    <th>Total sale after brokerage</th>
-                    <th>
-                      <Button variant="success" onClick={()=> { setCollapse(!collapse) } }>
-                        Collapse
-                      </Button>
-                    </th>
+                    <th>Type</th>
+                    <th>Fees</th>
+                    <th>Price ($)</th>
+                    <th>Date</th>
+                    <th>Net</th>
                 </tr>
             </thead>
-            <tbody style={{ 
-                display: collapse ? 'none' :'table-row-group',
-                overflow: 'hidden'
-              }}> 
+            <tbody> 
                 {
-                    list.map(trade => <Trade 
+                    props.trades.map(trade => <Trade 
                             key={trade.code}
                             {...trade}
+                            select={props.select}
                         />
                     )
                 }

@@ -12,10 +12,10 @@ import "react-datepicker/dist/react-datepicker.css";
 export default props => {
     const { startDate, endDate, updateStartDate, updateEndDate } = props
     return (
-        <Form.Group controlId="exampleForm.ControlSelect1">
+        <Form.Group >
             <InputGroup className="mb-3" size="md">
                 <InputGroup.Prepend>
-                    <InputGroup.Text id="basic-addon1">Start date</InputGroup.Text>
+                    <InputGroup.Text>Start date</InputGroup.Text>
                     <DatePicker 
                         selected={startDate} 
                         onChange={date => updateStartDate(date)} 
@@ -28,7 +28,7 @@ export default props => {
             </InputGroup>
             <InputGroup className="mb-3" size="md">
                 <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">End date</InputGroup.Text>
+                <InputGroup.Text>End date</InputGroup.Text>
                     <DatePicker 
                         selected={endDate} 
                         onChange={date => updateEndDate(date)} 
