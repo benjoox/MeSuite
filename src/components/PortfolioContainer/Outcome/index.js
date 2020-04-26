@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, ListGroup } from 'react-bootstrap'
 
 export default function (props) {
     const { buyPrice, sellPrice , fees, shares } = props
@@ -10,28 +10,26 @@ export default function (props) {
     const profitAndLoss = totalSell - totalBuy
 
     return (
-        <Row>
-            <Col>
-                <h4>Total Buy</h4>
-                <div>$ {totalBuy.toFixed(2)}</div>
-            </Col>
-            <Col>
-                <h4>Total Sell</h4>
-                <div>$ {totalSell.toFixed(2)}</div>
-            </Col>
-            <Col>
-                <h4>Change for each unit in $$</h4>
-                <div>$ {changeInDollar.toFixed(2)}</div>
-            </Col>
-            <Col>
-                <h4>Change for each unit in %</h4>
-                <div>{changeInPercentage.toFixed(2)}</div>
-            </Col>
-            <Col>
-                <h4>P&L</h4>
-                <div>$ {profitAndLoss.toFixed(2)}</div>
-            </Col>
-        </Row>
+        <Col>
+            <ListGroup>
+                <ListGroup.Item> 
+                    <span style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: 'Total buy: &nbsp'}} />
+                    ${totalBuy.toFixed(2)}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <span style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: 'Change for each unit in $:&nbsp'}} />
+                    ${totalSell.toFixed(2)}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <span style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: 'Change for each unit in %:&nbsp'}} />
+                    ${changeInPercentage.toFixed(2)}
+                </ListGroup.Item>
+                <ListGroup.Item>
+                    <span style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: 'Total buy:&nbsp'}} />
+                    ${profitAndLoss.toFixed(2)}
+                </ListGroup.Item>
+            </ListGroup>
+        </Col>
     )
 }
 

@@ -70,60 +70,55 @@ export default function PortfolioContainer() {
     sellPrice = parseFloat(sellPrice)
     
     return (
-        <div>
-            <TradeContainer />
-            <Form className="mb-3" style={{ textAlign: "left" }}>
-                <Container>
-                    <Row className="justify-content-between">
-                        <Col xs md={5} style={{ padding: '10px' }}>
-                            <InputWithSlider 
-                                value={buyPrice}
-                                onChange={setBuyPrice}
-                                label="Buy price"
-                                placeholder="Buy price"
-                            />
-                            <InputWithSlider 
-                                value={shares}
-                                onChange={setNumberOfShares}
-                                label="Number of shares"
-                                placeholder="Number of shares"
-                            /> 
-                        </Col>
-                        <Col xs md={5} style={{ padding: '10px' }}>
-                            <InputWithSlider 
-                                value={sellPrice}
-                                onChange={setSellPrice}
-                                label="Sell price"
-                                placeholder="Sell price"
-                            >
-                                <Form.Label></Form.Label>
-                                <Form.Check 
-                                    type="switch"
-                                    id="custom-switch"
-                                    label={priceChangeMode ? "Percentage" : "Dollar value" }
-                                    status={0}
-                                    onChange={toggleMode}
-                                />
-                            </InputWithSlider>
-                            <InputWithSlider 
-                                onChange={setBrokerageFees}
-                                label="Brokerage fees"
-                                placeholder="10"
-                                value={fees}
-                            /> 
-                        </Col>
-                    </Row>
-                </Container>
-            </Form>
-
+        <div style={{ textAlign: "left" }}>
+            
+            <Row className="justify-content-between">
+                <Col xs md={5}>
+                    <InputWithSlider 
+                        value={buyPrice}
+                        onChange={setBuyPrice}
+                        label="Buy price"
+                        placeholder="Buy price"
+                    />
+                    <InputWithSlider 
+                        value={shares}
+                        onChange={setNumberOfShares}
+                        label="Number of shares"
+                        placeholder="Number of shares"
+                    /> 
+                    <InputWithSlider 
+                        value={sellPrice}
+                        onChange={setSellPrice}
+                        label="Sell price"
+                        placeholder="Sell price"
+                    />
+                    <InputWithSlider 
+                        onChange={setBrokerageFees}
+                        label="Brokerage fees"
+                        placeholder="10"
+                        value={fees}
+                    /> 
+                </Col>
+                <Col  xs md={6}>
+                    <Form.Label></Form.Label>
+                    <Form.Check 
+                        type="switch"
+                        id="custom-switch"
+                        label={priceChangeMode ? "Percentage" : "Dollar value" }
+                        status={0}
+                        onChange={toggleMode}
+                    />
+                
+                    <Outcome 
+                        buyPrice={buyPrice}
+                        sellPrice={sellPrice}
+                        shares={shares}
+                        fees={fees}
+                    />
+                </Col>
+            </Row>
 
             
-            <Outcome 
-                buyPrice={buyPrice}
-                sellPrice={sellPrice}
-                shares={shares}
-                fees={fees}
-            />
             <Charts />
         </div>
     )

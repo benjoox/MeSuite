@@ -3,24 +3,26 @@ import { Form, Col } from 'react-bootstrap'
 
 const { Group, Label, Control, Row } = Form;
 
-export default function Price(props) {
+export default function InputWithSlider(props) {
     const { value, onChange, label, placeholder = "" } = props 
     return (
         <Row style={{ 
-                borderRadius: '2px',
+                borderRadius: '4px',
                 backgroundColor: 'lightgrey', 
-                margin: '10px', 
+                margin: '10px 0', 
                 padding: '10px'
             }}>
             { props.children ? <Col xs={12}> {props.children} </Col> : "" }
-            <Col xs={6} style={{
-                paddingLeft: '5px',
-                flexDirection: 'column',
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
+            <Col xs={6} 
+                style={{
+                    paddingLeft: '5px',
+                    flexDirection: 'column',
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            >
                 <Group className="mb-3">
-                    <Label>
+                    <Label style={{ fontWeight: 'bold' }}>
                         {label}
                     </Label>
                     <Control
@@ -33,8 +35,8 @@ export default function Price(props) {
                     />
                 </Group>
             </Col>
-            <Col xs={6}>
-                <Group className="mb-3"> 
+            <Col xs={6} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                <Group className="mb-3" > 
                     <Label></Label>
                     <Control
                         type="range"

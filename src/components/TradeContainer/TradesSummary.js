@@ -11,7 +11,7 @@ export default function TradeSummary(props) {
                 eventKey={asset[0]} 
                 key={asset[0]} 
                 title={asset[0]} 
-                style={{ padding: '20px', borderLeft: 'solid 1px #dee2e6', borderRight: 'solid 1px #dee2e6' }}
+                style={{ padding: '20px' }}
             >
                 <SecurityTab security={{...asset[1], code: asset[0]}}/>
             </Tab>
@@ -53,12 +53,23 @@ export default function TradeSummary(props) {
             >   
                 { security.tabList(assetList) }
 
-                <Tab eventKey='total' title='Total' style={{ padding: '20px', borderLeft: 'solid 1px #dee2e6', borderRight: 'solid 1px #dee2e6' }}>
-                    <div>{security.totalBuyCost}</div>
-                    <div>{security.totalSellCost}</div>
-                    <div>{security.totalNumberBuy}</div>
-                    <div>{security.totalNumberSell}</div>
-                    <div>{security.totalFees.toFixed(2)}</div>
+                <Tab eventKey='total' title='Total' style={{ padding: '20px' }}>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total buy cost: &nbsp'}} />
+                        <span>{security.totalBuyCost}</span>
+                    </div>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total sell cost: &nbsp'}} />
+                        <span>{security.totalSellCost}</span>
+                    </div>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total fees: &nbsp'}} />
+                        <span>{security.totalFees.toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Profit/Loss: &nbsp'}} />
+                        <span>{security.totalSellCost - security.totalBuyCost - security.totalFees.toFixed(2)}</span>
+                    </div>
                 </Tab>
             </Tabs>
         </section>

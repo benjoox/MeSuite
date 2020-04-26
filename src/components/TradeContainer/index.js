@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Row, Col, Button, Jumbotron } from 'react-bootstrap'
+import { Table, Row, Col, Button } from 'react-bootstrap'
 import TradeTable from './TradeTable'
 import TradeSummary from './TradesSummary'
 import TradeActionsContainer from './TradeActionsContainer'
@@ -97,13 +97,12 @@ export default function TradeContainer() {
   return( 
       <div>
         { error ? <div>{error}</div> : ''}
-        <TradeSummary assetList={summary()}/>
         <TradeActionsContainer 
           save={save} 
           selectedTrade={selectedTrade}
         >
           <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
-              Collapse
+              { collapse ? 'Show your transaction list' : 'Hide list' }
           </Button>
         </TradeActionsContainer>
         <TradeTable 
@@ -111,8 +110,7 @@ export default function TradeContainer() {
           trades={trades} 
           select={handleSelect}
         />
-        
-        
+        <TradeSummary assetList={summary()}/>
       </div>
   )
 }

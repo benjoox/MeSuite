@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Row } from 'react-bootstrap'
+import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
 
 export default function TradeActionsContainer(props) {
@@ -33,15 +33,17 @@ export default function TradeActionsContainer(props) {
     return (
         <>
             { error ? `Error ${error}` : ''}
-            <Row className="justify-content-around">
-                
-                <>
-                <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
-                <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
-                <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
-                {props.children}
-                </>
-                <TradeActionsModal 
+            <Row className="justify-content-between" style={{ marginBottom: '1rem'}}>
+                <Col>
+                    {props.children}
+                </Col>
+                <Col>
+                    <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
+                    <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
+                    <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
+                </Col>
+            </Row>
+            <TradeActionsModal 
                     show={modalState}
                     close={() => closeModal()}
                     save={props.save}
@@ -49,7 +51,6 @@ export default function TradeActionsContainer(props) {
                     trade={action === 'add' ? sampleTrade : props.selectedTrade}
                     action={action}
                 />
-            </Row>
         </>
     )
 }   

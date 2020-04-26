@@ -4,7 +4,6 @@ import { Form, Col } from 'react-bootstrap'
 const { Group, Label, Control, Row } = Form;
 
 export default function Price() {
-    
     return <Row>
                 <Col>
                     <Group>
