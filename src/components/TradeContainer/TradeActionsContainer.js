@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
+import UploadButton from './UploadButton'
 
 export default function TradeActionsContainer(props) {
     const [modalState, setModalState] = useState(false)
     const [title, setModalTitle] = useState('Add')
     const [action, setAction] = useState('add')
     const [error, setError] = useState(null)
+    const [selectedFile, setFile] = useState()
+    const [] = useState()
 
     function openModal(action) {
         setError(false)
@@ -30,6 +33,7 @@ export default function TradeActionsContainer(props) {
         setModalState(false)
     }
 
+    
     return (
         <>
             { error ? `Error ${error}` : ''}
@@ -41,6 +45,7 @@ export default function TradeActionsContainer(props) {
                     <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
                     <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
                     <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
+                    <UploadButton uploadCSVFile={props.uploadCSVFile}/>
                 </Col>
             </Row>
             <TradeActionsModal 
@@ -50,13 +55,13 @@ export default function TradeActionsContainer(props) {
                     title={title}
                     trade={action === 'add' ? sampleTrade : props.selectedTrade}
                     action={action}
-                />
+            />
         </>
     )
 }   
 
 TradeActionsContainer.propTypes = {
-    selectedTrade: PropTypes.obj
+    selectedTrade: PropTypes.object
 }
 
 const sampleTrade = {

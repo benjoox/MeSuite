@@ -4,6 +4,8 @@ import Trade from './Trade'
 
 export default function TradeTable(props) {
 
+    if(!props.trades || Object.keys(props.trades).length === 0) return <div>Upload your data first</div>
+
     return( 
           <Table striped bordered hover 
             style={{ 
@@ -26,7 +28,7 @@ export default function TradeTable(props) {
             <tbody> 
                 {
                     props.trades.map(trade => <Trade 
-                            key={trade.code}
+                            key={trade.code + Math.random() % 100}
                             {...trade}
                             select={props.select}
                         />

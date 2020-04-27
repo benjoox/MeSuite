@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { Tabs, Tab, Row, Col, Card } from 'react-bootstrap'
+import PropTypes from 'prop-types'
+import { Tabs, Tab } from 'react-bootstrap'
 import SecurityTab from './SecurityTab';
+
 
 export default function TradeSummary(props) {
     const [key, setKey] = useState('total');
@@ -16,15 +18,6 @@ export default function TradeSummary(props) {
                 <SecurityTab security={{...asset[1], code: asset[0]}}/>
             </Tab>
         )
-    }
-
-    function calculateProfitAndLoss() {
-        // To do 
-    }
-  
-    function calculateProfitAndLoss() {
-        // To do 
-
     }
     const assets = props.assetList
     let security = {
@@ -74,4 +67,8 @@ export default function TradeSummary(props) {
             </Tabs>
         </section>
     )
+}
+
+TradeSummary.propTypes = {
+    assetList: PropTypes.object.isRequired
 }

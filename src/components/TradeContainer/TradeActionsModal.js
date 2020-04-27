@@ -8,7 +8,6 @@ export default function TradeActionsModal(props) {
   const [trade, setTrade] = useState()
   const [error, setError] = useState()
   useEffect(() => {
-    console.log('setting the trade to ', props.trade)
     setTrade(props.trade)
   }, [props])
 
@@ -23,7 +22,6 @@ export default function TradeActionsModal(props) {
           return
         } 
       }
-      console.log('sesdasdfadsfasdf', trade)
       setError()
       props.save(trade, props.action)
       props.close()
