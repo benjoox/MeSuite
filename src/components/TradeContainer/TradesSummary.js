@@ -23,20 +23,26 @@ export default function TradeSummary(props) {
     let security = {
         tabList: [],
         profitAndLoss: 0,
-        totalBrokerageFee: 0
+        totalSellFees: 0,
+        totalBuyFees: 0,
+        totalBuyCost: 0,
+        totalSellCost: 0,
+        totalNumberBuy: 0
     }
     for(var k in assets) {
         security = { 
-            ...security,
+            ...security,    
             tabList: () => createSecurityTab(assetList),
-            totalBuyCost: assets[k].totalBuyCost ? assets[k].totalBuyCost : 0,
-            totalSellCost: assets[k].totalSellCost ? assets[k].totalSellCost : 0,
-            totalNumberBuy: assets[k].totalNumberBuy ? assets[k].totalNumberBuy : 0,
-            totalNumberSell: assets[k].totalNumberSell ? assets[k].totalNumberSell : 0,
-            totalFees: assets[k].totalFees ? assets[k].totalFees : 0,
+            totalBuyCost: assets[k].totalBuyCost ? assets[k].totalBuyCost + security.totalBuyCost : security.totalBuyCost,
+            totalSellCost: assets[k].totalSellCost ? assets[k].totalSellCost + security.totalSellCost: security.totalSellCost,
+            totalNumberBuy: assets[k].totalNumberBuy ? assets[k].totalNumberBuy + security.totalNumberBuy : security.totalNumberBuy,
+            totalNumberSell: assets[k].totalNumberSell ? assets[k].totalNumberSell + security.totalNumberSell: security.totalNumberSell,
+            totalSellFees: assets[k].totalSellFees ? assets[k].totalSellFees + security.totalSellFees : security.totalSellFees,
+            totalBuyFees: assets[k].totalBuyFees ? assets[k].totalBuyFees + security.totalBuyFees : security.totalBuyFees,
             [k]: ""
         }
     }
+    const totalFees = security.totalBuyFees + security.totalSellFees
     return (
         <section style={{ textAlign: 'left'}}>
             <Tabs
@@ -57,11 +63,11 @@ export default function TradeSummary(props) {
                     </div>
                     <div>
                         <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Total fees: &nbsp'}} />
-                        <span>{security.totalFees.toFixed(2)}</span>
+                        <span>{totalFees.toFixed(2)}</span>
                     </div>
                     <div>
                         <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Profit/Loss: &nbsp'}} />
-                        <span>{security.totalSellCost - security.totalBuyCost - security.totalFees.toFixed(2)}</span>
+                        <span>{(security.totalSellCost - security.totalBuyCost - totalFees).toFixed(2)}</span>
                     </div>
                 </Tab>
             </Tabs>
