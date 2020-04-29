@@ -3,21 +3,23 @@ import PropTypes from 'prop-types'
 import { Tabs, Tab } from 'react-bootstrap'
 import SecurityTab from './SecurityTab';
 
-
 export default function TradeSummary(props) {
     const [key, setKey] = useState('total');
-    const assetList = Object.entries(props.assetList)
-    function createSecurityTab(assetList) {
-        return assetList.map(asset => 
-            <Tab 
-                eventKey={asset[0]} 
-                key={asset[0]} 
-                title={asset[0]} 
+
+    function createSecurityTab() {
+        const tabList = []
+        for(let [code, trade] of props.assetList) {
+            console.log('the code is ' ,code )
+            tabList.push(<Tab 
+                eventKey={code} 
+                key={code} 
+                title={code} 
                 style={{ padding: '20px' }}
             >
-                <SecurityTab security={{...asset[1], code: asset[0]}}/>
-            </Tab>
-        )
+                <SecurityTab code={code} tradeList={trade} />
+            </Tab>)
+        }
+        return tabList
     }
     const assets = props.assetList
     let security = {
@@ -50,7 +52,7 @@ export default function TradeSummary(props) {
                 activeKey={key}
                 onSelect={(k) => setKey(k)}
             >   
-                { security.tabList(assetList) }
+                { createSecurityTab(props.assetList) }
 
                 <Tab eventKey='total' title='Total' style={{ padding: '20px' }}>
                     <div>

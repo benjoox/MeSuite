@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Tab, Nav, Col } from 'react-bootstrap';
 import TradeContainer from './TradeContainer'
-import PortfolioContainer from './PortfolioContainer'
+import PortfolioContainer from './CalculatorContainer'
 
-
-export default function AccountList() {
-    const [key, setKey] = useState('home');
+export default function Home() {
+    const [key, setKey] = useState('portfolio')
     useEffect(() => setKey('portfolio'))
     return (
-        
         <Container fluid style={{ margin: '3rem' }}>
             <Row>
-                <h1>MeFinance</h1>
+                <h1>MePortfolio</h1>
             </Row>
             <Tab.Container defaultActiveKey="portfolio">
                 <Row>

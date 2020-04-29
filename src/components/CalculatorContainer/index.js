@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Form, Col , Row, Container } from 'react-bootstrap'
-import InputWithSlider from './InputWithSlider'
+import { Form, Col , Row } from 'react-bootstrap'
+import fetch from 'isomorphic-unfetch'
+import InputWithSlider from '../UIElements/InputWithSlider'
 import Outcome from './Outcome'
-import Charts from './Charts'
-import TradeContainer from '../TradeContainer'
+import Charts from '../UIElements/Charts'
 
-export default function PortfolioContainer() {
+export default function CalculatorContainer() {
     let [buyPrice, setBuy] = useState(55.00)
     let [shares, setShares] = useState(1000)
     let [fees, setFees] = useState(10)
