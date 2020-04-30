@@ -48,20 +48,20 @@ export function getAverageAndOutstandingNumber(list) {
     return list.reduce((acc, item) => {
        const costSum =  acc.costSum + item.units * item.price
        const numberSum = acc.numberSum + item.units
-       let _averagePrice
+       let averagePrice
        if(!numberSum) {
-            _averagePrice = item.price
+            averagePrice = item.price
        } else if(item.units < 0) { // indicate a sell. Average does not change with a sell
-            _averagePrice = acc._averagePrice
+            averagePrice = acc.averagePrice
        } else {
-            _averagePrice = costSum / numberSum 
+            averagePrice = costSum / numberSum 
        }
        return { 
             costSum,
             numberSum,
-            _averagePrice
+            averagePrice
         }
-    }, { costSum: 0, numberSum: 0, _averagePrice: 0 })
+    }, { costSum: 0, numberSum: 0, averagePrice: 0 })
 }
 
 export function addAveragePriceAfterEachSell(tradeList) {
@@ -76,30 +76,30 @@ export function addAveragePriceAfterEachSell(tradeList) {
 
             if( trade.type.toLowerCase() === BUY) {
                 buyUntilSold.push({ units, price }) 
-                const { costSum, numberSum, _averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
+                const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
                 return {
                     ...trade, 
                     price, 
                     units, 
                     fees,
-                    averagePrice: _averagePrice,
+                    averagePrice,
                     outstandingNumberOfSecurity: numberSum,
                     costSum
                 }
             } 
             else if(trade.type.toLowerCase() === SOLD) {
                 buyUntilSold.push({ units: -1 * units, price }) 
-                const { costSum, numberSum, _averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
-                buyUntilSold = [{ units: numberSum, price: _averagePrice }]
+                const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
+                buyUntilSold = [{ units: numberSum, price: averagePrice }]
                 return {
                         ...trade, 
                         price, 
                         units, 
                         fees,
-                        averagePrice: _averagePrice,
+                        averagePrice,
                         outstandingNumberOfSecurity: numberSum,
                         costSum,
-                        profitAndLoss: _averagePrice * units
+                        profitAndLoss:  units * (price - averagePrice)
                 }
             }       
         })

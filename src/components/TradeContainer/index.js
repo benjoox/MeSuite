@@ -6,6 +6,7 @@ import TradeActionsContainer from './TradeActionsContainer'
 import { getTradeSummary, validateUploadedJSON ,seperateTradesBySecurity } from './_utils'
 
 const sample = require('./sampleTrade.json')
+
 export default function TradeContainer() {
   const [trades, setTrades] = useState([])
   const [selectedTrade, selectTrade] = useState(null)

@@ -9,18 +9,17 @@ export default function TradeSummary(props) {
     function createSecurityTab() {
         const tabList = []
         for(let [code, trade] of props.assetList) {
-            console.log('the code is ' ,code )
             tabList.push(<Tab 
                 eventKey={code} 
                 key={code} 
                 title={code} 
-                style={{ padding: '20px' }}
+                style={{ padding: '20px 0 20px 0' }}
             >
                 <SecurityTab code={code} tradeList={trade} />
             </Tab>)
         }
         return tabList
-    }
+    }   
     const assets = props.assetList
     let security = {
         tabList: [],

@@ -27,6 +27,7 @@ export default function TradeTable(props) {
                     <th>Average Price</th>
                     <th>Number of outstanding shares</th>
                     <th>Sum the cost of trades</th>
+                    <th>P/L</th>
                 </tr>
             </thead>
             <tbody> 
@@ -44,5 +45,5 @@ export default function TradeTable(props) {
 }
 
 TradeTable.propTypes = {
-    trades: PropTypes.arrayOf('objects')
+    trades: PropTypes.array
 }

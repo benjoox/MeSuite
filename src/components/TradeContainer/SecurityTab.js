@@ -1,10 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Row, Col } from 'react-bootstrap'
 import { getSummaryForOneAsset, addAveragePriceAfterEachSell } from './_utils'
 import TradeTable from './TradeTable'
 
 export default function SecurityTab(props) {
     const [sharePrice, setPrice] = useState(0)
+    const [cells, setCells] = useState([])
+    const [realisedGains, setRealisedGains] = useState()
+
+
+    useEffect(() => {
+        const cells = addAveragePriceAfterEachSell(props.tradeList)
+        setCells(cells)
+        const totalPandL = cells.reduce((acc, trade) => {
+            if(!trade.profitAndLoss) return acc
+            return acc + (trade.profitAndLoss ? trade.profitAndLoss : 0)
+        }, 0)
+        setRealisedGains(totalPandL ? totalPandL.toFixed(2) : totalPandL)
+    }
+    , [props])
     const { 
         totalBuyCost, 
         totalNumberBuy, 
@@ -18,6 +32,7 @@ export default function SecurityTab(props) {
         const calc = (totalSellCost - totalBuyCost - totalBuyFees - totalSellFees) + (totalNumberBuy - totalNumberSell) * sharePrice
         return calc.toFixed(2)
     }
+    
     
     
     return (
@@ -74,16 +89,39 @@ export default function SecurityTab(props) {
                     </div>
                 </Col>
             </Row>
-            <Row style={{ marginTop: '15px' }}>
+            <Row 
+                className="justify-content-around" 
+                style={{ 
+                    margin: '15px 0', 
+                    padding:'15px 0',
+                    border: 'solid #27a745 3px',
+                    borderRadius: '5px'
+                }}
+            >
                 <Col>
                     <div>
-                        <label style={{ fontWeight: 'bold' }} dangerouslySetInnerHTML={{__html : 'Portfolio: &nbsp'}} />
+                        <label style={{ fontWeight: 'bold', margin: '0px' }} dangerouslySetInnerHTML={{__html : 'Profit/Loss: &nbsp'}} />
                         <span>{profilAndLoss()}</span>
+                        <div style={{ fontSize: '12px', margin: '0px 0px 10px 0' }} dangerouslySetInnerHTML={{__html : '(from total portfolio) &nbsp'}} />
+                    </div>
+                </Col>
+                <Col>
+                    <div>
+                        <label style={{ fontWeight: 'bold', margin: '0px' }} dangerouslySetInnerHTML={{__html : 'Realised Gains : &nbsp'}} />
+                        <span>{realisedGains}</span>
+                        <div style={{ fontSize: '12px', margin: '0px 0px 10px 0' }} dangerouslySetInnerHTML={{__html : '(sum of gains after each transaction before fees) &nbsp'}} />
+                    </div>
+                </Col>
+                <Col>
+                    <div>
+                        <label style={{ fontWeight: 'bold' , margin: '0px' }} dangerouslySetInnerHTML={{__html : 'Profit/Loss: &nbsp'}} />
+                        <span>{(realisedGains - totalBuyFees - totalSellFees).toFixed(2)}</span>
+                        <div style={{ fontSize: '12px', margin: '0px 0px 10px 0' }} dangerouslySetInnerHTML={{__html : '(from realised gains after fees)&nbsp'}} />
                     </div>
                 </Col>
             </Row>
             <Row>
-                <TradeTable trades={addAveragePriceAfterEachSell(props.tradeList)}/>
+                <TradeTable trades={cells}/>
             </Row>
         </>
     )

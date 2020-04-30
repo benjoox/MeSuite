@@ -4,7 +4,7 @@ import { seperateTradesBySecurity,
     addAveragePriceAfterEachSell 
 } from '../components/TradeContainer/_utils'
 
-const trades = require('../components/TradeContainer/sampleTrade.json')
+const trades = require('./sampleTrade.json')
 
 
 describe('seperateTradesBySecurity', () => {
@@ -12,11 +12,16 @@ describe('seperateTradesBySecurity', () => {
         const result = seperateTradesBySecurity(trades)
 
         expect(typeof result).toBe('object')
-        expect(result.size).toEqual(2)
+        expect(result.size).toEqual(5)
         expect(result.has('SCG')).toEqual(true)
         expect(result.has('CBA')).toEqual(true)
-        expect(result.get('CBA').length).toEqual(6)
-        expect(result.get('SCG').length).toEqual(11)
+        expect(result.has('ANZ')).toEqual(true)
+        expect(result.has('NAB')).toEqual(true)
+
+        expect(result.get('CBA').length).toEqual(13)
+        expect(result.get('SCG').length).toEqual(13)
+        expect(result.get('ANZ').length).toEqual(2)
+        expect(result.get('NAB').length).toEqual(2)
     })
 
 })
@@ -143,14 +148,14 @@ describe('addAveragePriceAfterEachSell', () => {
 
   test ('Add average price and number of outstanding securities for each sell item ', () => {
       const result = addAveragePriceAfterEachSell(testData)
-      console.log('result ', result)
       expect(result.length).toBe(3)
       expect(result[2]).toHaveProperty('averagePrice')
       expect(result[2]).toHaveProperty('outstandingNumberOfSecurity')
-      expect(result[0]).not.toHaveProperty('averagePrice')
-      expect(result[0]).not.toHaveProperty('outstandingNumberOfSecurity')
-      expect(result[1]).not.toHaveProperty('averagePrice')
-      expect(result[1]).not.toHaveProperty('outstandingNumberOfSecurity')
+      expect(result[0]).toHaveProperty('averagePrice')
+      expect(result[0]).toHaveProperty('outstandingNumberOfSecurity')
+      expect(result[1]).toHaveProperty('averagePrice')
+      expect(result[1]).toHaveProperty('outstandingNumberOfSecurity')
+      expect(result[2]).toHaveProperty('profitAndLoss')
 
   })
 
