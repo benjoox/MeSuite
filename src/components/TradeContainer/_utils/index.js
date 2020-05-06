@@ -70,9 +70,9 @@ export function addAveragePriceAfterEachSell(tradeList) {
     // TODO : Assuming the order of tradelist is desc by timestamp
     const temp = [...tradeList]
     return temp.reverse().map(trade => {
-            const price = convertToFloat(trade.price)
+            const price = convertToFloat(trade.price.replace('$', ''))
             const units = convertToFloat(trade.units)
-            const fees = convertToFloat(trade.fees)
+            const fees = convertToFloat(trade.fees.replace('$', ''))
 
             if( trade.type.toLowerCase() === BUY) {
                 buyUntilSold.push({ units, price }) 
@@ -104,11 +104,40 @@ export function addAveragePriceAfterEachSell(tradeList) {
             }       
         })
 }
+/**
+ * 
+ * 
+ * @param {*} tradeList 
+ * 
+ * @return Object 
+ *  {   totalBuyCost: number,
+ *      totalNumberBuy: number,
+ *      totalBuyFees: number,
+ *      totalSellCost: number,
+ *      totalNumberSell: number,
+ *      totalBuyFees: number,
+ *      totalSellFees: number,
+ *      averagePrice: number,
+ *      outstandingNumberOfsecurity: number
+ *  }
+ */
 export function getSummaryForOneAsset(tradeList) {
+    const initialValue = {
+        totalBuyCost: 0,
+        totalNumberBuy: 0,
+        totalBuyFees: 0,
+        totalSellCost: 0,
+        totalNumberSell: 0,
+        totalBuyFees: 0,
+        totalSellFees: 0,
+        averagePrice: 0,
+        outstandingNumberOfsecurity: 0
+    }
+
     return tradeList.reduce((acc, trade) => {
-            const price = convertToFloat(trade.price)
+            const price = convertToFloat(trade.price.replace('$', ''))
             const units = convertToFloat(trade.units)
-            const fees = convertToFloat(trade.fees)
+            const fees = convertToFloat(trade.fees.replace('$', ''))
             
             const tradeCost = price * units
 
@@ -127,19 +156,19 @@ export function getSummaryForOneAsset(tradeList) {
                     totalSellCost: acc['totalSellCost'] ? acc['totalSellCost'] + tradeCost : tradeCost,
                     totalNumberSell: acc['totalNumberSell'] ? acc['totalNumberSell'] + units : units, 
                     totalSellFees: acc['totalSellFees'] ? acc['totalSellFees'] + fees : fees,
-                    averagePrice: trade.averagePrice,
-                    outstandingNumberOfsecurity: trade.outstandingNumberOfsecurity
+                    averagePrice: trade.averagePrice || 0,
+                    outstandingNumberOfsecurity: trade.outstandingNumberOfsecurity || 0
                 }
             } 
         return acc
-    }, {})
+    }, initialValue)
 }
 
 export function getTradeSummary(trades) {
     return trades.reduce((result, trade) => {
-        const price = convertToFloat(trade.price)
+        const price = convertToFloat(trade.price.replace('$', ''))
         const units = convertToFloat(trade.units)
-        const fees = convertToFloat(trade.fees)
+        const fees = convertToFloat(trade.fees.replace('$', ''))
         
         if(!result[trade.code]) result = {...result, [trade.code]: {} }
         const tradeCost = price * units
@@ -171,4 +200,66 @@ export function getTradeSummary(trades) {
 
         return result
     }, {})
+}
+
+/**
+ * Create an object with assests and a list of trades for each asset
+ * @param {*} tradeList // List of available trades
+ * 
+ * @return {Map} keys: asset tickers, value: [] list of trades for the ticker 
+ */
+
+export function seperateTradesByTickers(tradeList) {
+    const tickers = new Map()
+    for(let k = 0; k < tradeList.length; k++) {
+        const ticker = tradeList[k].code
+        if(!tickers.has(ticker)) {
+            tickers.set(ticker, [])
+        }
+        tickers.set(ticker, [...tickers.get(ticker), tradeList[k]])
+    }
+    return tickers
+}   
+
+
+/**
+ * 
+ * 
+ */
+export function cleanseTransactionData(transaction) {
+    const moment = require('moment-timezone')
+    try {
+        const { date, type, code, units, price, fees } = transaction
+        return {
+            type: type.toLowerCase(),
+            code: code.toLowerCase(),
+            units: parseInt(units, 10),
+            price: parseFloat( typeof price === 'string' ? price.replace('$', '') : price),
+            fees: parseFloat(typeof fees === 'string' ? fees.replace('$', '') : fees),
+            date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne').unix()
+        }
+    } catch(err) {
+        throw `Failed to cleanse the transaction data ${err}`
+    }
+}
+
+/**
+ * Check if the transaction has all the required keys with truthy values
+ * 
+ * @param {*} transaction 
+ * @returns bool 
+ */
+export function validateTransactionData(transaction) {
+    const requiredKeys = ['orderNumber', 'date', 'type', 'code', 'units', 'price', 'fees'] 
+
+    for(const key in requiredKeys) {
+        const targetKey = requiredKeys[key]
+        if(!transaction.hasOwnProperty(targetKey) 
+            || transaction[targetKey] == null
+            || transaction[targetKey] === '') 
+
+            throw `Validation failed. The key: "${targetKey}" does not exists or has no value`
+    }
+
+    return true
 }

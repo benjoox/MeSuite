@@ -7,25 +7,6 @@ import { seperateTradesBySecurity,
 const trades = require('./sampleTrade.json')
 
 
-describe('seperateTradesBySecurity', () => {
-    test ('seperate into correct number of unique assets', () => {
-        const result = seperateTradesBySecurity(trades)
-
-        expect(typeof result).toBe('object')
-        expect(result.size).toEqual(5)
-        expect(result.has('SCG')).toEqual(true)
-        expect(result.has('CBA')).toEqual(true)
-        expect(result.has('ANZ')).toEqual(true)
-        expect(result.has('NAB')).toEqual(true)
-
-        expect(result.get('CBA').length).toEqual(13)
-        expect(result.get('SCG').length).toEqual(13)
-        expect(result.get('ANZ').length).toEqual(2)
-        expect(result.get('NAB').length).toEqual(2)
-    })
-
-})
-
 
 describe('getSummaryForOneAsset', () => {
     const testData = [  {
@@ -72,6 +53,40 @@ describe('getSummaryForOneAsset', () => {
 
 })
 
+describe('getSummaryForOneAsset', () => {
+  const testData = [  {
+      "orderNumber": "N117731156",
+      "date": "16/04/2020",
+      "type": "B",
+      "code": "SCG",
+      "units": 1000,
+      "price": 2.03,
+      "fees": 19.95,
+      "net": 2049.95
+    },
+    {
+      "orderNumber": "N118382152",
+      "date": "16/04/2020",
+      "type": "B",
+      "code": "SCG",
+      "units": 1000,
+      "price": 2.04,
+      "fees": 19.95,
+      "net": 2059.95
+    }
+  ]
+  test ('summarise a list of trades with only buy items', () => {
+      const result = getSummaryForOneAsset(testData)
+
+      expect(typeof result).toBe('object')
+      expect(result['totalBuyCost']).toEqual(4070)
+      expect(result['totalNumberBuy']).toEqual(2000)
+      expect(result['totalBuyFees']).toEqual(39.9)
+      expect(result['totalSellCost']).toEqual(0)
+      expect(result['totalSellFees']).toEqual(0)
+  })
+
+})
 
 describe('getAverageAndOutstandingNumber', () => {
     const testData = [  {
@@ -157,6 +172,156 @@ describe('addAveragePriceAfterEachSell', () => {
       expect(result[1]).toHaveProperty('outstandingNumberOfSecurity')
       expect(result[2]).toHaveProperty('profitAndLoss')
 
+  })
+
+})
+
+
+describe('getSummaryForOneAsset when prices and fees include $ sign', () => {
+  const testData = [
+    {
+      "orderNumber": "N119682624",
+      "date": "04/05/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "50",
+      "price": "$58.63",
+      "fees": "$19.95",
+      "net": "$2,951.45"
+    },
+    {
+      "orderNumber": "N119606304",
+      "date": "01/05/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "50",
+      "price": "$58.84",
+      "fees": "$19.95",
+      "net": "$2,961.95"
+    },
+    {
+      "orderNumber": "N118472102",
+      "date": "30/04/2020",
+      "type": "S",
+      "code": "CBA",
+      "units": "100",
+      "price": "$62.50",
+      "fees": "$19.95",
+      "net": "$6,230.05"
+    },
+    {
+      "orderNumber": "N119319154",
+      "date": "29/04/2020",
+      "type": "S",
+      "code": "CBA",
+      "units": "100",
+      "price": "$61.07",
+      "fees": "$19.95",
+      "net": "$6,087.05"
+    },
+    {
+      "orderNumber": "N117922943",
+      "date": "07/04/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "200",
+      "price": "$61.60",
+      "fees": "$29.95",
+      "net": "$12,349.95"
+    }
+  ]
+  test ('summarise a list of trades with only buy items', () => {
+      const result = getSummaryForOneAsset(testData)
+
+      expect(typeof result).toBe('object')
+      //console.log(result)
+      expect(result['totalBuyCost']).anything()
+      expect(result['totalNumberBuy']).anything()
+      expect(result['totalBuyFees']).anything()
+      expect(result['totalSellCost']).anything()
+      expect(result['totalSellFees']).anything()
+  })
+
+})
+
+describe('addAveragePriceAfterEachSell when prices and fees include $ sign', () => {
+  const testData = [
+    {
+      "orderNumber": "N119682624",
+      "date": "04/05/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "50",
+      "price": "$58.63",
+      "fees": "$19.95",
+      "net": "$2,951.45"
+    },
+    {
+      "orderNumber": "N119606304",
+      "date": "01/05/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "50",
+      "price": "$58.84",
+      "fees": "$19.95",
+      "net": "$2,961.95"
+    },
+    {
+      "orderNumber": "N118472102",
+      "date": "30/04/2020",
+      "type": "S",
+      "code": "CBA",
+      "units": "100",
+      "price": "$62.50",
+      "fees": "$19.95",
+      "net": "$6,230.05"
+    },
+    {
+      "orderNumber": "N119319154",
+      "date": "29/04/2020",
+      "type": "S",
+      "code": "CBA",
+      "units": "100",
+      "price": "$61.07",
+      "fees": "$19.95",
+      "net": "$6,087.05"
+    },
+    {
+      "orderNumber": "N117922943",
+      "date": "07/04/2020",
+      "type": "B",
+      "code": "CBA",
+      "units": "200",
+      "price": "$61.60",
+      "fees": "$29.95",
+      "net": "$12,349.95"
+    }
+  ]
+  test ('summarise a list of trades with only buy items', () => {
+      const result = addAveragePriceAfterEachSell(testData)
+
+      expect(typeof result).toBe('object')
+      //console.log(result)
+      expect(result[2]).toHaveProperty('averagePrice')
+      expect(result[2]['averagePrice']).anything()
+
+      expect(result[2]).toHaveProperty('outstandingNumberOfSecurity')
+      expect(result[2]['outstandingNumberOfSecurity']).anything()
+
+      expect(result[0]).toHaveProperty('averagePrice')
+      expect(result[0]['averagePrice']).anything()
+
+
+      expect(result[0]).toHaveProperty('outstandingNumberOfSecurity')
+      expect(result[0]['outstandingNumberOfSecurity']).anything()
+
+    
+      expect(result[1]).toHaveProperty('averagePrice')
+      expect(result[1]['averagePrice']).anything()
+
+      expect(result[2]).toHaveProperty('profitAndLoss')
+      expect(result[2]).toHaveProperty('profitAndLoss')
+      
   })
 
 })

@@ -70,6 +70,7 @@ export default function CalculatorContainer() {
     sellPrice = parseFloat(sellPrice)
     
     return (
+        
         <div style={{ textAlign: "left" }}>
             
             <Row className="justify-content-between">

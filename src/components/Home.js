@@ -7,7 +7,7 @@ export default function Home() {
     const [key, setKey] = useState('portfolio')
     useEffect(() => setKey('portfolio'))
     return (
-        <Container fluid style={{ margin: '3rem' }}>
+        <Container fluid style={{ padding: '2rem' }}>
             <Row>
                 <h1>MePortfolio</h1>
             </Row>

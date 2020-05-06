@@ -8,7 +8,6 @@ export default function SecurityTab(props) {
     const [cells, setCells] = useState([])
     const [realisedGains, setRealisedGains] = useState()
 
-
     useEffect(() => {
         const cells = addAveragePriceAfterEachSell(props.tradeList)
         setCells(cells)
@@ -33,7 +32,9 @@ export default function SecurityTab(props) {
         return calc.toFixed(2)
     }
     
-    
+    function format() { 
+        
+    }
     
     return (
         <>

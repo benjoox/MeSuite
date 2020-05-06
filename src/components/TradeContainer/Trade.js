@@ -5,7 +5,10 @@ import styled from '@emotion/styled'
 
 const Td = styled.td`
     padding: 25px;
-    background-color: ${(props) => props.inGreen ? 'green' : 'transparent'}
+    background-color: ${(props) => {
+        console.log('props.profitAndLoss ', props.profitAndLoss)
+        return props.profitAndLoss < 0 ? 'red' : props.profitAndLoss > 0 ? 'green' : 'transparent'  
+    }}
 `
 
 export default function Trade (props) {
@@ -36,7 +39,7 @@ export default function Trade (props) {
                 <Td >{props.averagePrice ? (props.averagePrice).toFixed(2) : props.averagePrice}</Td>
                 <Td >{props.outstandingNumberOfSecurity}</Td>
                 <Td >{ toDecimalPoints(props.costSum) }</Td>
-                <Td inGreen={props.profitAndLoss > 0}>{toDecimalPoints(props.profitAndLoss)}</Td>
+                <Td profitAndLoss={props.profitAndLoss}>{toDecimalPoints(props.profitAndLoss)}</Td>
             </tr>
     )
 }

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
 import * as csv from 'csvtojson'
 
-
 const ACCEPTABLE_HEADERS = ['net', 'orderNumber', 'date', 'type', 'code', 'units', 'price', 'fees']
 export default function UploadButton(props) {
     const uploaderRef = useRef()
@@ -11,7 +10,7 @@ export default function UploadButton(props) {
     function handleClick(ev) { 
         ev.preventDefault()
         uploaderRef.current.click()
-    }; 
+    }
   
     function onFileChange(ev) { 
         ev.preventDefault()
@@ -37,16 +36,11 @@ export default function UploadButton(props) {
         }
 
         reader.readAsText(event.target.files[0]);
-    };
+    }
     
     return (
         <> 
-            <Button 
-                variant="outline-dark" 
-                onClick={handleClick} 
-            > 
-                Upload
-            </Button> 
+            <Button variant="outline-dark" onClick={handleClick}> Upload </Button> 
             <input type="file" onChange={onFileChange} ref={uploaderRef} hidden accept='.csv'/> 
         </>
     )
