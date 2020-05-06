@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
 import UploadButton from '../UIElements/UploadButton'
+import { PortfolioContext } from '.'
 
 export default function TradeActionsContainer(props) {
     const [modalState, setModalState] = useState(false)
     const [title, setModalTitle] = useState('Add')
     const [action, setAction] = useState('add')
     const [error, setError] = useState(null)
+    const Portfolio = useContext(PortfolioContext)
     const [selectedFile, setFile] = useState()
     const [] = useState()
 
@@ -45,16 +47,16 @@ export default function TradeActionsContainer(props) {
                     <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
                     <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
                     <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
-                    <UploadButton uploadCSVFile={props.uploadCSVFile}/>
+                    <UploadButton uploadCSVFile={Portfolio.uploadCSVFile}/>
                 </Col>
             </Row>
             <TradeActionsModal 
-                    show={modalState}
-                    close={() => closeModal()}
-                    save={props.save}
-                    title={title}
-                    trade={action === 'add' ? sampleTrade : props.selectedTrade}
-                    action={action}
+                show={modalState}
+                close={() => closeModal()}
+                save={props.save}
+                title={title}
+                trade={action === 'add' ? sampleTrade : props.selectedTrade}
+                action={action}
             />
         </>
     )

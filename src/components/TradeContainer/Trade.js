@@ -34,8 +34,8 @@ export default function Trade (props) {
                 <Td>{trade.type}</Td>
                 <Td>{trade.fees}</Td>
                 <Td >{trade.price}</Td>
-                <Td >{trade.date}</Td>
-                <Td >{parseFloat(trade.units) * parseFloat(trade.price) + trade.fees}</Td>
+                <Td >{trade.date.format('dd/mm/YYYY')}</Td>
+                <Td >{(trade.units * trade.price) + trade.fees}</Td>
                 <Td >{props.averagePrice ? (props.averagePrice).toFixed(2) : props.averagePrice}</Td>
                 <Td >{props.outstandingNumberOfSecurity}</Td>
                 <Td >{ toDecimalPoints(props.costSum) }</Td>

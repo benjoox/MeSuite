@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Tabs, Tab } from 'react-bootstrap'
 import SecurityTab from './SecurityTab';
+import { PortfolioContext } from '.'
 
 export default function TradeSummary(props) {
     const [key, setKey] = useState('total');
+    const portfolioContext = useContext(PortfolioContext)
 
     function createSecurityTab() {
         const tabList = []
-        for(let [code, trade] of props.assetList) {
+        for(let [code, trade] of portfolioContext.tradesMap) {
             tabList.push(<Tab 
                 eventKey={code} 
                 key={code} 
@@ -20,7 +22,12 @@ export default function TradeSummary(props) {
         }
         return tabList
     }   
-    const assets = props.assetList
+    if(!portfolioContext.tradesMap) {
+        return <div>W8 M8</div>
+    }
+    console.log( ' portfolioContext.tradesMap', portfolioContext.tradesMap)
+    
+    const assets = portfolioContext.tradesMap
     let security = {
         tabList: [],
         profitAndLoss: 0,

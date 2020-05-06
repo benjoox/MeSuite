@@ -1,20 +1,24 @@
 
-export function validateUploadedJSON(uploadedJSON, trades) {
-    return uploadedJSON.reduce((accumulator, current)  => {
-        const price = convertToFloat(current.price)
-        const units = convertToFloat(current.units)
-        const fees = convertToFloat(current.fees)
-        
-        const found = trades.find(trade => {
-        return current.code === trade.code 
-            && current.date === trade.date
+export function transactionExists(newTransaction, existingTransactions) {
+    return existingTransactions.find(trade => {
+        return newTransaction.code === trade.code 
+            && newTransaction.date === trade.date
             && units === trade.units
             && price === trade.price
             && fees === trade.fees
         })
 
-        if(found) accumulator.rejected.push(current)
-        else accumulator.accepted.push(current)
+}
+
+export function validateUploadedJSON(uploadedJSON, existingTransactions) {
+    return uploadedJSON.reduce((accumulator, current)  => {
+        if(!validateTransactionData(current)) return []
+        const cleansedTransactions = cleanseTransactionData(current) 
+
+        if(transactionExists(cleansedTransactions, existingTransactions)) 
+            accumulator.rejected.push(current)
+        else 
+            accumulator.accepted.push(cleansedTransactions)
         
         return accumulator
     }, { accepted: [], rejected: [] })
@@ -70,39 +74,37 @@ export function addAveragePriceAfterEachSell(tradeList) {
     // TODO : Assuming the order of tradelist is desc by timestamp
     const temp = [...tradeList]
     return temp.reverse().map(trade => {
-            const price = convertToFloat(trade.price.replace('$', ''))
-            const units = convertToFloat(trade.units)
-            const fees = convertToFloat(trade.fees.replace('$', ''))
+        const { price, units, fees } = trade;
 
-            if( trade.type.toLowerCase() === BUY) {
-                buyUntilSold.push({ units, price }) 
-                const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
-                return {
+        if( trade.type.toLowerCase() === BUY) {
+            buyUntilSold.push({ units, price }) 
+            const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
+            return {
+                ...trade, 
+                price, 
+                units, 
+                fees,
+                averagePrice,
+                outstandingNumberOfSecurity: numberSum,
+                costSum
+            }
+        } 
+        else if(trade.type.toLowerCase() === SOLD) {
+            buyUntilSold.push({ units: -1 * units, price }) 
+            const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
+            buyUntilSold = [{ units: numberSum, price: averagePrice }]
+            return {
                     ...trade, 
                     price, 
                     units, 
                     fees,
                     averagePrice,
                     outstandingNumberOfSecurity: numberSum,
-                    costSum
-                }
-            } 
-            else if(trade.type.toLowerCase() === SOLD) {
-                buyUntilSold.push({ units: -1 * units, price }) 
-                const { costSum, numberSum, averagePrice } = getAverageAndOutstandingNumber(buyUntilSold)
-                buyUntilSold = [{ units: numberSum, price: averagePrice }]
-                return {
-                        ...trade, 
-                        price, 
-                        units, 
-                        fees,
-                        averagePrice,
-                        outstandingNumberOfSecurity: numberSum,
-                        costSum,
-                        profitAndLoss:  units * (price - averagePrice)
-                }
-            }       
-        })
+                    costSum,
+                    profitAndLoss:  units * (price - averagePrice)
+            }
+        }       
+    })
 }
 /**
  * 
@@ -135,31 +137,29 @@ export function getSummaryForOneAsset(tradeList) {
     }
 
     return tradeList.reduce((acc, trade) => {
-            const price = convertToFloat(trade.price.replace('$', ''))
-            const units = convertToFloat(trade.units)
-            const fees = convertToFloat(trade.fees.replace('$', ''))
+        const { price, units, fees } = trade;
             
-            const tradeCost = price * units
+        const tradeCost = price * units
 
-            if(trade.type.toLowerCase() === BUY) {
-                acc = { 
-                    ...acc,                   
-                    totalBuyCost: acc['totalBuyCost'] ? acc['totalBuyCost'] + tradeCost : tradeCost,  
-                    totalNumberBuy: acc['totalNumberBuy']  ? acc['totalNumberBuy'] + units : units,
-                    totalBuyFees: acc['totalBuyFees'] ? acc['totalBuyFees'] + fees : fees,
-                    
-                } 
-
-            } else if(trade.type.toLowerCase() === SOLD) {
-                acc = {
-                    ...acc, 
-                    totalSellCost: acc['totalSellCost'] ? acc['totalSellCost'] + tradeCost : tradeCost,
-                    totalNumberSell: acc['totalNumberSell'] ? acc['totalNumberSell'] + units : units, 
-                    totalSellFees: acc['totalSellFees'] ? acc['totalSellFees'] + fees : fees,
-                    averagePrice: trade.averagePrice || 0,
-                    outstandingNumberOfsecurity: trade.outstandingNumberOfsecurity || 0
-                }
+        if(trade.type.toLowerCase() === BUY) {
+            acc = { 
+                ...acc,                   
+                totalBuyCost: acc['totalBuyCost'] ? acc['totalBuyCost'] + tradeCost : tradeCost,  
+                totalNumberBuy: acc['totalNumberBuy']  ? acc['totalNumberBuy'] + units : units,
+                totalBuyFees: acc['totalBuyFees'] ? acc['totalBuyFees'] + fees : fees,
+                
             } 
+
+        } else if(trade.type.toLowerCase() === SOLD) {
+            acc = {
+                ...acc, 
+                totalSellCost: acc['totalSellCost'] ? acc['totalSellCost'] + tradeCost : tradeCost,
+                totalNumberSell: acc['totalNumberSell'] ? acc['totalNumberSell'] + units : units, 
+                totalSellFees: acc['totalSellFees'] ? acc['totalSellFees'] + fees : fees,
+                averagePrice: trade.averagePrice || 0,
+                outstandingNumberOfsecurity: trade.outstandingNumberOfsecurity || 0
+            }
+        } 
         return acc
     }, initialValue)
 }
@@ -221,10 +221,10 @@ export function seperateTradesByTickers(tradeList) {
     return tickers
 }   
 
-
 /**
  * 
- * 
+ * @param {*} transaction
+ * @returns Object { type: string, code: string, units: int, price: float, fees: float, date: Moment} 
  */
 export function cleanseTransactionData(transaction) {
     const moment = require('moment-timezone')
@@ -236,7 +236,7 @@ export function cleanseTransactionData(transaction) {
             units: parseInt(units, 10),
             price: parseFloat( typeof price === 'string' ? price.replace('$', '') : price),
             fees: parseFloat(typeof fees === 'string' ? fees.replace('$', '') : fees),
-            date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne').unix()
+            date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne')
         }
     } catch(err) {
         throw `Failed to cleanse the transaction data ${err}`

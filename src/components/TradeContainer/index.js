@@ -3,16 +3,22 @@ import { Button } from 'react-bootstrap'
 import TradeTable from './TradeTable'
 import TradeSummary from './TradesSummary'
 import TradeActionsContainer from './TradeActionsContainer'
-import { getTradeSummary, validateUploadedJSON ,seperateTradesBySecurity } from './_utils'
+import { getTradeSummary, validateUploadedJSON ,seperateTradesBySecurity, seperateTradesByTickers } from './_utils'
 
 const sample = require('./sampleTrade.json')
 
+export const PortfolioContext = React.createContext()
+
 export default function TradeContainer() {
   const [trades, setTrades] = useState([])
+  const [tradesMap, setTradesMap] = useState(null)
   const [selectedTrade, selectTrade] = useState(null)
   const [collapse, setCollapse] = useState(true)
   const [error, setError] = useState('')
 
+  function update() {
+    console.log('we can update hello from the provider root')
+  }
   function add(trade) {
     const newTrade = [...trades, trade]
     setTrades(newTrade)
@@ -63,29 +69,29 @@ export default function TradeContainer() {
     const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
     
     setTrades(accepted)
+    const tradeMap = seperateTradesByTickers(accepted)
+    setTradesMap(tradeMap)
+    setError('this is an error ')
   } 
-  
-  return( 
-      <div>
+  console.log('trades ', trades)
+  console.log('tradesMap ', tradesMap)
+  console.log('error ', error)
+  return ( 
+      <PortfolioContext.Provider value={{ trades, uploadCSVFile, tradesMap }} >
         { error ? <div>{error}</div> : ''}
         <TradeActionsContainer 
           save={save} 
           selectedTrade={selectedTrade}
-          uploadCSVFile={uploadCSVFile}
         >
           <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
               { collapse ? 'Show your transaction list' : 'Hide list' }
           </Button>
         </TradeActionsContainer>
-        <TradeTable 
-          collapse={collapse}
-          trades={trades} 
-          select={handleSelect}
-        />
+      
         { 
-          !trades || trades.length === 0 ? null : <TradeSummary assetList={seperateTradesBySecurity(trades)}/>
+          !trades || trades.length === 0 ? null : <TradeSummary />
         }
         
-      </div>
+      </PortfolioContext.Provider>
   )
 }
