@@ -101,7 +101,7 @@ export function addAveragePriceAfterEachSell(tradeList) {
                     averagePrice,
                     outstandingNumberOfSecurity: numberSum,
                     costSum,
-                    profitAndLoss:  units * (price - averagePrice)
+                    profitAndLossBeforeFees:  units * (price - averagePrice)
             }
         }       
     })
@@ -166,9 +166,9 @@ export function getSummaryForOneAsset(tradeList) {
 
 export function getTradeSummary(trades) {
     return trades.reduce((result, trade) => {
-        const price = convertToFloat(trade.price.replace('$', ''))
-        const units = convertToFloat(trade.units)
-        const fees = convertToFloat(trade.fees.replace('$', ''))
+        const price = trade.price
+        const units = trade.units
+        const fees = trade.fees
         
         if(!result[trade.code]) result = {...result, [trade.code]: {} }
         const tradeCost = price * units
@@ -208,7 +208,6 @@ export function getTradeSummary(trades) {
  * 
  * @return {Map} keys: asset tickers, value: [] list of trades for the ticker 
  */
-
 export function seperateTradesByTickers(tradeList) {
     const tickers = new Map()
     for(let k = 0; k < tradeList.length; k++) {
@@ -233,7 +232,7 @@ export function cleanseTransactionData(transaction) {
         return {
             type: type.toLowerCase(),
             code: code.toLowerCase(),
-            units: parseInt(units, 10),
+            units: parseInt(typeof units === 'string' ? units.replace(',', '') : units, 10),
             price: parseFloat( typeof price === 'string' ? price.replace('$', '') : price),
             fees: parseFloat(typeof fees === 'string' ? fees.replace('$', '') : fees),
             date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne')
@@ -262,4 +261,124 @@ export function validateTransactionData(transaction) {
     }
 
     return true
+}
+
+
+/**
+ * Sum the cost, fees and units for all the buys
+ * 
+ * @param {*} tradeList 
+ * @returns number 
+ */
+export function buySummary(tradeList) {
+    const temp = tradeList.reduce((acc, current) => {
+        if(current.type === BUY) {
+            acc.cost += current.price * current.units
+            acc.fees += current.fees
+            acc.units += current.units
+        }
+        return acc
+    }, { cost: 0, fees: 0, units: 0})
+    return {
+        cost: parseFloat(temp.cost.toFixed(3)),
+        units: temp.units,
+        fees:  parseFloat(temp.fees.toFixed(3)),
+    }
+}
+
+/**
+ * Sum the cost, fees and units for all the sells
+ * 
+ * @param {*} tradeList 
+ * @returns number 
+ */
+export function sellSummary(tradeList) {
+    const temp = tradeList.reduce((acc, current) => {
+        if(current.type === SOLD) {
+            acc.cost += current.price * current.units
+            acc.fees += current.fees
+            acc.units += current.units
+        }
+        return acc
+    }, { cost: 0, fees: 0, units: 0})
+
+    return {
+        cost: parseFloat(temp.cost.toFixed(3)),
+        units: temp.units,
+        fees: parseFloat(temp.fees.toFixed(3))
+    }
+}
+
+function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
+    return ((sellPrice * sellUnits) - (buyPrice * sellUnits)).toFixed(3)
+}
+
+export function sortTransactionsByDate(transactionList, orderBy='asc') {
+    return transactionList.sort((a, b) => {
+        if(a.date.isBefore(b.date)) return  orderBy === 'asc' ? -1 : 1
+        if(a.date.isAfter(b.date)) return orderBy === 'asc' ? 1 : -1
+        return a.type === 'b' ? -1 : 1
+    })
+}
+
+export function averagePriceForEachTransaction(tradelist) {
+    let tempBuyList = []
+    let result = []
+    for(let k = 0; k < tradelist.length; k++) {
+        const trade = tradelist[k]
+
+        if(trade.type === BUY) {
+            tempBuyList.push(trade)
+            const { average, outstandingUnits } = calculateBuyAverages(tempBuyList)
+            result = [...result, {...trade, average, outstandingUnits, profitAndLossBeforeFees: 0}]
+        }
+        if(trade.type === SOLD) {
+            if(tempBuyList.length < 1) {
+                throw Error('There is a sell without any outstanding shares! Maybe the tradelist is not sorted ascending by date')
+            }
+            const { average, outstandingUnits } = calculateSellAverages(tempBuyList, trade)
+            // after each sell we reset the list to only include the latest average buy price 
+            tempBuyList = [{ price: average, units: outstandingUnits }]
+            const pAndL = profitAndLossBeforeFees(average, trade.price, trade.units)
+            result = [...result, {...trade, average, outstandingUnits, profitAndLossBeforeFees: pAndL}]
+        }
+    }
+
+    return result
+}
+
+/**
+ * 
+ * @param {*} list list of buy transactions
+ */
+export function calculateBuyAverages(list) {
+    let costOfTrade = 0
+    let totalUnits = 0
+    for(let k = 0; k < list.length; k++) {
+        costOfTrade += list[k].price * list[k].units 
+        totalUnits += list[k].units
+    } 
+    return {
+        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
+        outstandingUnits: totalUnits
+    }
+}
+
+/**
+ * 
+ * @param {*} list list of buy transactions
+ * @param {*} sellTrade 
+ */
+export function calculateSellAverages(list, sellTrade) {
+    let costOfTrade = 0
+    let totalUnits = 0
+    for(let k = 0; k < list.length; k++) {
+        costOfTrade += list[k].price * list[k].units 
+        totalUnits += list[k].units
+    } 
+
+    return {
+        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
+        outstandingUnits: totalUnits - sellTrade.units 
+    }
 }

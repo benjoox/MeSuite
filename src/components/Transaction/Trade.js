@@ -6,8 +6,8 @@ import styled from '@emotion/styled'
 const Td = styled.td`
     padding: 25px;
     background-color: ${(props) => {
-        console.log('props.profitAndLoss ', props.profitAndLoss)
-        return props.profitAndLoss < 0 ? 'red' : props.profitAndLoss > 0 ? 'green' : 'transparent'  
+        console.log('props.totalPandLBeforeFees ', props.totalPandLBeforeFees)
+        return props.totalPandLBeforeFees < 0 ? 'red' : props.totalPandLBeforeFees > 0 ? 'green' : 'transparent'  
     }}
 `
 

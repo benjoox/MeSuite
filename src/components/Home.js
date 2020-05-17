@@ -1,38 +1,70 @@
-import React, { useState, useEffect } from 'react'
-import { Container, Row, Tab, Nav, Col } from 'react-bootstrap';
-import TradeContainer from './TradeContainer'
-import PortfolioContainer from './CalculatorContainer'
+import React, { useState } from 'react'
+import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
+import TradeActionsContainer from './Transaction/TradeActionsContainer'
+import {
+    validateUploadedJSON , 
+    seperateTradesByTickers 
+} from './Transaction/_utils'
+import MainMenu from './MainMenu'
+import MainContainer from './MainContainer'
+
 
 export default function Home() {
-    const [key, setKey] = useState('portfolio')
-    useEffect(() => setKey('portfolio'))
+    const [trades, setTrades] = useState([])
+    const [collapse, setCollapse] = useState(true)
+    const [tradesMap, setTradesMap] = useState(null)
+
+    function uploadCSVFile(uploadedJSON) {
+        const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
+        
+        setTrades(accepted)
+        const tradesMap = seperateTradesByTickers(accepted)
+        setTradesMap(tradesMap)
+      } 
+
+
+    function save(trade, action) {
+        switch(action) {
+            case('add'): 
+                add(trade)
+            break
+            case('edit'):
+            case('remove'): 
+                const found = trades.find(el => el.id === trade.id)
+            break
+            if(!found) {
+                setError(`The trade with id ${trade.id} does not exist`)
+                return
+            }
+            // TODO 
+            console.log('TODO :: saving the details af a transaction ')
+            break
+            default:
+            break
+        }
+    }
+    
     return (
         <Container fluid style={{ padding: '2rem' }}>
             <Row>
-                <h1>MePortfolio</h1>
+                <Col sm={2}>
+                    <h1>MePortfolio</h1>
+                </Col>
+                <Col sm={10}>
+                    <TradeActionsContainer 
+                        uploadCSVFile={uploadCSVFile}
+                        save={save} 
+                    >
+                        <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
+                            { collapse ? 'Show transaction list' : 'Hide transaction list' }
+                        </Button> 
+                    </TradeActionsContainer>
+                </Col>
             </Row>
             <Tab.Container defaultActiveKey="portfolio">
                 <Row>
-                    <Col sm={2}>
-                        <Nav variant="links" className="flex-column">
-                            <Nav.Item>
-                                <Nav.Link eventKey="portfolio" title="Portfolio">Portfolio</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="calculator">Calculators</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col sm={9}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey="portfolio">
-                                <TradeContainer />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="calculator">
-                                <PortfolioContainer />  
-                            </Tab.Pane>
-                        </Tab.Content>
-                    </Col>
+                    <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
+                    <MainContainer trades={trades} tradesMap={tradesMap}/>
                 </Row>
             </Tab.Container>
         </Container>

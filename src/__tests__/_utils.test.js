@@ -170,7 +170,7 @@ describe('addAveragePriceAfterEachSell', () => {
       expect(result[0]).toHaveProperty('outstandingNumberOfSecurity')
       expect(result[1]).toHaveProperty('averagePrice')
       expect(result[1]).toHaveProperty('outstandingNumberOfSecurity')
-      expect(result[2]).toHaveProperty('profitAndLoss')
+      expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
 
   })
 
@@ -319,8 +319,8 @@ describe('addAveragePriceAfterEachSell when prices and fees include $ sign', () 
       expect(result[1]).toHaveProperty('averagePrice')
       expect(result[1]['averagePrice']).anything()
 
-      expect(result[2]).toHaveProperty('profitAndLoss')
-      expect(result[2]).toHaveProperty('profitAndLoss')
+      expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
+      expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
       
   })
 

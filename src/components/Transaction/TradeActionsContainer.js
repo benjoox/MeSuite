@@ -11,7 +11,6 @@ export default function TradeActionsContainer(props) {
     const [action, setAction] = useState('add')
     const [error, setError] = useState(null)
     const Portfolio = useContext(PortfolioContext)
-    const [selectedFile, setFile] = useState()
     const [] = useState()
 
     function openModal(action) {
@@ -39,15 +38,14 @@ export default function TradeActionsContainer(props) {
     return (
         <>
             { error ? `Error ${error}` : ''}
-            <Row className="justify-content-between" style={{ marginBottom: '1rem'}}>
+            <Row className="justify-content-center" style={{ marginBottom: '1rem'}}>
+            
                 <Col>
                     {props.children}
-                </Col>
-                <Col>
                     <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
                     <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
                     <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
-                    <UploadButton uploadCSVFile={Portfolio.uploadCSVFile}/>
+                    <UploadButton uploadCSVFile={props.uploadCSVFile}/>
                 </Col>
             </Row>
             <TradeActionsModal 

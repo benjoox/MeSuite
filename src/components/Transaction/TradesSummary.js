@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { Tabs, Tab } from 'react-bootstrap'
+import { Tabs, Tab, Row, Col, Nav, Sonnet } from 'react-bootstrap'
 import SecurityTab from './SecurityTab';
 import { PortfolioContext } from '.'
 
@@ -25,7 +25,6 @@ export default function TradeSummary(props) {
     if(!portfolioContext.tradesMap) {
         return <div>W8 M8</div>
     }
-    console.log( ' portfolioContext.tradesMap', portfolioContext.tradesMap)
     
     const assets = portfolioContext.tradesMap
     let security = {

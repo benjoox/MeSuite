@@ -2,6 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap'
 import Trade from './Trade'
+import {
+    useTable,
+    useGroupBy,
+    useFilters,
+    useSortBy,
+    useExpanded,
+    usePagination,
+  } from 'react-table'
 
 export default function TradeTable(props) {
 
@@ -19,7 +27,7 @@ export default function TradeTable(props) {
                     <th>Select</th>
                     <th>Code</th>
                     <th>Units</th>
-                    <th>Type</th>
+                     <th>Type</th>
                     <th>Fees</th>
                     <th>Price ($)</th>
                     <th>Date</th>
