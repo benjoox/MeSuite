@@ -1,13 +1,22 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useRef } from 'react'
 import { buySummary, sellSummary } from '../Transaction/_utils'
 import { Table } from '../UIElements'
-import { Row, Col, Container } from 'react-bootstrap'
+import { Row, Col, Container, Tooltip, Overlay } from 'react-bootstrap'
 
 const ProtfolioContext = createContext('portfolio') 
 const FEES = 19.95
 
 export default function Portfolio(props) {
     if(!props.tradesMap) return ''
+    const [show, setShow] = useState([0,0,0]);
+
+    const toggleTooltip = id => setShow(
+        show.map((el, index) => index !== id ? false : !el)
+    )
+    const target_1 = useRef(null)
+    const target_2 = useRef(null)
+    const target_3 = useRef(null)
+
     const [outstandingSecurities, setOutstandingSecurties] = useState([])
 
     
@@ -67,12 +76,58 @@ export default function Portfolio(props) {
                 <h2>Portfolio</h2>
                 <Container style={ContainerStyle}>
                     <Row>
-                        <Col> <b>Total buy:</b> {consolidated.totalBuy}</Col>
-                        <Col> <b>Total sell:</b> {(consolidated.totalSell + value).toFixed(2)}</Col>
+                        <Col> 
+                            <b>Total buy:</b> 
+                            {consolidated.totalBuy}
+                        </Col>
+                        <Col> 
+                            <b  ref={target_1} 
+                                onClick={() => toggleTooltip(0)}
+                                style={pointer}
+                            >Total sell:</b> 
+
+                            <Overlay target={target_1.current} show={show[0]} placement='top'>
+                                {(props) => (
+                                    <Tooltip id='overlay' {...props}>
+                                        totalSell + value of outstanding shares
+                                    </Tooltip>
+                                )}
+                            </Overlay>
+                        
+                            {(consolidated.totalSell + value).toFixed(2)}</Col>
                     </Row>
                     <Row>
-                        <Col> <b>Value of outstanding securities:</b> {value.toFixed(2)} </Col>
-                        <Col> <b>Net:</b> {(consolidated.totalSell + value - consolidated.totalBuy).toFixed(2)}</Col>
+                        <Col> 
+                            <b  ref={target_2} 
+                                onClick={() => toggleTooltip(1)}
+                                style={pointer}
+                            >Value of outstanding securities:</b> 
+                            <Overlay target={target_2.current} show={show[1]} placement='top'>
+                                {(props) => (
+                                    <Tooltip id='overlay' {...props}>
+                                        price * outstandingUnits - fees
+                                    </Tooltip>
+                                )}
+                            </Overlay>
+                            
+                            {value.toFixed(2)} 
+                        </Col>
+                        <Col> 
+                            <b 
+                                style={pointer}
+                                ref={target_3} 
+                                onClick={() => toggleTooltip(2)}
+                            >Net:</b> 
+                            <Overlay target={target_3.current} show={show[2]} placement='top'>
+                                {(props) => (
+                                    <Tooltip id='overlay' {...props}>
+                                        totalSell + of outstanding securities - totalBuy
+                                    </Tooltip>
+                                )}
+                            </Overlay>
+                            {(consolidated.totalSell + value - consolidated.totalBuy).toFixed(2)}
+                            
+                            </Col>
                     </Row>
                 </Container>
                 <Container style={ContainerStyle}>
@@ -123,4 +178,8 @@ const ContainerStyle = {
     margin: '20px 0',
     padding: '20px',
     borderTop: 'solid 1px lightgrey' 
+}
+
+const pointer = {
+    cursor: 'pointer'
 }
