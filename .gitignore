@@ -32,3 +32,6 @@ yarn-error.log*
 # deployment
 .serverless/
 .serverless_nextjs/
+
+# server
+/server/node_modules

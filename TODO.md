@@ -1,7 +1,7 @@
 ## To do list
 
-0. Top priority : tooltip for each label
-01. Add total capital as an input field until the capital can be read from the db. Get the difference of this amount with the 'value of outstanding securties'
+0. \[Done\] Top priority : tooltip for each label
+1. Add total capital as an input field until the capital can be read from the db. Get the difference of this amount with the 'value of outstanding securties'
 1. Add the transaction account to the portfolio account and show that they are consolidated at every moment
 2. Start the database for both of them 
 3. Add authentication
