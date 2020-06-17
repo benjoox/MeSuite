@@ -10,12 +10,7 @@ module.exports = () => withCSS({
               }
           });
 
-        const env = Object.keys(process.env).reduce((acc, current) => {
-          acc[`process.env.${current}`] = JSON.stringify(process.env[current]);
-          return acc;
-        }, {});
-
-        config.plugins.push(new webpack.DefinePlugin(env));
+        
         return config
       },
       target: 'serverless'
