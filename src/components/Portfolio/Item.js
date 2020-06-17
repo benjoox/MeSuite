@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { string, number } from 'prop-types'
+import { string } from 'prop-types'
 import { Col, Tooltip, Overlay } from 'react-bootstrap'
 
 export default function Item(props) {
@@ -33,7 +33,7 @@ export default function Item(props) {
 Item.propTypes = {
     tooltip: string,
     label: string.isRequired,
-    value: number.isRequired
+    value: string.isRequired
 }
 
 const pointer = {

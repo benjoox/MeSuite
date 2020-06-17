@@ -7,7 +7,7 @@ export default function Summary(props) {
                 <Row>
                     <Item 
                         label='Total buy'
-                        value={props.totalBuy}
+                        value={props.totalBuy.toFixed(2)}
                     />
 
                     <Item 

@@ -3,7 +3,8 @@ import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
 import TradeActionsContainer from './Transaction/TradeActionsContainer'
 import {
     validateUploadedJSON , 
-    seperateTradesByTickers 
+    seperateTradesByTickers,
+    seperateTradesByDate 
 } from './Transaction/_utils'
 import MainMenu from './MainMenu'
 import MainContainer from './MainContainer'
@@ -19,6 +20,7 @@ export default function Home() {
         
         setTrades(accepted)
         const tradesMap = seperateTradesByTickers(accepted)
+        const tradesMapByDate = seperateTradesByDate(accepted)
         setTradesMap(tradesMap)
       } 
 

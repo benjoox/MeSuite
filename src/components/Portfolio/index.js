@@ -14,7 +14,7 @@ export default function Portfolio(props) {
     const [loader, setLoader] = useState(false)
     const [outstandingSecurities, setOutstandingSecurties] = useState([])
 
-    useEffect(fetchPrice, [props])
+    useEffect(() => { fetchPrice() }, [props])
     
     async function fetchPrice() {
         setLoader(true)

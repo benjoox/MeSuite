@@ -221,6 +221,24 @@ export function seperateTradesByTickers(tradeList) {
 }   
 
 /**
+ * Create an object with assests and a list of trades for each date
+ * @param {*} tradeList // List of available trades
+ * 
+ * @return {Map} keys: asset tickers, value: [] list of trades for the ticker 
+ */
+export function seperateTradesByDate(tradeList) {
+    const tickers = new Map()
+    for(let k = 0; k < tradeList.length; k++) {
+        const date = tradeList[k].date.toString()
+        if(!tickers.has(date)) {
+            tickers.set(date, [])
+        }
+        tickers.set(date, [...tickers.get(date), tradeList[k]])
+    }
+    return tickers
+}   
+
+/**
  * 
  * @param {*} transaction
  * @returns Object { type: string, code: string, units: int, price: float, fees: float, date: Moment} 

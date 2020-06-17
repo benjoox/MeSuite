@@ -6,8 +6,8 @@
 2. Start the database for both of them 
 3. Add authentication
 4. Deploy the stack along side with the database
-5. Bring in the closing price for each holding stock
-6. Calculate the protfolio value with the value of the last price for the holding stock
+5. \[Done\] Bring in the closing price for each holding stock
+6. \[Done\] Calculate the protfolio value with the value of the last price for the holding stock
 7. Display the value of the portfolio for at the end of every day and record
 8. P/L relative to capital
 9. Add net/total cost for individual stock
