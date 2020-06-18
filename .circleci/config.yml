@@ -1,0 +1,22 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  build-and-test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run:
+              name: Install Serverless CLI and dependencies
+              command: |
+                sudo npm i -g serverless
+                npm install
+          - run: npm install
+          - run: serverless
+workflows:
+    build-and-test:
+      jobs:
+        - build-and-test
