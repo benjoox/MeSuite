@@ -8,12 +8,10 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
-          - run:
-             name: Install Serverless CLI and dependencies
-             command: |
-               sudo npm i -g serverless
-               npm install
-               serverless
+        - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
 workflows:
     build-and-test:
       jobs:
