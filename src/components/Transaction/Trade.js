@@ -29,7 +29,7 @@ export default function Trade (props) {
                 <td style={{ marginBottom: 0 }}>
                     <Form.Check type="checkbox" onChange={() => props.select(trade)}/>
                 </td>
-                <Td>{trade.code}</Td>
+                <Td>{trade.ticker}</Td>
                 <Td>{trade.units}</Td>
                 <Td>{trade.type}</Td>
                 <Td>{trade.fees}</Td>

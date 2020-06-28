@@ -20,7 +20,7 @@ export default function Portfolio(props) {
         setLoader(true)
         const result = summary.map(el => {
             return new Promise(async (res) => {
-                const { lastPrice } = await getLastPrice(el.code)
+                const { lastPrice } = await getLastPrice(el.ticker)
                 res({ ...el, lastPrice })
             })
         })
@@ -33,7 +33,7 @@ export default function Portfolio(props) {
     const updatePrice = ev => {
         ev.preventDefault()
         const tempList = outstandingSecurities.map(ticker => {
-            if(ticker.code === ev.target.id) {
+            if(ticker.ticker === ev.target.id) {
                 return {...ticker, lastPrice: ev.target.value}
             }
             return ticker
@@ -65,7 +65,7 @@ export default function Portfolio(props) {
 const column = [
     {
         Header: 'Code',
-        accessor: 'code',
+        accessor: 'ticker',
     },
     {
         Header: 'Buy',

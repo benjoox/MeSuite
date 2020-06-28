@@ -1,29 +1,36 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
 import TradeActionsContainer from './Transaction/TradeActionsContainer'
-import {
-    validateUploadedJSON , 
-    seperateTradesByTickers,
-    seperateTradesByDate 
-} from './Transaction/_utils'
+import { validateUploadedJSON } from './Transaction/_utils'
 import MainMenu from './MainMenu'
 import MainContainer from './MainContainer'
-
 
 export default function Home() {
     const [trades, setTrades] = useState([])
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
 
-    function uploadCSVFile(uploadedJSON) {
-        const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
-        
-        setTrades(accepted)
-        const tradesMap = seperateTradesByTickers(accepted)
-        const tradesMapByDate = seperateTradesByDate(accepted)
-        setTradesMap(tradesMap)
-      } 
+    useEffect(() => {
+        getTransactions()
+    }, [])
 
+    async function getTransactions() {
+        const response = await fetch(`/api/transactions`)
+        const transactions = await response.json()
+        const tradesMap = new Map()
+        Object.entries(transactions).map(transaction => tradesMap.set(transaction[0], transaction[1]))
+        setTradesMap(tradesMap)
+    }
+
+    async function uploadCSVFile(uploadedJSON) {
+        const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
+        await fetch(`/api/transactions`, {
+            method: 'POST',
+            body: JSON.stringify(accepted)
+        })
+        
+        getTransactions()
+    }
 
     function save(trade, action) {
         switch(action) {

@@ -21,6 +21,11 @@ export async function getLastPrice(ticker) {
     return response.json()
 }
 
+export async function getLastDBPrice(date) {
+    const response = await fetch(`/api/prices?date=${date}`)
+   return response.json()
+}
+
 export const summaryList = tradesMap => {
     let result = []
     tradesMap.forEach((value, key) => {
@@ -28,7 +33,7 @@ export const summaryList = tradesMap => {
         const sell = sellSummary(value)
        
         result.push({ 
-            code: key.toUpperCase(), 
+            ticker: key.toUpperCase(), 
             buy: buy.cost + buy.fees,
             sell: sell.cost - sell.fees,
             outstandingUnits: (buy.units - sell.units),

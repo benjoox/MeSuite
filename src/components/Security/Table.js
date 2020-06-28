@@ -4,11 +4,11 @@ import Consolidated from './Summary/Consolidated'
 import Context from './Context'
 
 export default function SecurityTable () {
-    const { listWithAvg , totalFees, totalPandLBeforeFees } = useContext(Context)
+    const { trades , totalFees, totalPandLBeforeFees } = useContext(Context)
     
     const pAndL = (totalPandLBeforeFees - totalFees).toFixed(3)
     return <> 
-        <Table list={listWithAvg} column={column} />
+        <Table list={trades} column={column} />
         <Consolidated fees={totalFees} pAndL={pAndL} />
     </>
 }
@@ -16,7 +16,7 @@ export default function SecurityTable () {
 const column = [
     {
         Header: 'Code',
-        accessor: 'code',
+        accessor: 'ticker',
         filter: 'fuzzyText',
     },
     {

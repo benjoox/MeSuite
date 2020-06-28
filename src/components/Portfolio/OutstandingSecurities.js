@@ -13,14 +13,14 @@ export default function OutstandingSecurities(props) {
                 </Spinner>
                 </div>
                 :
-                props.outstandingSecurities.map(ticker => <Row key={ticker.code}>
-                    <Col><b>Ticker: </b>{ticker.code}</Col>
+                props.outstandingSecurities.map(ticker => <Row key={ticker.ticker}>
+                    <Col><b>Ticker: </b>{ticker.ticker}</Col>
                     <Col><b>Number of securities: </b>{ticker.outstandingUnits}</Col>
                     <Col>
                         <b>Price: </b>
                         <input 
                             onChange={props.updatePrice} 
-                            id={ticker.code}
+                            id={ticker.ticker}
                             type='number' 
                             value={ticker.lastPrice}  
                         />

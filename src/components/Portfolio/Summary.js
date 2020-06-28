@@ -11,7 +11,7 @@ export default function Summary(props) {
                     />
 
                     <Item 
-                        label='Total sel'
+                        label='Total sell'
                         value={(props.totalSell + props.value).toFixed(2)}
                         tooltip='totalSell + value of outstanding shares'
                     />

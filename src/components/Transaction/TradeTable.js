@@ -41,7 +41,7 @@ export default function TradeTable(props) {
             <tbody> 
                 {
                     props.trades.map(trade => <Trade 
-                            key={trade.code + Math.random() % 100}
+                            key={trade.ticker + Math.random() % 100}
                             {...trade}
                             select={props.select}
                         />

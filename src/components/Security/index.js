@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Summary from './Summary'
 import Table from './Table'
 
-import { sortTransactionsByDate, 
+import { 
     averagePriceForEachTransaction,
     buySummary,
     sellSummary 
@@ -14,12 +14,8 @@ import SecurityContext from './Context'
 export default function Security(props) {
     const buy = buySummary(props.trades)
     const sell = sellSummary(props.trades)
-    
-    
-    const sortedList = sortTransactionsByDate((props.trades))
-    const listWithAvg = averagePriceForEachTransaction(sortedList)
-    
-    const { fees, profitAndLossBeforeFees } = listWithAvg.reduce((acc, cur) => ({
+
+    const { fees, profitAndLossBeforeFees } = props.trades.reduce((acc, cur) => ({
         fees: acc.fees + cur.fees,
         profitAndLossBeforeFees: acc.profitAndLossBeforeFees + parseFloat(cur.profitAndLossBeforeFees)
     }), { fees: 0, profitAndLossBeforeFees: 0 })
@@ -31,7 +27,6 @@ export default function Security(props) {
         return ''
     }
     const value = {
-        listWithAvg,
         totalFees,
         totalPandLBeforeFees,
         trades,
@@ -40,7 +35,7 @@ export default function Security(props) {
     }
     return (
         <SecurityContext.Provider value={value}>
-            <h2>{props.trades[0].code.toUpperCase()}</h2>
+            <h2>{props.trades[0].ticker.toUpperCase()}</h2>
             <Summary trades={props.trades}/>
             <Table trades={props.trades}/>
         </SecurityContext.Provider>
