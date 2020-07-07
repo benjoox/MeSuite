@@ -17,12 +17,12 @@ export const consolidateOutstandings = outstandingSecurities => outstandingSecur
 }, 0 )
 
 export async function getLastPrice(ticker) {
-    const response = await fetch(`/api/quotes?ticker=${ticker}`)
+    const response = await fetch(`/api/v1/quotes?ticker=${ticker}`)
     return response.json()
 }
 
 export async function getLastDBPrice(date) {
-    const response = await fetch(`/api/prices?date=${date}`)
+    const response = await fetch(`/api/v1/prices?date=${date}`)
    return response.json()
 }
 

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
 import TradeActionsContainer from './Transaction/TradeActionsContainer'
 import { validateUploadedJSON } from './Transaction/_utils'
 import MainMenu from './MainMenu'
 import MainContainer from './MainContainer'
+import Login from './Login'
+import Logout from './Logout'
 
 export default function Home() {
+    const { isLoading, user, isAuthenticated } = useAuth0()
     const [trades, setTrades] = useState([])
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
@@ -15,7 +19,7 @@ export default function Home() {
     }, [])
 
     async function getTransactions() {
-        const response = await fetch(`/api/transactions`)
+        const response = await fetch(`/api/v1/transactions`)
         const transactions = await response.json()
         const tradesMap = new Map()
         Object.entries(transactions).map(transaction => tradesMap.set(transaction[0], transaction[1]))
@@ -24,7 +28,7 @@ export default function Home() {
 
     async function uploadCSVFile(uploadedJSON) {
         const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
-        await fetch(`/api/transactions`, {
+        await fetch(`/api/v1/transactions`, {
             method: 'POST',
             body: JSON.stringify(accepted)
         })
@@ -59,7 +63,7 @@ export default function Home() {
                 <Col sm={2}>
                     <h1>MePortfolio</h1>
                 </Col>
-                <Col sm={10}>
+                <Col sm={8}>
                     <TradeActionsContainer 
                         uploadCSVFile={uploadCSVFile}
                         save={save} 
@@ -69,6 +73,11 @@ export default function Home() {
                         </Button> 
                     </TradeActionsContainer>
                 </Col>
+              
+                <Col sm={2}>
+                    {  isAuthenticated ? <Logout user={user} /> : <Login />    }
+                </Col>
+                
             </Row>
             <Tab.Container defaultActiveKey="portfolio">
                 <Row>
