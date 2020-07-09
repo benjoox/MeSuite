@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react"
 import { Container } from 'react-bootstrap'
 import Home from './sharedComponents/Home'
 import Login from './sharedComponents/Login'
-import Navbar from './sharedComponents/Navbar'
+import Navbar from './sharedComponents/NavigationBar'
 
 import './App.css' 
 import 'bootstrap/dist/css/bootstrap.min.css'
