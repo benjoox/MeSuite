@@ -36,3 +36,7 @@ export function listTables() {
   };
   return dynamodb.listTables(params).promise()
 }
+
+export function putItem(params) {
+  return dynamodb.putItem(params).promise()
+}

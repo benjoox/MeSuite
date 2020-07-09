@@ -9,21 +9,43 @@ import Login from './Login'
 import Logout from './Logout'
 
 export default function Home() {
-    const { isLoading, user, isAuthenticated } = useAuth0()
+    const { isLoading, user, isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [trades, setTrades] = useState([])
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
         getTransactions()
     }, [])
 
     async function getTransactions() {
-        const response = await fetch(`/api/v1/transactions`)
-        const transactions = await response.json()
-        const tradesMap = new Map()
-        Object.entries(transactions).map(transaction => tradesMap.set(transaction[0], transaction[1]))
-        setTradesMap(tradesMap)
+        const accessToken = await getAccessTokenSilently({
+            audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
+            scope: "read:current_user",
+        })
+        console.log('The access token returned from the Auth0 is ', accessToken)
+        const response = await fetch(`/api/v1/transactions`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
+        
+        console.log('the status of the response from the call to the transactions endpoint with the user accesstoken is ', status)
+        if(response.status === 200) {
+            const transactions = await response.json()
+            const tradesMap = new Map()
+            Object.entries(transactions).map(transaction => tradesMap.set(transaction[0], transaction[1]))
+            setTradesMap(tradesMap)
+        } else {
+            if(response.status === 401) {
+                console.error('Unauthorised user')
+                setError('User is not authorised to access the requested endpoint')
+            }
+        }
+        
     }
 
     async function uploadCSVFile(uploadedJSON) {

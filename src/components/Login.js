@@ -16,7 +16,7 @@ const LoginButton = () => {
           audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
           scope: "read:current_user",
         })
-      const apiResponse = await fetch(`/api/users`, {
+      const apiResponse = await fetch(`/api/v1/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
