@@ -1,7 +1,9 @@
 import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react"
-import Home from './Home'
-import Login from './components/Login'
+import { Container } from 'react-bootstrap'
+import Home from './sharedComponents/Home'
+import Login from './sharedComponents/Login'
+import Navbar from './sharedComponents/Navbar'
 
 import './App.css' 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -10,16 +12,11 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 function App() {
   const { isLoading, user, isAuthenticated } = useAuth0()
 
-  if(isLoading) {
-    return <div style={root}>
-      Loading ...
-    </div>
-  } 
-
   return (
-    <div style={root}>
-        { isAuthenticated ? <Home user={user}/> : <Login />    }
-    </div>
+    <Container>
+        <Navbar />
+        { isAuthenticated ? <Home user={user}/> : ''   }
+    </Container>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
-import MePortfolio from './components/Home'
-import MeFinance from './meFinance/App'
+import MePortfolio from '../components/Home'
+import MeFinance from '../meFinance/App'
 
 
 export default function Home () {

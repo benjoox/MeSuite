@@ -5,8 +5,8 @@ import TradeActionsContainer from './Transaction/TradeActionsContainer'
 import { validateUploadedJSON } from './Transaction/_utils'
 import MainMenu from './MainMenu'
 import MainContainer from './MainContainer'
-import Login from './Login'
-import Logout from './Logout'
+import Login from '../sharedComponents/Login'
+import Logout from '../sharedComponents/Logout'
 
 export default function Home() {
     const { isLoading, user, isAuthenticated, getAccessTokenSilently } = useAuth0()
