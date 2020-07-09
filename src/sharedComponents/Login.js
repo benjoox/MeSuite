@@ -25,7 +25,6 @@ const LoginButton = () => {
         })
   
       const user = await apiResponse.json() 
-      console.log('the result of calling the /api/users is ', user)
     } catch(err) {
       console.error('Error in loggin the user in ', err)
     }

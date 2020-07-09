@@ -8,7 +8,7 @@ export default async (req, res) => {
     switch(method) {
         case 'GET': 
             try {
-                console.log('The GET method in transaction is called with headers ', req.headers)
+                console.log('The GET method in transaction is called with headers')
                 const { date, ticker } = req.query
                 const { authorization } = req.headers
                 const user = await authorise(authorization)

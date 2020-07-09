@@ -33,7 +33,6 @@ export async function authorise(authorization) {
     })
 
     const user = await response.json()
-    console.log('The user returned from calling the function is ', user)
     return user
 }
 

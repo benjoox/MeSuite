@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Nav, Container } from 'react-bootstrap';
-import AccountContainer from './AccountContainer'
+import { useAuth0 } from "@auth0/auth0-react"
+import AccountContainer from '../src/meFinance/components/AccountContainer'
 
-export default function AccountList(props) {
+export default function Accounts(props) {
     const [key, setKey] = useState('home');
+    const { isAuthenticated } = useAuth0()
+    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     useEffect(() => setKey('cbaPersonalSmart'), [props])
     return (
         <Container style={{ padding: '20px', maxWidth: '1340px' }} >

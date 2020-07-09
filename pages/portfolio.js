@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth0 } from "@auth0/auth0-react";
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react"
 import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
-import TradeActionsContainer from './Transaction/TradeActionsContainer'
-import { validateUploadedJSON } from './Transaction/_utils'
-import MainMenu from './MainMenu'
-import MainContainer from './MainContainer'
-import Login from '../sharedComponents/Login'
-import Logout from '../sharedComponents/Logout'
+import TradeActionsContainer from '../src/components/Transaction/TradeActionsContainer'
+import { validateUploadedJSON } from '../src/components/Transaction/_utils'
+import MainMenu from '../src/components/MainMenu'
+import MainContainer from '../src/components/MainContainer'
 
-export default function Home() {
-    const { isLoading, user, isAuthenticated, getAccessTokenSilently } = useAuth0()
+export default function Portfolio() {
+    const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     const [trades, setTrades] = useState([])
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
@@ -80,6 +79,7 @@ export default function Home() {
     }
     
     return (
+        
         <Container fluid style={{ padding: '2rem' }}>
             <Row>
                 <Col sm={2}>
@@ -95,10 +95,6 @@ export default function Home() {
                         </Button> 
                     </TradeActionsContainer>
                 </Col>
-              
-                <Col sm={2}>
-                    {  isAuthenticated ? <Logout user={user} /> : <Login />    }
-                </Col>
                 
             </Row>
             <Tab.Container defaultActiveKey="portfolio">
@@ -108,6 +104,7 @@ export default function Home() {
                 </Row>
             </Tab.Container>
         </Container>
+    
     )
 }
 

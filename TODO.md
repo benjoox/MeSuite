@@ -13,6 +13,7 @@
 9. Add net/total cost for individual stock
 10. Get a monthly report
 11. For each stock user can put add as many hypothetical trades and get the result for the average price and the percentage change of the portfolio for that trade
+12. Add percentage change and dollar change on the outstanding shares on the portfolio page
 
 
 
