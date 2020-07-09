@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react"
-import Home from './components/Home'
+import Home from './Home'
 import Login from './components/Login'
 
 import './App.css' 
@@ -26,7 +26,6 @@ function App() {
 export default App;
 
 const root = {
-  height: '100vh',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
