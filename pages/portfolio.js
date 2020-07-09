@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Auth0Provider, useAuth0 } from "@auth0/auth0-react"
 import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
-import TradeActionsContainer from '../src/components/Transaction/TradeActionsContainer'
-import { validateUploadedJSON } from '../src/components/Transaction/_utils'
-import MainMenu from '../src/components/MainMenu'
-import MainContainer from '../src/components/MainContainer'
+import TradeActionsContainer from '../src/portfolio/Transaction/TradeActionsContainer'
+import { validateUploadedJSON } from '../src/portfolio/Transaction/_utils'
+import MainMenu from '../src/portfolio/MainMenu'
+import MainContainer from '../src/portfolio/MainContainer'
 
 export default function Portfolio() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()

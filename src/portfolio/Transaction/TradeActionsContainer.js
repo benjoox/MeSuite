@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
 import UploadButton from '../UIElements/UploadButton'
-import { PortfolioContext } from '.'
+import { PortfolioContext } from '../Transaction'
 
 export default function TradeActionsContainer(props) {
     const [modalState, setModalState] = useState(false)
