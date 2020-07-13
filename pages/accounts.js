@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Nav, Container } from 'react-bootstrap';
 import { useAuth0 } from "@auth0/auth0-react"
-import AccountContainer from '../src/meFinance/components/AccountContainer'
+import AccountContainer from '../components/accounts/AccountContainer.js'
 
 export default function Accounts(props) {
     const [key, setKey] = useState('home');

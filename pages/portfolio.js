@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Auth0Provider, useAuth0 } from "@auth0/auth0-react"
-import { Container, Row, Tab, Col, Button } from 'react-bootstrap';
-import TradeActionsContainer from '../src/portfolio/Transaction/TradeActionsContainer'
-import { validateUploadedJSON } from '../src/portfolio/Transaction/_utils'
-import MainMenu from '../src/portfolio/MainMenu'
-import MainContainer from '../src/portfolio/MainContainer'
+import { useAuth0 } from "@auth0/auth0-react"
+import { Row, Tab, Col, Button } from 'react-bootstrap';
+import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
+import { validateUploadedJSON } from '../components/portfolio/Transaction/_utils'
+import MainMenu from '../components/portfolio/MainMenu'
+import MainContainer from '../components/portfolio/MainContainer'
 
 export default function Portfolio() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
@@ -78,33 +78,29 @@ export default function Portfolio() {
         }
     }
     
-    return (
-        
-        <Container fluid style={{ padding: '2rem' }}>
-            <Row>
-                <Col sm={2}>
-                    <h1>MePortfolio</h1>
-                </Col>
-                <Col sm={8}>
-                    <TradeActionsContainer 
-                        uploadCSVFile={uploadCSVFile}
-                        save={save} 
-                    >
-                        <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
-                            { collapse ? 'Show transaction list' : 'Hide transaction list' }
-                        </Button> 
-                    </TradeActionsContainer>
-                </Col>
-                
-            </Row>
-            <Tab.Container defaultActiveKey="portfolio">
+    return <>
                 <Row>
-                    <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
-                    <MainContainer trades={trades} tradesMap={tradesMap}/>
+                    <Col sm={2}>
+                        <h1>MePortfolio</h1>
+                    </Col>
+                    <Col sm={8}>
+                        <TradeActionsContainer 
+                            uploadCSVFile={uploadCSVFile}
+                            save={save} 
+                        >
+                            <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
+                                { collapse ? 'Show transaction list' : 'Hide transaction list' }
+                            </Button> 
+                        </TradeActionsContainer>
+                    </Col>
+                    
                 </Row>
-            </Tab.Container>
-        </Container>
-    
-    )
+                <Tab.Container defaultActiveKey="portfolio">
+                    <Row>
+                        <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
+                        <MainContainer trades={trades} tradesMap={tradesMap}/>
+                    </Row>
+                </Tab.Container>
+            </>
 }
 
