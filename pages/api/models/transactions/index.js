@@ -8,7 +8,7 @@ import {
   averagePriceForEachTransaction 
 } from './_utils'
 
-const TABLENAME = 'transactions'
+const TABLENAME = 'Transactions'
 
 const schema = {
   AttributeDefinitions: [
@@ -37,7 +37,6 @@ const schema = {
   }, 
   TableName: TABLENAME
 }
-
 
 export function get(date, ticker) {
     return dynamodb.getItem(getParams(TABLENAME, date, ticker))
@@ -88,20 +87,10 @@ export function put(item) {
     //return dynamodb.batchGetItem(parameters(date, ticker))
 }
 
-export async function batchPutItem(itemList) {
-  console.log('the length of the item to be added is ', itemList.length)
-  const division = 2
-  const partitionSize =  Math.round(itemList.length / division)
-  const partitionArray = []
-  for(let k = 0; k < division; k++) {
-    const startIndex = (k * partitionSize) + 1
-    const endIndex = (k + 1) * partitionSize
-    partitionArray.push(itemList.slice(startIndex, endIndex))
-  }
-
+export async function batchPutItem(itemList, user) {
+  const partitionArray = splitArray(itemList, 20)
   const newAddedPromises = partitionArray.map(async partition => {  
-    console.log('partition ', partition)
-    return dynamodb.batchWriteItem(batchPutParams(TABLENAME, partition))
+    return dynamodb.batchWriteItem(batchPutParams(TABLENAME, partition, user))
   })
 
   await Promise.all(newAddedPromises)
@@ -114,4 +103,32 @@ async function getTables () {
     Limit: 10
   };
   await dynamodb.listTables(params).promise()
+}
+
+function splitArray(list, capacity=50) {
+  const length = list.length
+  console.group('Splitting the array')
+  console.log('The length of the item list is ', length)
+  console.log('capacity ', capacity)
+  const sizeOfLastSubArray = length % capacity
+  console.log('The number of sub arrays are ', Math.round(length / capacity))
+  console.log(`The length of the last subArray is ${sizeOfLastSubArray}`)
+  const partitionArray = []
+
+  for(let k = 0; k < Math.round(length / capacity); k++) {
+    const startIndex = k === 0 ? 0 : (k * capacity) + 1
+    const endIndex = (k + 1) * capacity
+    partitionArray.push(list.slice(startIndex, endIndex + 1))
+  }
+
+  // Add the remainder of the items
+  if(sizeOfLastSubArray > 0) {
+    const lastArray = list.slice(length - sizeOfLastSubArray)
+    console.log('The length of the last array ', lastArray.length)
+    partitionArray.push(lastArray)
+  }
+
+  console.log('Accumulated number of elements in the arrays are ', sizeOfLastSubArray +  Math.round(length / capacity) * capacity)
+  console.groupEnd()
+  return partitionArray
 }

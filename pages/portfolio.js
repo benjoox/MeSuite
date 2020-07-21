@@ -18,12 +18,15 @@ export default function Portfolio() {
         getTransactions()
     }, [])
 
-    async function getTransactions() {
-        const accessToken = await getAccessTokenSilently({
+    function getAccessToken() {
+        return getAccessTokenSilently({
             audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
             scope: "read:current_user",
         })
-        console.log('The access token returned from the Auth0 is ', accessToken)
+    } 
+
+    async function getTransactions() {
+        const accessToken = await getAccessToken()
         const response = await fetch(`/api/v1/transactions`, {
             method: 'GET',
             headers: {
@@ -32,7 +35,6 @@ export default function Portfolio() {
             }
         })
         
-        console.log('the status of the response from the call to the transactions endpoint with the user accesstoken is ', status)
         if(response.status === 200) {
             const transactions = await response.json()
             const tradesMap = new Map()
@@ -49,8 +51,14 @@ export default function Portfolio() {
 
     async function uploadCSVFile(uploadedJSON) {
         const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
+        const accessToken = await getAccessToken()
+        
         await fetch(`/api/v1/transactions`, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
             body: JSON.stringify(accepted)
         })
         

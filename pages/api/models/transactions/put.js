@@ -1,4 +1,6 @@
-const putItem = params => {
+import { timestamp } from './_utils'
+
+const putItem = (params, user) => {
     const { 
         date, 
         code,
@@ -10,9 +12,9 @@ const putItem = params => {
         avgAustrandingPrice=0,
         oustandingNumber=0
     } = params
-    
+
     return {
-        "id": { S: `${date}${code}${price}`},
+        "user_datetime_price": { S: `${user}_${timestamp(date)}_${price}`},
         "date": { S: date },
         "ticker": { S: code },
         "fees": { N: fees.toString() },
@@ -25,18 +27,18 @@ const putItem = params => {
     }
 }
 
-const putItemList = paramsList => paramsList.map(params => ({ 
-    PutRequest: { Item: putItem(params) }
+const putItemList = (paramsList, user) => paramsList.map(params => ({ 
+    PutRequest: { Item: putItem(params, user) }
 }))
 
-export const putParams = (TableName, params) => ({
-    Item: putItem(params),
+export const putParams = (TableName, params, user) => ({
+    Item: putItem(params, user),
     ReturnConsumedCapacity: "TOTAL",
     TableName
 })
 
-export const batchPutParams = (TableName, params) => ({
+export const batchPutParams = (TableName, params, user) => ({
     RequestItems: {
-        [TableName]: putItemList(params)
+        [TableName]: putItemList(params, user)
     }
 })

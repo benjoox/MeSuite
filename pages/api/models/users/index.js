@@ -1,7 +1,8 @@
 import { putItem } from '../../services/dynamoDb'
 
+const TABLENAME = 'Users'
 const schema = {
-    TableName : "User",
+    TableName : TABLENAME,
     KeySchema: [       
         { AttributeName: "email", KeyType: "HASH"},  //Partition key
         { AttributeName: "createdAt", KeyType: "RANGE" }  //Sort key
@@ -20,10 +21,10 @@ export const create = async email => {
     try {
         const user = userItem(email)
         const table = await putItem(user)
-        console.log('putItem response is ', table)
         return table
     } catch(err) {
         console.log(err)
+        throw err
     } 
 } 
 
@@ -36,6 +37,6 @@ const userItem = email => ({
             N: `${Date.now()}`
         }
     },
-    TableName: "User",
+    TableName: TABLENAME,
     ReturnValues: "ALL_OLD"
 })

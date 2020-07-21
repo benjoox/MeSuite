@@ -38,7 +38,11 @@ export default async (req, res) => {
             res.end(JSON.stringify(response))
             break;
         case 'POST': 
-            response = await batchPutItem(JSON.parse(req.body))
+            const { authorization } = req.headers
+            const user = await authorise(authorization)
+            const { email } = user
+            await createUser(email)
+            response =  await batchPutItem(req.body, email)
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify(response))
             break;
