@@ -42,9 +42,6 @@ export default function TradeActionsContainer(props) {
             
                 <Col>
                     {props.children}
-                    <Button variant="dark" onClick={() => openModal('add')}>Add</Button>
-                    <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
-                    <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
                     <UploadButton uploadCSVFile={props.uploadCSVFile}/>
                     <div style={dataModeStyle}>
                         <DataMode />

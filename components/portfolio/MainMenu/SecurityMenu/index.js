@@ -5,7 +5,7 @@ export default function SecurityMenu(props) {
     return <>
     { 
         props.tickers.map(ticker => <Nav.Item key={ticker}>
-                <Nav.Link eventKey={ticker} title={ticker}>{ticker}</Nav.Link>
+                <Nav.Link eventKey={ticker} title={ticker}>{ticker.toUpperCase()}</Nav.Link>
             </Nav.Item>
         )
     }

@@ -1,33 +1,31 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
 import Link from 'next/link'
 import { Navbar, Nav, Spinner } from 'react-bootstrap'
 import UserMenu from './UserMenu'
+import DataMode from '../portfolio/Transaction/DataMode'
 
 export default function NavigationBar() {
     const { isLoading } = useAuth0()
 
     return (
-            <Navbar bg="light" expand="lg">
-                <div>
-                    <Link href='/'> 
-                        <a>Me</a> 
-                    </Link>
-                </div>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <div className="mr-auto">
-                        <div>
-                            <Link href='/accounts'>
-                                <a>Accounts</a>
-                            </Link>
-                        </div>
-                        <div>
-                            <Link href='/portfolio'>
-                                <a>Portfolio</a>
-                            </Link>
-                        </div>
+            <Navbar bg="dark" expand="lg" className="d-flex">
+                <Link href='/' passHref> 
+                    <Nav.Link> 
+                        <h3>Me Suite</h3>
+                    </Nav.Link> 
+                </Link>
+                <Navbar.Toggle aria-controls="navbar-nav" />
+                <Navbar.Collapse id="navbar-nav" className="d-flex justify-content-end">
+                    <div>
+                        <DataMode />
                     </div>
+                    <Link href='/accounts' passHref>
+                        <Nav.Link>Accounts</Nav.Link> 
+                    </Link>
+                    <Link href='/portfolio' passHref>
+                        <Nav.Link>Portfolio</Nav.Link> 
+                    </Link>
                     
                     { 
                         isLoading

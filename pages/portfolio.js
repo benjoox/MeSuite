@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
+import { AppContext } from '../pages/_app'
 import { Row, Tab, Col, Button } from 'react-bootstrap';
 import { PortfolioContext } from '../components/portfolio/context'
 import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
@@ -14,7 +15,8 @@ export default function Portfolio() {
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
     const [error, setError] = useState(null)
-    const [mode, switchMode] = useState(false) // false correspond to offline
+    
+    const { mode } = useContext(AppContext)
 
     useEffect(() => {
         if(mode) getTransactions()
@@ -94,29 +96,11 @@ export default function Portfolio() {
         }
     }
     
-    return <PortfolioContext.Provider value={{ switchMode, mode }}>
-                <Row>
-                    <Col sm={2}>
-                        <h1>MePortfolio</h1>
-                    </Col>
-                    <Col sm={8}>
-                        <TradeActionsContainer 
-                            uploadCSVFile={uploadCSVFile}
-                            save={save} 
-                        >
-                            <Button variant="success" onClick={()=> { setCollapse(!collapse) }}>
-                                { collapse ? 'Show transaction list' : 'Hide transaction list' }
-                            </Button> 
-                        </TradeActionsContainer>
-                    </Col>
-                    
-                </Row>
-                <Tab.Container defaultActiveKey="portfolio">
-                    <Row>
-                        <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
-                        <MainContainer trades={trades} tradesMap={tradesMap}/>
-                    </Row>
-                </Tab.Container>
-            </PortfolioContext.Provider>
+    return <Tab.Container defaultActiveKey="portfolio">
+            <Row>
+                <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
+                <MainContainer trades={trades} tradesMap={tradesMap}/>
+            </Row>
+        </Tab.Container>
 }
 

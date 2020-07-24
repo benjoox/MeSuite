@@ -10,13 +10,9 @@ export default function Accounts(props) {
     useEffect(() => setKey('cbaPersonalSmart'), [props])
     return (
         <Container style={{ padding: '20px', maxWidth: '1340px' }} >
-            <Row style={{ position: 'fixed' }}>
-                    <h1>MeFinance</h1>
-            </Row>
-        
             <Tab.Container defaultActiveKey="cbaPersonalSmart">
                 
-                <Row style={{ marginTop: '100px' }}>
+                <Row>
                 <Col sm={2} style={{ position: 'fixed' }} >
                     <Nav variant="pills" className="flex-column">
                         <Nav.Item>

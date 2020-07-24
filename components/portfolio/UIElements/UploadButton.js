@@ -36,7 +36,7 @@ export default function UploadButton(props) {
     
     return (
         <> 
-            <Button variant="outline-dark" onClick={handleClick}> Upload </Button> 
+            <Button variant="outline-dark" onClick={handleClick}> Upload Transactions</Button> 
             <input type="file" onChange={onFileChange} ref={uploaderRef} hidden accept='.csv'/> 
         </>
     )
