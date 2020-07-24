@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
 import { Row, Tab, Col, Button } from 'react-bootstrap';
+import { PortfolioContext } from '../components/portfolio/context'
 import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
-import { validateUploadedJSON } from '../components/portfolio/Transaction/_utils'
+import { validateUploadedJSON, seperateTradesBySecurity } from '../components/portfolio/Transaction/_utils'
 import MainMenu from '../components/portfolio/MainMenu'
 import MainContainer from '../components/portfolio/MainContainer'
 
+
 export default function Portfolio() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
-    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     const [trades, setTrades] = useState([])
     const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
     const [error, setError] = useState(null)
+    const [mode, switchMode] = useState(false) // false correspond to offline
 
     useEffect(() => {
-        getTransactions()
-    }, [])
+        if(mode) getTransactions()
+        else setTradesMap(null)
+    }, [mode])
 
+    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
+    
     function getAccessToken() {
         return getAccessTokenSilently({
             audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
@@ -62,7 +67,10 @@ export default function Portfolio() {
             body: JSON.stringify(accepted)
         })
         
-        getTransactions()
+        if(mode) getTransactions()
+        else {
+            setTradesMap(seperateTradesBySecurity(accepted))
+        }
     }
 
     function save(trade, action) {
@@ -86,7 +94,7 @@ export default function Portfolio() {
         }
     }
     
-    return <>
+    return <PortfolioContext.Provider value={{ switchMode, mode }}>
                 <Row>
                     <Col sm={2}>
                         <h1>MePortfolio</h1>
@@ -109,6 +117,6 @@ export default function Portfolio() {
                         <MainContainer trades={trades} tradesMap={tradesMap}/>
                     </Row>
                 </Tab.Container>
-            </>
+            </PortfolioContext.Provider>
 }
 

@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
 import UploadButton from '../UIElements/UploadButton'
-import { PortfolioContext } from '../Transaction'
+import DataMode from './DataMode'
 
 export default function TradeActionsContainer(props) {
     const [modalState, setModalState] = useState(false)
     const [title, setModalTitle] = useState('Add')
     const [action, setAction] = useState('add')
     const [error, setError] = useState(null)
-    const Portfolio = useContext(PortfolioContext)
+
     const [] = useState()
 
     function openModal(action) {
@@ -46,6 +46,9 @@ export default function TradeActionsContainer(props) {
                     <Button variant="outline-dark" onClick={() => openModal('edit')}>Edit</Button>
                     <Button variant="outline-dark" onClick={() => openModal('remove')}>Remove</Button>
                     <UploadButton uploadCSVFile={props.uploadCSVFile}/>
+                    <div style={dataModeStyle}>
+                        <DataMode />
+                    </div>
                 </Col>
             </Row>
             <TradeActionsModal 
@@ -72,4 +75,9 @@ const sampleTrade = {
     price: 2.04,
     date: "22/04/2020",
     fees: 19.95,
+}
+
+const dataModeStyle = { 
+    display: 'inline-block', 
+    float: 'right'
 }

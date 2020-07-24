@@ -27,11 +27,7 @@ export default function UploadButton(props) {
                     
             }            
             csv().fromString(ev.target.result)
-                .then(result => {
-                    console.log('result ', result)
-                    
-                    props.uploadCSVFile(result)
-                })
+                .then(result => props.uploadCSVFile(result))
                 .catch(err => console.log('Error in converting CSV to JSON ', err.message))
         }
 

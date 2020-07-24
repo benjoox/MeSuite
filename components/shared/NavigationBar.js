@@ -9,11 +9,11 @@ export default function NavigationBar() {
 
     return (
             <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="#home">
+                <div>
                     <Link href='/'> 
                         <a>Me</a> 
                     </Link>
-                </Navbar.Brand>
+                </div>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <div className="mr-auto">
@@ -29,7 +29,6 @@ export default function NavigationBar() {
                         </div>
                     </div>
                     
-
                     { 
                         isLoading
                         ? 

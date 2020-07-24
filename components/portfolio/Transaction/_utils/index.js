@@ -33,7 +33,7 @@ function convertToFloat(value) {
     return typeof value === 'string' ? parseFloat(value.replace(",", "")) : parseFloat(value)
 }
 /**
- * Deprecated
+ * Used only for the offline mode only
  * @param {*} trades 
  */
 export function seperateTradesBySecurity(trades) {
@@ -43,9 +43,10 @@ export function seperateTradesBySecurity(trades) {
             tradesMap.set(trade.code, [])
         }
         const tradeArray = tradesMap.get(trade.code)        
-        tradeArray.push(trade)
+        tradeArray.push({ ...trade, ticker: trade.code })
         return tradesMap.set(trade.code, tradeArray)
     })
+    console.log('tradesMap is ', tradesMap)
     return tradesMap
 }
 
