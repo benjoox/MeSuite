@@ -19,7 +19,7 @@ export default function Account(props) {
     const [excludingText, setExcludingText] = useState('')
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(new Date());
-    useEffect(fetchAccounts, [])
+    //useEffect(fetchAccounts, [])
     useEffect(filterList, 
         [transactionList, filterField, includingText, excludingText, startDate, endDate])
 
@@ -77,9 +77,7 @@ export default function Account(props) {
         return startDateTimestamp <= date &&  date <= endDateTimestamp 
     }
 
-    const filteredByDate = () => 
-            transactionList.filter(({ date }) => 
-                isDateIncluded(date))
+    const filteredByDate = () => props.transactions.filter(({ date }) => isDateIncluded(date))
 
     function filterList() {
         const updatedFilterList = filteredByDate().filter(transaction => {

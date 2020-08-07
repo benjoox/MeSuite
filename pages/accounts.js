@@ -2,95 +2,79 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Nav, Container } from 'react-bootstrap';
 import { useAuth0 } from "@auth0/auth0-react"
 import AccountContainer from '../components/accounts/AccountContainer.js'
+import fetch from 'isomorphic-fetch'
+
+const API_URL=`/api/v1/accounts`
 
 export default function Accounts(props) {
     const [key, setKey] = useState('home');
     const { isAuthenticated } = useAuth0()
-    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
+    const [accounts, setAccounts] = useState([])
+
+    useEffect(() => {
+        async function getAccounts() {
+            try {
+                const response = await fetch(API_URL)
+                const { content } = await response.json()
+                console.log('the content is ', content)
+                setAccounts(content)
+                if(!content) return  
+            } catch(err) {
+                console.error('Error from the server ', err)
+            }
+        }
+        getAccounts()
+    }, [])
     useEffect(() => setKey('cbaPersonalSmart'), [props])
+
+    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
+    if(accounts.length < 1) return <div>No accounts were linked to this user</div>
+
+    const navItems = () => {
+        const menu = []
+        for(let k in accounts) {
+            menu.push(<Nav.Item>
+                <Nav.Link eventKey={k}>{k}</Nav.Link>
+            </Nav.Item>
+            )
+        }
+
+        return <Nav variant="pills" className="flex-column">
+                { menu }
+            </Nav>
+    }
+    const tabItems = () => {
+        const menu = []
+        for(let k in accounts) {
+            menu.push(<Tab.Pane eventKey={k}>
+                        <AccountContainer name={k} transactions={accounts[k]}/>
+                    </Tab.Pane>
+            )
+        }
+
+        return <Tab.Content>{ menu } </Tab.Content>
+    }
+    
+    
     return (
         <Container style={{ padding: '20px', maxWidth: '1340px' }} >
             <Tab.Container defaultActiveKey="cbaPersonalSmart">
-                
                 <Row>
-                <Col sm={2} style={{ position: 'fixed' }} >
-                    <Nav variant="pills" className="flex-column">
-                        <Nav.Item>
-                            <Nav.Link eventKey="cbaPersonalSmart">CBA Personal</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="cba-moPersonal">CBA Mo Personal</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="nabPersonal">NAB Offset FY19/20</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="nab-personal_FY1819">NAB Offset FY18/19</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="nabCredit">NAB Credit</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="cbaCDIA">CBA CDIA</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="cbaPortfolio">CBA Portfolio</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="AA_CDIA">AA CDIA</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="AA_account_transactions">AA Account transactions</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="loan-dandenong">Loan Dandenong</Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item>
-                            <Nav.Link eventKey="loan-hoppers">Loan Hoppers</Nav.Link>
-                        </Nav.Item>
-                        
-                    </Nav>
-                </Col>
-                <Col sm={9} style={{ marginLeft: '300px' }}>
-                    <Tab.Content>
-                        <Tab.Pane eventKey="cbaPersonalSmart">
-                                <AccountContainer name='cbaPersonalSmart'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="cba-moPersonal">
-                                <AccountContainer name='cba-moPersonal'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="nabPersonal">
-                                <AccountContainer name='nabPersonal'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="nab-personal_FY1819">
-                                <AccountContainer name='nab-personal_FY1819'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="nabCredit">
-                                <AccountContainer name='nabCredit'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="cbaCDIA">
-                                <AccountContainer name='cbaCDIA'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="cbaPortfolio">
-                                <AccountContainer name='cbaPortfolio'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="AA_CDIA">
-                                <AccountContainer name='AA_CDIA'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="AA_account_transactions">
-                            <AccountContainer name='AA_account_transactions'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="loan-dandenong">
-                            <AccountContainer name='loan-dandenong'/>
-                        </Tab.Pane>
-                        <Tab.Pane eventKey="loan-hoppers">
-                            <AccountContainer name='loan-hoppers'/>
-                        </Tab.Pane>
-                    </Tab.Content>
-                </Col>
+                    <Col sm={2} style={{ position: 'fixed' }} >
+                        { navItems() }
+                        <AddAccount />
+                    </Col>
+                    <Col sm={9} style={{ marginLeft: '300px' }}>
+                        <Tab.Content>
+                            { tabItems() }
+                        </Tab.Content>
+                    </Col>
                 </Row>
             </Tab.Container>
         </Container>
     )
 }
 
+const AddAccount = () => {
+    return <form></form>
+}
