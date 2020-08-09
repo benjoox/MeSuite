@@ -15,7 +15,7 @@ export default function Taglist(props) {
         <Container>
             <Row>
                 <Col>
-                    { tagList.map(tag => <Badge pill variant="info">{tag}</Badge>) }
+                    { tagList.map(tag => <Badge pill variant="info" key={tag} >{tag}</Badge>) }
                 </Col>
             </Row>
         </Container>

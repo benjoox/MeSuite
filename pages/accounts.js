@@ -7,11 +7,11 @@ import { NavItems, TabItems } from '../components/accounts/menu'
 
 export const AccountsContext = React.createContext('Accounts')
 
-export default function Accounts(props) {
+export default function Accounts() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const [show, setShow] = useState(false)
-
+    
     useEffect(() => { fetchAccounts() }, [])
 
     function getAccessToken() {
@@ -44,7 +44,7 @@ export default function Accounts(props) {
     async function deleteAccountTransaction(id) {
         try {
             const accessToken = await getAccessToken()
-            await API.deleteAccountTransaction(id, accessToken)s
+            await API.deleteAccountTransaction(id, accessToken)
             await fetchAccounts()
         } catch(err) {
             console.error(err)

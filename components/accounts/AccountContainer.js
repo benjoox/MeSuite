@@ -45,7 +45,7 @@ export default function AccountContainer(props) {
     }
 
     return <Container>
-        { transactionList.length > 0 ? <Taglist transactionList={transactionList} /> : ''}
+        { props.transactions.length > 0 ? <Taglist transactionList={props.transactions} /> : ''}
         
         <Filter 
             includingText={includingText}
@@ -60,7 +60,7 @@ export default function AccountContainer(props) {
             updateFilterField={setFilterField}
         />
         <Row>
-            <Col md={4}> The number of transactions are {transactionList.length} </Col>
+            <Col md={4}> The number of transactions are {props.transactions.length} </Col>
             <Col md={4}> The number of filtered list are {filteredList.length} </Col>
         </Row>
         {
