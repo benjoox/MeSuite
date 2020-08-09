@@ -20,7 +20,7 @@ function App({ Component, pageProps }) {
       scope="read:current_user update:current_user_metadata"
     >   
       <AppContext.Provider value={{ mode, switchMode }}>
-        <Container>
+        <Container fluid >
           <Navbar />
           <Component {...pageProps} />
         </Container>
