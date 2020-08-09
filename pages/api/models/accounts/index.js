@@ -1,8 +1,11 @@
 import * as dynamodb from '../../services/dynamoDb'
+import { accountPostParams  } from './post'
+
+import { accountsMap } from './__utils'
 
 const TABLENAME = 'Accounts'
 
-const schema = {
+const Accounts = {
   AttributeDefinitions: [
     {
       AttributeName: "user_account_date_amount", 
@@ -31,58 +34,16 @@ const schema = {
 }
 
 export async function getAccounts() {
-    try {
-        const response = await dynamodb.scan({
-            TableName : TABLENAME
-        })  
-        return accountsMap(response.Items)
-        
-    } catch(err) {
-        console.log('error in get Accounts ', err)
-    }
-    
+    const response = await dynamodb.scan({
+        TableName : TABLENAME
+    })  
+    return accountsMap(response.Items)
 }
 
-/**
- * Converts the list of items from Accounts table
- * into a map of items array
- * 
- * @param {*} itemList 
- */
-export const accountsMap = itemList => {
-
-  const accountsMap = {}
-  for(let k = 0; k < itemList.length; k++ ) {
-      const accountName = itemList[k].account.S
-      if(!accountsMap[accountName]) {
-          accountsMap[accountName] = []
-      }
-      accountsMap[accountName].push(convertItemToAccountObj(itemList[k]))
+export function createAccountTransaction(params, user) {
+    return dynamodb.putItem(accountPostParams(params, user))
   }
 
-  return accountsMap
-}
-
-/**
- * Convert the a dynamodb account item to a a simple object
- * 
- * @param {obj} item 
- */
-  
-export const convertItemToAccountObj = item => {
-    let result = {}
-    for (let k in item) {
-        if(k === "user_account_date_amount") {
-            const primaryKeySplitted = item[k].S.split('_') 
-            result = {
-              ...result, 
-              username: primaryKeySplitted[0],
-              date: primaryKeySplitted[2],
-              amount: primaryKeySplitted[3],
-            }
-        } else {
-            result = {...result, [k]: item[k].S }
-        }
-    }
-    return result 
+export async function updateAccount(params) {
+  // To be implemented
 }

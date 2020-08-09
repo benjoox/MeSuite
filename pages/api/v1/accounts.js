@@ -1,36 +1,55 @@
-import { getAccounts } from '../models/accounts/index.js'
+import { getAccounts, createAccountTransaction, updateAccount } from '../models/accounts/index.js'
+import { authorise, createUser } from './users'
 
+async function authoriseUser(authorization) {
+    const user = await authorise(authorization)
+    const { email } = user
+    await createUser(email)
+    return email
+}
 export default async (req, res) => {
-    const { method } = req
-    let response = null
-    switch(method) {
-        case 'GET': 
-            try {
+    const { method, body, headers } = req
+    const { authorization } = headers
+    try {
+        switch(method) {
+            case 'GET': {
                 console.log('The GET method in accounts is called with headers')
-                const accountsMap = await getAccounts()
+                await authoriseUser(authorization)
+
+                const content = await getAccounts()
                 res.json({
                     success: true, 
-                    content: accountsMap
+                    content
                 })
-            } catch(err) {
-                console.log('Error in getting accounts in the api level ', err.message)
-                if(err.message === 'invalid signature') {
-                    res.status(401).send({
-                        error: 'Unauthorized',
-                        message: 'The user is not verfied. Try logging out and in'    
-                    })
-                }
-            } 
-            
-            break;
-
-        case 'PUT':
-            
-            break;
-        case 'POST': 
-           
-            break;
-        default:
-            console.log('The HTTP method requesed is not valid')
+                break
+            }
+            case 'POST': {
+                console.log('The POST method in account')
+                const user = await authoriseUser(authorization)
+                const content = await createAccountTransaction(body, user)
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            case 'PUT': {
+                console.log('The PUT method in accounts')
+                const user = authoriseUser(authorization)
+                
+                break
+            }
+            default:
+                console.log('The HTTP method requesed is not valid')
+        }
+    } catch(err) {
+        console.log('Error in updating a new account ', err.message)
+        if(err.message === 'invalid signature') {
+            res.status(401).send({
+                error: 'Unauthorized',
+                message: 'The user is not verfied. Try logging out and in'    
+            })
+        }
     }
+
 }

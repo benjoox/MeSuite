@@ -1,80 +1,71 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, Tab, Nav, Container } from 'react-bootstrap';
+import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
 import { useAuth0 } from "@auth0/auth0-react"
-import AccountContainer from '../components/accounts/AccountContainer.js'
-import fetch from 'isomorphic-fetch'
-
-const API_URL=`/api/v1/accounts`
+import Create from '../components/accounts/crud/Create'
+import { fetchAccounts, saveAccountTransaction } from '../apiCalls/accounts'
+import { NavItems, TabItems } from '../components/accounts/menu'
 
 export default function Accounts(props) {
     const [key, setKey] = useState('home');
-    const { isAuthenticated } = useAuth0()
+    const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
+    const [show, setShow] = useState(false)
 
-    useEffect(() => {
-        async function getAccounts() {
-            try {
-                const response = await fetch(API_URL)
-                const { content } = await response.json()
-                console.log('the content is ', content)
-                setAccounts(content)
-                if(!content) return  
-            } catch(err) {
-                console.error('Error from the server ', err)
-            }
-        }
-        getAccounts()
-    }, [])
+    useEffect(() => { getAccounts() }, [])
     useEffect(() => setKey('cbaPersonalSmart'), [props])
+
+    function getAccessToken() {
+        return getAccessTokenSilently({
+            audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
+            scope: "read:current_user",
+        })
+    } 
+
+    async function getAccounts() {
+        try {
+            const accessToken = await getAccessToken()
+            const content = await fetchAccounts(accessToken)
+            setAccounts(content)
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    async function save(account) {
+        try {
+            const accessToken = await getAccessToken()
+            await saveAccountTransaction(account, accessToken)
+            await getAccounts()
+        } catch(err) {
+            console.error('Error from the server ', err)
+        }
+    }
 
     if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     if(accounts.length < 1) return <div>No accounts were linked to this user</div>
-
-    const navItems = () => {
-        const menu = []
-        for(let k in accounts) {
-            menu.push(<Nav.Item>
-                <Nav.Link eventKey={k}>{k}</Nav.Link>
-            </Nav.Item>
-            )
-        }
-
-        return <Nav variant="pills" className="flex-column">
-                { menu }
-            </Nav>
-    }
-    const tabItems = () => {
-        const menu = []
-        for(let k in accounts) {
-            menu.push(<Tab.Pane eventKey={k}>
-                        <AccountContainer name={k} transactions={accounts[k]}/>
-                    </Tab.Pane>
-            )
-        }
-
-        return <Tab.Content>{ menu } </Tab.Content>
-    }
-    
     
     return (
-        <Container style={{ padding: '20px', maxWidth: '1340px' }} >
+        <Container fluid>
             <Tab.Container defaultActiveKey="cbaPersonalSmart">
                 <Row>
-                    <Col sm={2} style={{ position: 'fixed' }} >
-                        { navItems() }
-                        <AddAccount />
+                    <Col sm={3}>
+                        <NavItems accounts={accounts} />
+                        <Button onClick={() => setShow(true)} >
+                                Create
+                        </Button>
                     </Col>
-                    <Col sm={9} style={{ marginLeft: '300px' }}>
+                    <Col sm={9}>
                         <Tab.Content>
-                            { tabItems() }
+                            <TabItems accounts={accounts} />
                         </Tab.Content>
                     </Col>
                 </Row>
             </Tab.Container>
+            <Create 
+                close={() => setShow(false)} 
+                show={show} 
+                save={save} 
+            />
         </Container>
     )
-}
-
-const AddAccount = () => {
-    return <form></form>
 }

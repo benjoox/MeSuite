@@ -1,4 +1,4 @@
-import { accountsMap } from '../accounts'
+import { accountsMap } from '../accounts/__utils'
 
 describe('accountsMap', () => {
     const testCase = [

@@ -114,6 +114,3 @@ function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
     return ((sellPrice * sellUnits) - (buyPrice * sellUnits)).toFixed(3)
 }
 
-export const timestamp = (datetime, dateFormat='YYYY-MM-DDTHH:mm:ss', zone='AUSTRALIA/MELBOURNE') => {
-    return moment(datetime.trim(), dateFormat).tz(zone).unix()
-}

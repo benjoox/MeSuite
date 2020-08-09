@@ -1,5 +1,4 @@
-import { convertItemToAccountObj } from '../accounts'
-
+import { convertItemToAccountObj } from '../accounts/__utils'
 
 describe('convertItemToAccountObj', () => {
     
