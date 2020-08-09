@@ -18,8 +18,6 @@ const accountItem = (params, user) => {
     }
 }
 
- 
-
 const putItemList = (paramsList, user) => paramsList.map(params => ({ 
     PutRequest: { Item: putItem(params, user) }
 }))

@@ -4,8 +4,8 @@ import { Nav } from 'react-bootstrap'
 const NavItems = ({accounts}) => {
     const menu = []
     for(let k in accounts) {
-        menu.push(<Nav.Item>
-            <Nav.Link eventKey={k}>{k}</Nav.Link>
+        menu.push(<Nav.Item key={k} >
+            <Nav.Link eventKey={k} >{k}</Nav.Link>
         </Nav.Item>
         )
     }

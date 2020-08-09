@@ -9,8 +9,7 @@ const today = new Date()
 today.setMonth(2)
 today.setDate(15)
 
-export default function Account(props) {
-    const [transactionList, updateTransactionsList] = useState([])
+export default function AccountContainer(props) {
     const [filteredList, setFilteredList] = useState([])
     const [filterField, setFilterField] = useState('')
     const [includingText, setIncludingText] = useState('')
@@ -19,23 +18,7 @@ export default function Account(props) {
     const [endDate, setEndDate] = useState(new Date());
 
     useEffect(filterList, 
-        [transactionList, filterField, includingText, excludingText, startDate, endDate])
-
-    async function updateTransaction(transaction) {
-        try {
-            const response = await fetch(process.env.API_URL, {
-                method: 'PUT',
-                body: JSON.stringify(transaction),
-                headers: {
-                    'Content-Type': 'application/json',
-                  }
-            })
-            const { content } = await response.json()
-            if(!content) return  
-        } catch(err) {
-            console.error('Error from the server ', err)
-        }
-    }
+        [props.transactions, filterField, includingText, excludingText, startDate, endDate])
 
     const isTextIncluded = text => text.toString().toLowerCase()
         .includes(includingText.toLowerCase())
@@ -86,7 +69,6 @@ export default function Account(props) {
             <Transactions 
                 list={filteredList}
                 updateFilteredList={setFilteredList}
-                updateTransaction={updateTransaction}
             />
             :
             ''

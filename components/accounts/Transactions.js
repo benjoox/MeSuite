@@ -8,7 +8,7 @@ export default function Transctions(props) {
     const [debit, setDebit] = useState(0)
     const [credit, setCredit] = useState(0)
 
-    const { list, deleteTransaction, updateTransaction } = props
+    const { list } = props
     function sort(sortBy) {
         const sortedArray = list.sort((a, b) => {
             if(a[sortBy] > b[sortBy]) return -1 
@@ -60,8 +60,6 @@ export default function Transctions(props) {
                 { props.list.map(transaction => <Field 
                         key={Math.random()}
                         transaction={transaction} 
-                        updateTransaction={updateTransaction}
-                        deleteTransaction={deleteTransaction}
                     />)
                 }       
             

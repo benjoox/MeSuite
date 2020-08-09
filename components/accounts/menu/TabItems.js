@@ -5,7 +5,7 @@ import AccountContainer from '../AccountContainer'
 const TabItems = ({ accounts }) => {
     const menu = []
     for(let k in accounts) {
-        menu.push(<Tab.Pane eventKey={k}>
+        menu.push(<Tab.Pane eventKey={k} key={k} >
                     <AccountContainer name={k} transactions={accounts[k]}/>
                 </Tab.Pane>
         )

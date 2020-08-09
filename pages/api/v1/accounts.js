@@ -1,4 +1,9 @@
-import { getAccounts, createAccountTransaction, deleteAccountTransaction } from '../models/accounts/index.js'
+import { 
+    getAccounts, 
+    createAccountTransaction, 
+    deleteAccountTransaction, 
+    updateAccountTransaction
+} from '../models/accounts/index.js'
 import { authorise, createUser } from './users'
 
 async function authoriseUser(authorization) {
@@ -45,15 +50,21 @@ export default async (req, res) => {
             }
             case 'PUT': {
                 console.log('The PUT method in accounts')
-                const user = authoriseUser(authorization)
-                
+                console.log('the authorization   is ', authorization)
+                const user = await authoriseUser(authorization)
+                console.log('the user is ', user)
+                const content = await updateAccountTransaction(body)
+                res.json({
+                    success: true, 
+                    content
+                })
                 break
             }
             default:
                 console.log('The HTTP method requesed is not valid')
         }
     } catch(err) {
-        console.log('Error in updating a new account ', err.message)
+        console.log('Error in updating an account ', err)
         if(err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',

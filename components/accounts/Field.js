@@ -9,10 +9,10 @@ const convertTime = (timestamp, timezone=TIMEZONE) => {
 }
 
 export default function Field (props) {
-    const { transaction, deleteTransaction, updateTransaction } = props 
+    const { transaction } = props 
     const [category, setCategory] = useState('')
     useEffect(() => setCategory(transaction.category), [])
-    const { deleteAccountTransaction } = useContext(AccountsContext)
+    const { deleteAccountTransaction, updateAccountTransaction } = useContext(AccountsContext)
     
     return (
             <tr>
@@ -28,7 +28,7 @@ export default function Field (props) {
                 </td>
                 <td>{transaction.description ? transaction.description.toLowerCase() : ''}</td>
                 <td colSpan={5}>
-                    <Button onClick={() => updateTransaction({ ...transaction, category })}>Save</Button>
+                    <Button onClick={() => updateAccountTransaction({ ...transaction, category })}>Save</Button>
                 </td> 
                 <td colSpan={5}>
                     <Button onClick={() => deleteAccountTransaction(transaction.id)}>Delete</Button>

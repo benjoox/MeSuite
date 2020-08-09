@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
 import { useAuth0 } from '@auth0/auth0-react'
 import Create from '../components/accounts/crud/Create'
-import { fetchAccounts, saveAccountTransaction, deleteAccountTransaction } from '../apiCalls/accounts'
+import * as API from '../apiCalls/accounts'
 import { NavItems, TabItems } from '../components/accounts/menu'
 
 export const AccountsContext = React.createContext('Accounts')
 
 export default function Accounts(props) {
-    const [key, setKey] = useState('home');
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const [show, setShow] = useState(false)
 
-    useEffect(() => { getAccounts() }, [])
-    useEffect(() => setKey('cbaPersonalSmart'), [props])
+    useEffect(() => { fetchAccounts() }, [])
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -23,40 +21,55 @@ export default function Accounts(props) {
         })
     } 
 
-    async function getAccounts() {
+    async function fetchAccounts() {
         try {
             const accessToken = await getAccessToken()
-            const content = await fetchAccounts(accessToken)
+            const content = await API.fetchAccounts(accessToken)
             setAccounts(content)
         } catch(err) {
             console.error(err)
         }
     }
 
-    async function _saveAccountTransaction(account) {
+    async function saveAccountTransaction(account) {
         try {
             const accessToken = await getAccessToken()
-            await saveAccountTransaction(account, accessToken)
-            await getAccounts()
+            await API.saveAccountTransaction(account, accessToken)
+            await fetchAccounts()
         } catch(err) {
-            console.error('Error from the server ', err)
+            console.error(err)
         }
     }
     
-    async function _deleteAccountTransaction(id) {
+    async function deleteAccountTransaction(id) {
         try {
             const accessToken = await getAccessToken()
-            await deleteAccountTransaction(id, accessToken)
-            await getAccounts()
+            await API.deleteAccountTransaction(id, accessToken)s
+            await fetchAccounts()
         } catch(err) {
             console.error(err)
+        }
+    }
+
+    async function updateAccountTransaction(transaction) {
+        try {
+            const accessToken = await getAccessToken()
+            await API.updateAccountTransaction(transaction, accessToken)
+            await fetchAccounts()
+            if(!content) return  
+        } catch(err) {
+            console.error('Error from the server ', err)
         }
     }
 
     if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     if(accounts.length < 1) return <div>No accounts were linked to this user</div>
     
-    const value = { deleteAccountTransaction: _deleteAccountTransaction }
+    const value = { 
+        deleteAccountTransaction,
+        updateAccountTransaction
+    }
+
     return (
         <AccountsContext.Provider value={value} >
             <Container fluid>
@@ -78,7 +91,7 @@ export default function Accounts(props) {
                 <Create 
                     close={() => setShow(false)} 
                     show={show} 
-                    save={_saveAccountTransaction} 
+                    save={saveAccountTransaction} 
                 />
             </Container>
         </AccountsContext.Provider>
