@@ -1,4 +1,4 @@
-import { getAccounts, createAccountTransaction, updateAccount } from '../models/accounts/index.js'
+import { getAccounts, createAccountTransaction, deleteAccountTransaction } from '../models/accounts/index.js'
 import { authorise, createUser } from './users'
 
 async function authoriseUser(authorization) {
@@ -8,7 +8,7 @@ async function authoriseUser(authorization) {
     return email
 }
 export default async (req, res) => {
-    const { method, body, headers } = req
+    const { method, body, headers, query } = req
     const { authorization } = headers
     try {
         switch(method) {
@@ -27,6 +27,16 @@ export default async (req, res) => {
                 console.log('The POST method in account')
                 const user = await authoriseUser(authorization)
                 const content = await createAccountTransaction(body, user)
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            case 'DELETE': {
+                console.log('The DELETE method in account')
+                await authoriseUser(authorization)
+                const content = await deleteAccountTransaction(body)
                 res.json({
                     success: true, 
                     content

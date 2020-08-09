@@ -1,6 +1,6 @@
 import * as dynamodb from '../../services/dynamoDb'
-import { accountPostParams  } from './post'
-
+import { accountPostParams } from './post'
+import { accountDeleteParams } from './delete'
 import { accountsMap } from './__utils'
 
 const TABLENAME = 'Accounts'
@@ -42,7 +42,11 @@ export async function getAccounts() {
 
 export function createAccountTransaction(params, user) {
     return dynamodb.putItem(accountPostParams(params, user))
-  }
+}
+
+export function deleteAccountTransaction(params) {
+    return dynamodb.deleteItem(accountDeleteParams(params))
+}
 
 export async function updateAccount(params) {
   // To be implemented

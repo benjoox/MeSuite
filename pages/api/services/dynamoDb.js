@@ -40,3 +40,7 @@ export function listTables() {
 export function putItem(params) {
   return dynamodb.putItem(params).promise()
 }
+
+export function deleteItem(params) {
+  return dynamodb.deleteItem(params).promise()
+}

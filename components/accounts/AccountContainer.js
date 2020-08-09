@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap'
 import Filter from './Filters'
 import Transactions from './Transactions'
 import Taglist from './TagList';
 import Charts from './Charts';
-
-const API_URL=`http://localhost:3040/api/transactions`
 
 const today = new Date()
 today.setMonth(2)
@@ -19,13 +17,13 @@ export default function Account(props) {
     const [excludingText, setExcludingText] = useState('')
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(new Date());
-    //useEffect(fetchAccounts, [])
+
     useEffect(filterList, 
         [transactionList, filterField, includingText, excludingText, startDate, endDate])
 
     async function updateTransaction(transaction) {
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(process.env.API_URL, {
                 method: 'PUT',
                 body: JSON.stringify(transaction),
                 headers: {
@@ -37,32 +35,6 @@ export default function Account(props) {
         } catch(err) {
             console.error('Error from the server ', err)
         }
-    }
-    async function deleteTransaction(id) {
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
-            })
-            const { content } = await response.json()
-            if(!content) return  
-        } catch(err) {
-            console.error('Error from the server ', err)
-        }
-    }
-
-    function fetchAccounts() {  
-        async function fetchData() {
-            try {
-                const response = await fetch(`${API_URL}/${props.name}`)
-                const { content } = await response.json()
-                if(!content) return  
-                updateTransactionsList(content.reverse())
-                
-            } catch(err) {
-                console.error('Error from the server ', err)
-            }
-        } 
-        fetchData()
     }
 
     const isTextIncluded = text => text.toString().toLowerCase()
@@ -109,12 +81,12 @@ export default function Account(props) {
             <Col md={4}> The number of filtered list are {filteredList.length} </Col>
         </Row>
         {
-            filteredList.length > 0 ? 
+            filteredList.length > 0 
+            ? 
             <Transactions 
                 list={filteredList}
                 updateFilteredList={setFilteredList}
                 updateTransaction={updateTransaction}
-                deleteTransaction={deleteTransaction}
             />
             :
             ''

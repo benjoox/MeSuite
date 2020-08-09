@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
-import { useAuth0 } from "@auth0/auth0-react"
+import { useAuth0 } from '@auth0/auth0-react'
 import Create from '../components/accounts/crud/Create'
-import { fetchAccounts, saveAccountTransaction } from '../apiCalls/accounts'
+import { fetchAccounts, saveAccountTransaction, deleteAccountTransaction } from '../apiCalls/accounts'
 import { NavItems, TabItems } from '../components/accounts/menu'
+
+export const AccountsContext = React.createContext('Accounts')
 
 export default function Accounts(props) {
     const [key, setKey] = useState('home');
@@ -31,7 +33,7 @@ export default function Accounts(props) {
         }
     }
 
-    async function save(account) {
+    async function _saveAccountTransaction(account) {
         try {
             const accessToken = await getAccessToken()
             await saveAccountTransaction(account, accessToken)
@@ -40,32 +42,45 @@ export default function Accounts(props) {
             console.error('Error from the server ', err)
         }
     }
+    
+    async function _deleteAccountTransaction(id) {
+        try {
+            const accessToken = await getAccessToken()
+            await deleteAccountTransaction(id, accessToken)
+            await getAccounts()
+        } catch(err) {
+            console.error(err)
+        }
+    }
 
     if(!isAuthenticated) return <div>You are not authorised to see this page</div>
     if(accounts.length < 1) return <div>No accounts were linked to this user</div>
     
+    const value = { deleteAccountTransaction: _deleteAccountTransaction }
     return (
-        <Container fluid>
-            <Tab.Container defaultActiveKey="cbaPersonalSmart">
-                <Row>
-                    <Col sm={3}>
-                        <NavItems accounts={accounts} />
-                        <Button onClick={() => setShow(true)} >
-                                Create
-                        </Button>
-                    </Col>
-                    <Col sm={9}>
-                        <Tab.Content>
-                            <TabItems accounts={accounts} />
-                        </Tab.Content>
-                    </Col>
-                </Row>
-            </Tab.Container>
-            <Create 
-                close={() => setShow(false)} 
-                show={show} 
-                save={save} 
-            />
-        </Container>
+        <AccountsContext.Provider value={value} >
+            <Container fluid>
+                <Tab.Container defaultActiveKey="cbaPersonalSmart">
+                    <Row>
+                        <Col sm={3}>
+                            <NavItems accounts={accounts} />
+                            <Button onClick={() => setShow(true)} >
+                                    Create
+                            </Button>
+                        </Col>
+                        <Col sm={9}>
+                            <Tab.Content>
+                                <TabItems accounts={accounts} />
+                            </Tab.Content>
+                        </Col>
+                    </Row>
+                </Tab.Container>
+                <Create 
+                    close={() => setShow(false)} 
+                    show={show} 
+                    save={_saveAccountTransaction} 
+                />
+            </Container>
+        </AccountsContext.Provider>
     )
 }
