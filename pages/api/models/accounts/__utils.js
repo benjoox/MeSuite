@@ -26,21 +26,21 @@ export const accountsMap = itemList => {
    * 
    * @param {obj} item 
    */
-    
   export const convertItemToAccountObj = item => {
       let result = {}
       for (let k in item) {
-          if(k === PRIMARY_KEY) {
-              const primaryKeySplitted = item[k].S.split('_') 
-              result = {
-                ...result, 
-                username: primaryKeySplitted[0],
-                date: primaryKeySplitted[2],
-                amount: primaryKeySplitted[3],
-              }
-          } else {
-              result = {...result, [k]: item[k].S }
-          }
+            if(k === PRIMARY_KEY) {
+                const primaryKeySplitted = item[k].S.split('_') 
+                result = {
+                    ...result, 
+                    username: primaryKeySplitted[0],
+                    date: primaryKeySplitted[2],
+                    amount: primaryKeySplitted[3],
+                    id: item[k].S
+                }
+            } else {
+                result = {...result, [k]: item[k].S }
+            }
       }
       return result 
   }
