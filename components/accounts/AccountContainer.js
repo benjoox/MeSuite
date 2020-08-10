@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 import Filter from './Filters'
 import Transactions from './Transactions'
 import Taglist from './TagList';
-import Charts from './Charts';
+import Charts from '../shared/Charts';
 import UploadButton from '../shared/UploadButton.js'
 import { AccountsContext } from '../../pages/accounts'
 
