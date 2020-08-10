@@ -10,44 +10,13 @@ export default function CalculatorContainer() {
     let [shares, setShares] = useState(1000)
     let [fees, setFees] = useState(10)
     let [sellPrice, setSell] = useState(55.00)
-    let [priceChangeMode, setMode] = useState(false)
-    const [series, setSeries] = useState()
+    let [percentageMode, setMode] = useState(false)
 
     function setNumberOfShares(ev) {
         ev.preventDefault()
         setShares(ev.target.value)
     }
 
-    function constructData(series) {
-        const result = []
-        let counter = 0
-        for (const property in series) {
-            const innerArray = [] 
-            const data = series[property]
-            innerArray.push(property)
-            innerArray.push(data['3. low'])
-            innerArray.push(data['1. open'])
-            innerArray.push(data['4. close']) 
-            innerArray.push(data['2. high'])
-            
-            result[counter] = innerArray
-            counter++
-          }
-
-          return result 
-    }
-
-    async function fetchIntradayPrice() {
-        try {
-            const response = await fetch('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=cba.ax&interval=5min&apikey=TYTH6WSR5AYPF032')
-            const data = await response.json()
-            constructData(data['Time Series (5min)'])
-        } catch(err) {
-            console.error(err)
-        }
-        
-    }
-    fetchIntradayPrice()
     function setBuyPrice(ev) {
         ev.preventDefault()
         setBuy(parseFloat(ev.target.value))
@@ -59,13 +28,14 @@ export default function CalculatorContainer() {
     }
 
     function toggleMode() {
-        setMode(!priceChangeMode)
+        setMode(!percentageMode)
     }
 
     function setBrokerageFees(ev) {
         ev.preventDefault()
-        setFees(ev.target.value)
+        setFees(parseFloat(ev.target.value))
     }
+
     buyPrice = parseFloat(buyPrice)
     sellPrice = parseFloat(sellPrice)
     
@@ -80,24 +50,34 @@ export default function CalculatorContainer() {
                         onChange={setBuyPrice}
                         label="Buy price"
                         placeholder="Buy price"
+                        steps={0.01}
+                        min={0}
+                        max={200}
                     />
                     <InputWithSlider 
                         value={shares}
                         onChange={setNumberOfShares}
                         label="Number of shares"
                         placeholder="Number of shares"
+                        steps={1}
+                        min={0}
+                        max={10000}
                     /> 
                     <InputWithSlider 
                         value={sellPrice}
                         onChange={setSellPrice}
                         label="Sell price"
                         placeholder="Sell price"
+                        steps={0.01}
+                        min={0}
+                        max={200}
                     />
                     <InputWithSlider 
                         onChange={setBrokerageFees}
                         label="Brokerage fees"
                         placeholder="10"
                         value={fees}
+                        steps={1}
                     /> 
                 </Col>
                 <Col  xs md={6}>
@@ -105,7 +85,7 @@ export default function CalculatorContainer() {
                     <Form.Check 
                         type="switch"
                         id="custom-switch"
-                        label={priceChangeMode ? "Percentage" : "Dollar value" }
+                        label={percentageMode ? "Percentage" : "Dollar value" }
                         status={0}
                         onChange={toggleMode}
                     />
@@ -115,6 +95,7 @@ export default function CalculatorContainer() {
                         sellPrice={sellPrice}
                         shares={shares}
                         fees={fees}
+                        percentageMode={percentageMode}
                     />
                 </Col>
             </Row>

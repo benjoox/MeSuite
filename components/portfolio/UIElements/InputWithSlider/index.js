@@ -4,7 +4,7 @@ import { Form, Col } from 'react-bootstrap'
 const { Group, Label, Control, Row } = Form;
 
 export default function InputWithSlider(props) {
-    const { value, onChange, label, placeholder = "" } = props 
+    const { value, onChange, label, placeholder = "", steps, min, max } = props 
     return (
         <Row style={{ 
                 borderRadius: '4px',
@@ -31,7 +31,6 @@ export default function InputWithSlider(props) {
                         aria-label={label}
                         onChange={onChange}
                         value={value}
-                        
                     />
                 </Group>
             </Col>
@@ -42,6 +41,9 @@ export default function InputWithSlider(props) {
                         type="range"
                         onChange={onChange}
                         value={value}
+                        step={steps}
+                        min={min}
+                        max={max}
                     />
                 </Group>
             </Col>
