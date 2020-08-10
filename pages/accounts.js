@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
 import { useAuth0 } from '@auth0/auth0-react'
-import Create from '../components/accounts/crud/Create'
+import Create from '../components/accounts/forms/AccountActionsModal'
 import * as API from '../apiCalls/accounts'
 import { NavItems, TabItems } from '../components/accounts/menu'
 

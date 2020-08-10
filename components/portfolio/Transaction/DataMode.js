@@ -12,7 +12,7 @@ const DataMode = () => {
             label={mode ? 'Online' : 'Offline'}
             onChange={() => switchMode(!mode)}
             checked={mode}
-            secondary
+            secondary={1}
         />
     </Form>
 }

@@ -30,11 +30,9 @@ export default function NavigationBar() {
                     { 
                         isLoading
                         ? 
-                        <Nav>
-                            <Spinner animation="border" role="status">
-                                <span className="sr-only">Loading...</span>
-                            </Spinner>
-                        </Nav>
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </Spinner>
                         :
                         <UserMenu />
                     }

@@ -71,6 +71,5 @@ export default function AccountActionsModal(props) {
 AccountActionsModal.propTypes = {
   show: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  title: PropTypes.string,
-  trade: PropTypes.object.isRequired
+  title: PropTypes.string
 }
