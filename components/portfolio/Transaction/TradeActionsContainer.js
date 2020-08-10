@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
-import UploadButton from '../UIElements/UploadButton'
+import UploadButton from '../../shared/UploadButton'
 import DataMode from './DataMode'
 
 export default function TradeActionsContainer(props) {

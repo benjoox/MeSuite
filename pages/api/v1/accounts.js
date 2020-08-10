@@ -13,14 +13,13 @@ async function authoriseUser(authorization) {
     return email
 }
 export default async (req, res) => {
-    const { method, body, headers, query } = req
+    const { method, body, headers } = req
     const { authorization } = headers
     try {
         switch(method) {
             case 'GET': {
                 console.log('The GET method in accounts is called with headers')
                 await authoriseUser(authorization)
-
                 const content = await getAccounts()
                 res.json({
                     success: true, 
@@ -38,7 +37,7 @@ export default async (req, res) => {
                 })
                 break
             }
-            case 'DELETE': {
+            case 'DELETE': {    
                 console.log('The DELETE method in account')
                 await authoriseUser(authorization)
                 const content = await deleteAccountTransaction(body)
@@ -50,9 +49,7 @@ export default async (req, res) => {
             }
             case 'PUT': {
                 console.log('The PUT method in accounts')
-                console.log('the authorization   is ', authorization)
                 const user = await authoriseUser(authorization)
-                console.log('the user is ', user)
                 const content = await updateAccountTransaction(body)
                 res.json({
                     success: true, 
@@ -64,7 +61,7 @@ export default async (req, res) => {
                 console.log('The HTTP method requesed is not valid')
         }
     } catch(err) {
-        console.log('Error in updating an account ', err)
+        console.log('Error in accounts API ', err)
         if(err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',

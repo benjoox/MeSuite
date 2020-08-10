@@ -3,6 +3,10 @@ import PropTypes from 'prop-types'
 import { Modal, Button } from 'react-bootstrap'
 import AccountTransactionForm from './AccountTransactionForm'
 
+const timestamp = (datetime, dateFormat='YYYY-MM-DDTHH:mm:ss', zone='AUSTRALIA/MELBOURNE') => {
+  return moment(datetime.trim(), dateFormat).tz(zone).unix()
+}
+
 export default function AccountActionsModal(props) {
   const [account, setAccount] = useState({
     name: '',
@@ -28,9 +32,12 @@ export default function AccountActionsModal(props) {
           return
         } 
       }
-      console.log('save ', account)
       setError()
-      props.save({ ...account, account: account.name })
+      props.save({ 
+        ...account, 
+        account: account.name,
+        date: timestamp(account.date)
+       })
       props.close()
   }
 

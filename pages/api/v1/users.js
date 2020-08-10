@@ -20,12 +20,7 @@ export default async (req, res) => {
 export async function authorise(authorization) {
     const decoded = jwt.verify(accessToken(authorization), process.env.AUTH_PUBLIC_KEY)
     const { sub } =  decoded
-
-    console.log('The user sub extracted from the decoded JWT is ', sub)
     const userDetailsByIdUrl = `https://${process.env.AUTH_DOMAIN}/api/v2/users/${sub}`;
-
-    console.log(`Calling the ${userDetailsByIdUrl} endpoint with the accessToken`)
-
     const response = await fetch(userDetailsByIdUrl, {
         headers: {
             authorization

@@ -32,7 +32,7 @@ export default function Portfolio() {
         })
     } 
 
-    async function getTransactions() {
+    async function getTransactions() {      
         const accessToken = await getAccessToken()
         const response = await fetch(`/api/v1/transactions`, {
             method: 'GET',

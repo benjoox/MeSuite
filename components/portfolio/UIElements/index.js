@@ -1,6 +1,6 @@
 import _InputWithSlider from './InputWithSlider'
 import _Charts from './Charts'
-import _UploadButton from './UploadButton'
+import _UploadButton from '../../shared/UploadButton'
 import _Table from './Table'
 
 export const InputWithSlider = _InputWithSlider

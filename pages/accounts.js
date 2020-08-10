@@ -11,7 +11,7 @@ export default function Accounts() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const [show, setShow] = useState(false)
-    
+
     useEffect(() => { fetchAccounts() }, [])
 
     function getAccessToken() {
@@ -32,9 +32,10 @@ export default function Accounts() {
     }
 
     async function saveAccountTransaction(account) {
+        const params = Array.isArray(account) ? account : [account]
         try {
             const accessToken = await getAccessToken()
-            await API.saveAccountTransaction(account, accessToken)
+            await API.saveAccountTransaction(params, accessToken)
             await fetchAccounts()
         } catch(err) {
             console.error(err)
@@ -67,7 +68,8 @@ export default function Accounts() {
     
     const value = { 
         deleteAccountTransaction,
-        updateAccountTransaction
+        updateAccountTransaction,
+        saveAccountTransaction
     }
 
     return (

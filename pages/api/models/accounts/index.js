@@ -1,5 +1,5 @@
 import * as dynamodb from '../../services/dynamoDb'
-import { accountPostParams } from './post'
+import { accountPostParams, batchPutParams } from './post'
 import { accountDeleteParams } from './delete'
 import { accountPutParams } from './put'
 import { accountsMap } from './__utils'
@@ -36,13 +36,17 @@ const Accounts = {
 
 export async function getAccounts() {
     const response = await dynamodb.scan({
-        TableName : TABLENAME
+        TableName: TABLENAME
     })  
     return accountsMap(response.Items)
 }
 
 export function createAccountTransaction(params, user) {
-    return dynamodb.putItem(accountPostParams(params, user))
+  if(params.length === 1 ) {
+    return dynamodb.putItem(accountPostParams(params[0], user))
+  } else if (params.length > 1) {
+    return dynamodb.batchWriteItem(batchPutParams(params, user))
+  }
 }
 
 export function deleteAccountTransaction(params) {

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import Filter from './Filters'
 import Transactions from './Transactions'
 import Taglist from './TagList';
 import Charts from './Charts';
+import UploadButton from '../shared/UploadButton.js'
+import { AccountsContext } from '../../pages/accounts'
 
 const today = new Date()
 today.setMonth(2)
@@ -19,6 +21,8 @@ export default function AccountContainer(props) {
 
     useEffect(filterList, 
         [props.transactions, filterField, includingText, excludingText, startDate, endDate])
+
+    const { saveAccountTransaction } = useContext(AccountsContext)
 
     const isTextIncluded = text => text.toString().toLowerCase()
         .includes(includingText.toLowerCase())
@@ -44,6 +48,11 @@ export default function AccountContainer(props) {
         setFilteredList(updatedFilterList)
     }
 
+    const addAccountAndSave = transactions => {
+        const transactionWithAccount = transactions.map(el => ({...el, account: props.name}))
+        saveAccountTransaction(transactionWithAccount)
+    }
+    
     return <Container>
         { props.transactions.length > 0 ? <Taglist transactionList={props.transactions} /> : ''}
         
@@ -60,8 +69,16 @@ export default function AccountContainer(props) {
             updateFilterField={setFilterField}
         />
         <Row>
-            <Col md={4}> The number of transactions are {props.transactions.length} </Col>
-            <Col md={4}> The number of filtered list are {filteredList.length} </Col>
+            <Col md={4} > The number of transactions are {props.transactions.length} </Col>
+            <Col md={4} > The number of filtered list are {filteredList.length} </Col>
+            <Col md={4} >
+                <UploadButton 
+                    uploadCSVFile={addAccountAndSave} 
+                    headers={['date', 'amount', 'description', 'balance', 'category']}
+                >
+                    Upload transactions
+                </UploadButton>
+            </Col>
         </Row>
         {
             filteredList.length > 0 

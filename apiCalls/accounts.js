@@ -13,12 +13,11 @@ export async function fetchAccounts(token) {
         console.error('Error from the server ', err)
         throw err
     }
-     
 }
 
 export async function saveAccountTransaction(account, token) {
     try {
-        await fetch(process.env.API_URL, {  
+        return await fetch(process.env.API_URL, {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,13 +25,11 @@ export async function saveAccountTransaction(account, token) {
             },
             body: JSON.stringify(account)
         })
-        return await fetchAccounts()
     } 
     catch(err) {
         console.error('Error from the server ', err)
         throw err
     }
-    
 }
 
 export async function deleteAccountTransaction(id, token) {
