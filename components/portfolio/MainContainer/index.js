@@ -1,7 +1,6 @@
 import React from 'react'
 import { Col, Tab } from 'react-bootstrap'
 import Security from '../Security'
-import Calculator from '../Calculator'
 import Portfolio from '../Portfolio'
 
 export default props => {
@@ -20,9 +19,6 @@ export default props => {
                     :
                     ''
                 }
-                <Tab.Pane key='calculator' eventKey="calculator">
-                    <Calculator />  
-                </Tab.Pane>
             </Tab.Content>
         </Col>
     )

@@ -26,6 +26,9 @@ export default function NavigationBar() {
                     <Link href='/portfolio' passHref>
                         <Nav.Link>Portfolio</Nav.Link> 
                     </Link>
+                    <Link href='/calculator' passHref>
+                        <Nav.Link>Calculator</Nav.Link> 
+                    </Link>
                     
                     { 
                         isLoading

@@ -16,9 +16,6 @@ export default function MainMenu (props) {
                     :
                     ''
                 }
-                <Nav.Item>
-                    <Nav.Link eventKey="calculator">Calculators</Nav.Link>
-                </Nav.Item>
             </Nav>
         </Col>
     )

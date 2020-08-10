@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Form, Col , Row } from 'react-bootstrap'
 import fetch from 'isomorphic-unfetch'
-import InputWithSlider from '../UIElements/InputWithSlider'
-import Outcome from './Outcome'
-import Charts from '../UIElements/Charts'
+import InputWithSlider from '../components/portfolio/UIElements/InputWithSlider'
+import Outcome from '../components/portfolio/Calculator/Outcome'
+import Charts from '../components/portfolio/UIElements/Charts'
 
 export default function CalculatorContainer() {
     let [buyPrice, setBuy] = useState(55.00)
@@ -81,14 +81,16 @@ export default function CalculatorContainer() {
                     /> 
                 </Col>
                 <Col  xs md={6}>
-                    <Form.Label></Form.Label>
-                    <Form.Check 
-                        type="switch"
-                        id="custom-switch"
-                        label={percentageMode ? "Percentage" : "Dollar value" }
-                        status={0}
-                        onChange={toggleMode}
-                    />
+                    <Col>
+                        <Form.Label></Form.Label>
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label={percentageMode ? "Percentage" : "Dollar value" }
+                            status={0}
+                            onChange={toggleMode}
+                        />
+                    </Col>
                 
                     <Outcome 
                         buyPrice={buyPrice}
