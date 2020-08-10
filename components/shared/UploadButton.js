@@ -41,8 +41,9 @@ export default function UploadButton(props) {
                 const headers = extractHeader(target)
                 validateHeaders(props.headers, headers)
                 csv().fromString(ev.target.result)
-                    .then(data => {
-                        props.uploadCSVFile(convertDates(data))
+                    .then(rawData => {
+                        const data = props.timestamped ? convertDates(rawData) : rawData
+                        props.uploadCSVFile(data)
                         formRef.current.reset()
                     })
                     .catch(err => console.log('Error in converting CSV to JSON ', err.message))

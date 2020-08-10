@@ -2,17 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
 import { AppContext } from '../pages/_app'
 import { Row, Tab, Col, Button } from 'react-bootstrap';
-import { PortfolioContext } from '../components/portfolio/context'
 import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
 import { validateUploadedJSON, seperateTradesBySecurity } from '../components/portfolio/Transaction/_utils'
 import { NavItems, TabItems }  from '../components/portfolio/Menu'
-import MainContainer from '../components/portfolio/MainContainer'
-
 
 export default function Portfolio() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [trades, setTrades] = useState([])
-    const [collapse, setCollapse] = useState(true)
     const [tradesMap, setTradesMap] = useState(null)
     const [error, setError] = useState(null)
     

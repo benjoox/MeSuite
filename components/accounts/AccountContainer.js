@@ -75,6 +75,7 @@ export default function AccountContainer(props) {
                 <UploadButton 
                     uploadCSVFile={addAccountAndSave} 
                     headers={['date', 'amount', 'description', 'balance', 'category']}
+                    timestamped
                 >
                     Upload transactions
                 </UploadButton>
