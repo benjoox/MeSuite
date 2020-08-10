@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment-timezone'
 import { Modal, Button } from 'react-bootstrap'
 import AccountTransactionForm from './AccountTransactionForm'
 
 const timestamp = (datetime, dateFormat='YYYY-MM-DDTHH:mm:ss', zone='AUSTRALIA/MELBOURNE') => {
-  return moment(datetime.trim(), dateFormat).tz(zone).unix()
+  console.log('datetime ', datetime)
+  return moment(datetime, dateFormat).tz(zone).unix()
 }
 
 export default function AccountActionsModal(props) {
@@ -37,7 +39,7 @@ export default function AccountActionsModal(props) {
         ...account, 
         account: account.name,
         date: timestamp(account.date)
-       })
+      })
       props.close()
   }
 

@@ -32,7 +32,7 @@ module.exports = phase => withCSS({
     console.log(`isDev:${isDev}  isProd:${isProd}   isStaging:${isStaging}`)
 
     const env = {
-        API_URL: (() => `/api/v1/accounts`)(),
+        API_URL: (() => `/api/v1`)(),
         AUTH_REDIRECT_URI: (() => {
             if (isDev) return 'http://localhost:3000'
             if (isProd) return 'https://alidadkashani.com'

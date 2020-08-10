@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
 import { useAuth0 } from '@auth0/auth0-react'
 import Create from '../components/accounts/forms/AccountActionsModal'
-import * as API from '../apiCalls/accounts'
+import * as API from '../apiCalls'
 import { NavItems, TabItems } from '../components/accounts/menu'
 
 export const AccountsContext = React.createContext('Accounts')
 
+const ENTITY = 'accounts'
 export default function Accounts() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
@@ -24,7 +25,7 @@ export default function Accounts() {
     async function fetchAccounts() {
         try {
             const accessToken = await getAccessToken()
-            const content = await API.fetchAccounts(accessToken)
+            const content = await API.fetchEntity(accessToken, ENTITY)
             setAccounts(content)
         } catch(err) {
             console.error(err)
@@ -35,7 +36,7 @@ export default function Accounts() {
         const params = Array.isArray(account) ? account : [account]
         try {
             const accessToken = await getAccessToken()
-            await API.saveAccountTransaction(params, accessToken)
+            await API.save(params, accessToken, ENTITY)
             await fetchAccounts()
         } catch(err) {
             console.error(err)
@@ -45,7 +46,7 @@ export default function Accounts() {
     async function deleteAccountTransaction(id) {
         try {
             const accessToken = await getAccessToken()
-            await API.deleteAccountTransaction(id, accessToken)
+            await API.deleteEntity(id, accessToken, ENTITY)
             await fetchAccounts()
         } catch(err) {
             console.error(err)
@@ -55,7 +56,7 @@ export default function Accounts() {
     async function updateAccountTransaction(transaction) {
         try {
             const accessToken = await getAccessToken()
-            await API.updateAccountTransaction(transaction, accessToken)
+            await API.update(transaction, accessToken, ENTITY)
             await fetchAccounts()
             if(!content) return  
         } catch(err) {

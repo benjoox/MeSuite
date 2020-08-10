@@ -1,6 +1,6 @@
-export async function fetchAccounts(token) {
+export async function fetchEntity(token, entity) {
     try {
-        const response = await fetch(process.env.API_URL, {
+        const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -15,9 +15,9 @@ export async function fetchAccounts(token) {
     }
 }
 
-export async function saveAccountTransaction(account, token) {
+export async function save(account, token, entity) {
     try {
-        return await fetch(process.env.API_URL, {  
+        return await fetch(`${process.env.API_URL}/${entity}`, {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,9 +32,9 @@ export async function saveAccountTransaction(account, token) {
     }
 }
 
-export async function deleteAccountTransaction(id, token) {
+export async function deleteEntity(id, token, entity) {
     try {
-        const response = await fetch(process.env.API_URL, {
+        const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,9 +50,9 @@ export async function deleteAccountTransaction(id, token) {
     }
 }
 
-export async function updateAccountTransaction(params, token) {
+export async function update(params, token, entity) {
     try {
-        const response = await fetch(process.env.API_URL, {
+        const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
