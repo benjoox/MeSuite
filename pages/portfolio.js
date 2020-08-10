@@ -5,7 +5,7 @@ import { Row, Tab, Col, Button } from 'react-bootstrap';
 import { PortfolioContext } from '../components/portfolio/context'
 import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
 import { validateUploadedJSON, seperateTradesBySecurity } from '../components/portfolio/Transaction/_utils'
-import MainMenu from '../components/portfolio/MainMenu'
+import { NavItems, TabItems }  from '../components/portfolio/Menu'
 import MainContainer from '../components/portfolio/MainContainer'
 
 
@@ -23,8 +23,6 @@ export default function Portfolio() {
         else setTradesMap(null)
     }, [mode])
 
-    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
-    
     function getAccessToken() {
         return getAccessTokenSilently({
             audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
@@ -97,10 +95,21 @@ export default function Portfolio() {
     }
     
     return <Tab.Container defaultActiveKey="portfolio">
-            <Row>
-                <MainMenu tickers={tradesMap ? Array.from(tradesMap.keys()) : []}/>
-                <MainContainer trades={trades} tradesMap={tradesMap}/>
-            </Row>
-        </Tab.Container>
+                <Row>
+                    <Col>
+                        <TradeActionsContainer uploadCSVFile={uploadCSVFile} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col sm={3}>
+                        <NavItems tickers={tradesMap} />
+                    </Col>
+                    <Col sm={9}>
+                        <Tab.Content>
+                            <TabItems tickers={tradesMap} />
+                        </Tab.Content>
+                    </Col>
+                </Row>
+            </Tab.Container>
 }
 

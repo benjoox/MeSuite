@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
+import { func, array } from 'prop-types'
 import moment from 'moment-timezone'
 import { Button } from 'react-bootstrap'
 import * as csv from 'csvtojson'
@@ -62,6 +62,7 @@ export default function UploadButton(props) {
 }
 
 UploadButton.propTypes = {
-    uploadCSVFile: PropTypes.func.isRequired
+    uploadCSVFile: func.isRequired,
+    headers: array.isRequired
 }
 

@@ -15,7 +15,7 @@ export default function Home () {
                     </Col>
                     <Col xs={4}>
                         <Jumbotron>
-                        <Link href='/accounts'>
+                            <Link href='/accounts'>
                                 <a> MeAccounts </a>
                             </Link>
                         </Jumbotron>

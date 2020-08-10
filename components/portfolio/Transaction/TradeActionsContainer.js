@@ -1,9 +1,8 @@
-import React, { useState, useContext } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Row, Col } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { func, object } from 'prop-types'
+import { Row, Jumbotron } from 'react-bootstrap'
 import TradeActionsModal from './TradeActionsModal'
 import UploadButton from '../../shared/UploadButton'
-import DataMode from './DataMode'
 
 export default function TradeActionsContainer(props) {
     const [modalState, setModalState] = useState(false)
@@ -33,20 +32,23 @@ export default function TradeActionsContainer(props) {
     function closeModal() {
         setModalState(false)
     }
-
     
     return (
         <>
             { error ? `Error ${error}` : ''}
-            <Row className="justify-content-center" style={{ marginBottom: '1rem'}}>
-            
-                <Col>
-                    {props.children}
-                    <UploadButton uploadCSVFile={props.uploadCSVFile}/>
-                    <div style={dataModeStyle}>
-                        <DataMode />
+            <Row className='justify-content-center column' style={{ margin: '1rem'}}>
+
+                <Jumbotron>
+                    <p>In the offline mode you can upload a CSV file and analyse your positions without saving any data</p>
+
+                    <div style={{ textAlign: 'center'}}>
+                        <UploadButton 
+                            uploadCSVFile={props.uploadCSVFile}
+                            headers={['orderNumber', 'date', 'type', 'code', 'units', 'price', 'fees', 'net']}
+                        />
                     </div>
-                </Col>
+                </Jumbotron>
+                
             </Row>
             <TradeActionsModal 
                 show={modalState}
@@ -61,7 +63,8 @@ export default function TradeActionsContainer(props) {
 }   
 
 TradeActionsContainer.propTypes = {
-    selectedTrade: PropTypes.object
+    selectedTrade: object,
+    uploadCSVFile: func.isRequired
 }
 
 const sampleTrade = {
@@ -72,9 +75,4 @@ const sampleTrade = {
     price: 2.04,
     date: "22/04/2020",
     fees: 19.95,
-}
-
-const dataModeStyle = { 
-    display: 'inline-block', 
-    float: 'right'
 }
