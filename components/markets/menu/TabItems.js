@@ -8,7 +8,7 @@ const TabItems = ({ tickers }) => {
     if(!tickers ) return ''
     tickers.forEach((val, key) => {
         items.push(<Tab.Pane key={key} eventKey={key} >
-            <Security trades={val}/>
+            <Security trades={val} ticker={key}/>
         </Tab.Pane>)
     })
     

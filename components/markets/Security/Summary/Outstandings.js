@@ -13,7 +13,7 @@ export default function Outstandings (props) {
         <div style={{ display: 'flex'}}>
             <label 
                 style={label} 
-                dangerouslySetInnerHTML={{__html : `Enter a price for ${props.code} : &nbsp`}} 
+                dangerouslySetInnerHTML={{__html : `Enter a price for ${props.ticker.toUpperCase()} : &nbsp`}} 
             />
             <input 
                 type='number' 

@@ -12,7 +12,7 @@ export default function Summary(props) {
     const { 
         buy, 
         sell, 
-        code,
+        ticker,
         totalFees
     } = context
      
@@ -45,7 +45,7 @@ export default function Summary(props) {
                         setPrice={setPrice}
                         units={outstandingUnits}
                         sharePrice={sharePrice}
-                        code={code}
+                        ticker={ticker}
                     />
                 </Col>
             </Row>

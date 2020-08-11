@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table } from '../UIElements'
+import Table from '../../shared/Table'
 import OutstandingSecurities from './OutstandingSecurities'
 import Summary from './Summary'
 import { consolidate, 

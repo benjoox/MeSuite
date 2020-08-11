@@ -36,7 +36,6 @@ export function seperateTradesBySecurity(trades) {
         tradeArray.push({ ...trade, ticker: trade.code })
         return tradesMap.set(trade.code, tradeArray)
     })
-    console.log('tradesMap is ', tradesMap)
     return tradesMap
 }
 

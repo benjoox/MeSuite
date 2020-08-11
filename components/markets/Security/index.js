@@ -30,11 +30,12 @@ export default function Security(props) {
         totalPandLBeforeFees,
         trades,
         sell,
-        buy
+        buy,
+        ticker: props.ticker
     }
     return (
         <SecurityContext.Provider value={value}>
-            <h2>{props.trades[0].ticker.toUpperCase()}</h2>
+            <h2>{props.ticker.toUpperCase()}</h2>
             <Summary trades={props.trades}/>
             <Table trades={props.trades}/>
         </SecurityContext.Provider>
