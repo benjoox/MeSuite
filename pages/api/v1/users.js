@@ -17,7 +17,7 @@ export default async (req, res) => {
     }
 }
 
-export async function authorise(authorization) {
+ async function authorise(authorization) {
     const decoded = jwt.verify(accessToken(authorization), process.env.AUTH_PUBLIC_KEY)
     const { sub } =  decoded
     const userDetailsByIdUrl = `https://${process.env.AUTH_DOMAIN}/api/v2/users/${sub}`;
@@ -29,6 +29,13 @@ export async function authorise(authorization) {
 
     const user = await response.json()
     return user
+}
+
+export async function authoriseUser(authorization) {
+    const user = await authorise(authorization)
+    const { email } = user
+    await createUser(email)
+    return email
 }
 
 export function createUser(email) {

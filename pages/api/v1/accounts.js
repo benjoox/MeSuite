@@ -4,14 +4,8 @@ import {
     deleteAccountTransaction, 
     updateAccountTransaction
 } from '../models/accounts/index.js'
-import { authorise, createUser } from './users'
+import { authoriseUser, createUser } from './users'
 
-async function authoriseUser(authorization) {
-    const user = await authorise(authorization)
-    const { email } = user
-    await createUser(email)
-    return email
-}
 export default async (req, res) => {
     const { method, body, headers } = req
     const { authorization } = headers

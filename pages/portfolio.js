@@ -1,23 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
 import { AppContext } from '../pages/_app'
-import { Row, Tab, Col, Button } from 'react-bootstrap';
+import { Row, Tab, Col } from 'react-bootstrap'
+import * as API from '../apiCalls'
 import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
 import { validateUploadedJSON, seperateTradesBySecurity } from '../components/portfolio/Transaction/_utils'
 import { NavItems, TabItems }  from '../components/portfolio/Menu'
+
+export const TradesContext = React.createContext('Trades')
+
+const ENTITY = 'transactions'
 
 export default function Portfolio() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [trades, setTrades] = useState([])
     const [tradesMap, setTradesMap] = useState(null)
-    const [error, setError] = useState(null)
     
     const { mode } = useContext(AppContext)
 
     useEffect(() => {
-        if(mode) getTransactions()
-        else setTradesMap(null)
-    }, [mode])
+        if(mode && isAuthenticated) {
+            fetchTrades()
+        } else {
+            setTradesMap(null)
+        }
+    }, [mode, isAuthenticated])
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -26,86 +33,84 @@ export default function Portfolio() {
         })
     } 
 
-    async function getTransactions() {      
-        const accessToken = await getAccessToken()
-        const response = await fetch(`/api/v1/transactions`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-        
-        if(response.status === 200) {
-            const transactions = await response.json()
-            const tradesMap = new Map()
-            Object.entries(transactions).map(transaction => tradesMap.set(transaction[0], transaction[1]))
+    async function fetchTrades() {
+        try {
+            const accessToken = await getAccessToken()
+            const content = await API.fetchEntity(accessToken, ENTITY)
+            const tradesMap = new Map(Object.entries(content))
             setTradesMap(tradesMap)
-        } else {
-            if(response.status === 401) {
-                console.error('Unauthorised user')
-                setError('User is not authorised to access the requested endpoint')
-            }
+        } catch(err) {
+            console.error(err)
         }
-        
+    }
+
+    async function saveTradeTransaction(transaction) {
+        const params = Array.isArray(transaction) ? transaction : [transaction]
+        try {
+            const accessToken = await getAccessToken()
+            await API.save(params, accessToken, ENTITY)
+            await fetchTrades()
+        } catch(err) {
+            console.error(err)
+        }
+    }
+    
+    async function deleteTradeTransaction(id) {
+        try {
+            const accessToken = await getAccessToken()
+            await API.deleteEntity(id, accessToken, ENTITY)
+            await fetchTrades()
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    async function updateTradeTransaction(transaction) {
+        try {
+            const accessToken = await getAccessToken()
+            await API.update(transaction, accessToken, ENTITY)
+            await fetchTrades()
+            if(!content) return  
+        } catch(err) {
+            console.error('Error from the server ', err)
+        }
     }
 
     async function uploadCSVFile(uploadedJSON) {
         const { accepted, rejected } = validateUploadedJSON(uploadedJSON, trades)
-        const accessToken = await getAccessToken()
         
-        await fetch(`/api/v1/transactions`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(accepted)
-        })
-        
-        if(mode) getTransactions()
+        if(mode) {
+            updateTradeTransaction(accepted)
+        }
         else {
             setTradesMap(seperateTradesBySecurity(accepted))
         }
     }
 
-    function save(trade, action) {
-        switch(action) {
-            case('add'): 
-                add(trade)
-            break
-            case('edit'):
-            case('remove'): 
-                const found = trades.find(el => el.id === trade.id)
-            break
-            if(!found) {
-                setError(`The trade with id ${trade.id} does not exist`)
-                return
-            }
-            // TODO 
-            console.log('TODO :: saving the details af a transaction ')
-            break
-            default:
-            break
-        }
+    const value = { 
+        deleteTradeTransaction,
+        updateTradeTransaction,
+        saveTradeTransaction
     }
-    
-    return <Tab.Container defaultActiveKey="portfolio">
-                <Row>
-                    <Col>
-                        <TradeActionsContainer uploadCSVFile={uploadCSVFile} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col sm={3}>
-                        <NavItems tickers={tradesMap} />
-                    </Col>
-                    <Col sm={9}>
-                        <Tab.Content>
-                            <TabItems tickers={tradesMap} />
-                        </Tab.Content>
-                    </Col>
-                </Row>
-            </Tab.Container>
+
+    return <TradesContext.Provider value={value}>
+                <Tab.Container defaultActiveKey="portfolio">
+                    <Row>
+                        <Col>
+                            <TradeActionsContainer uploadCSVFile={uploadCSVFile} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col sm={3}>
+                            <NavItems tickers={tradesMap} />
+                        </Col>
+                        <Col sm={9}>
+                            <Tab.Content>
+                                <TabItems tickers={tradesMap} />
+                            </Tab.Content>
+                        </Col>
+                    </Row>
+                </Tab.Container>
+        </TradesContext.Provider>
 }
 

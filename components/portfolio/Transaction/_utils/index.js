@@ -33,7 +33,7 @@ function convertToFloat(value) {
     return typeof value === 'string' ? parseFloat(value.replace(",", "")) : parseFloat(value)
 }
 /**
- * Used only for the offline mode only
+ * Used only for the offline mode
  * @param {*} trades 
  */
 export function seperateTradesBySecurity(trades) {

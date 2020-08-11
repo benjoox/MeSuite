@@ -38,7 +38,8 @@ const schema = {
   TableName: TABLENAME
 }
 
-export function get(date, ticker) {
+export function get(params) {
+    const { date, ticker } = params
     return dynamodb.getItem(getParams(TABLENAME, date, ticker))
 }
 

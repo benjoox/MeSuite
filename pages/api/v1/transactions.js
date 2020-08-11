@@ -1,52 +1,61 @@
-import { getItem, create } from '../services/dynamoDb'
 import { get, put, batchPutItem, scan, scanAll } from '../models/transactions'
-import { authorise, createUser } from './users'
+import { authoriseUser, createUser } from './users'
 
 export default async (req, res) => {
-    const { method } = req
-    let response = null
-    switch(method) {
-        case 'GET': 
-            try {
-                console.log('The GET method in transaction is called with headers')
-                const { date, ticker } = req.query
-                const { authorization } = req.headers
-                const user = await authorise(authorization)
-                const { email } = user
-                await createUser(email)
-                if(date) response = await getItem(date, ticker)
-                else if(ticker) response = await scan(ticker)
-                else response = await scanAll()
-    
-                res.setHeader('Content-Type', 'application/json')
-                res.end(JSON.stringify(response))
-            } catch(err) {
-                console.log('Error in getting transations ', err.message)
-                if(err.message === 'invalid signature') {
-                    res.status(401).send({
-                        error: 'Unauthorized',
-                        message: 'The user is not verfied. Try logging out and in'    
-                    })
-                }
-            } 
-            
-            break;
-
-        case 'PUT':
-            response = await put(req.body)
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify(response))
-            break;
-        case 'POST': 
-            const { authorization } = req.headers
-            const user = await authorise(authorization)
-            const { email } = user
-            await createUser(email)
-            response =  await batchPutItem(req.body, email)
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify(response))
-            break;
-        default:
-            console.log('The HTTP method requesed is not valid')
+    const { method, body, headers } = req
+    const { authorization } = headers
+    try {
+        switch(method) {    
+            case 'GET': {
+                console.log('The GET method in accounts is called with headers')
+                await authoriseUser(authorization)
+                const content = await scanAll()
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            case 'POST': {
+                console.log('The POST method in account')
+                const user = await authoriseUser(authorization)
+                response =  await batchPutItem(req.body, user)
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            case 'DELETE': {    
+                console.log('The DELETE method in account')
+                await authoriseUser(authorization)
+                const content = await deleteAccountTransaction(body)
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            case 'PUT': {
+                console.log('The PUT method in accounts')
+                await authoriseUser(authorization)
+                const content = await put(req.body)
+                res.json({
+                    success: true, 
+                    content
+                })
+                break
+            }
+            default:
+                console.log('The HTTP method requesed is not valid')
+        }
+    } catch(err) {
+        console.log('Error in trade API ', err)
+        if(err.message === 'invalid signature') {
+            res.status(401).send({
+                error: 'Unauthorized',
+                message: 'The user is not verfied. Try logging out and in'    
+            })
+        }
     }
 }

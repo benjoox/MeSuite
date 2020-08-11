@@ -6,7 +6,7 @@ const NavItems = ({ tickers }) => {
     const menu = []
     tickers.forEach((val, key) => {
         menu.push(<Nav.Item key={key} >
-            <Nav.Link eventKey={key} >{key}</Nav.Link>
+            <Nav.Link eventKey={key} >{key.toUpperCase()}</Nav.Link>
         </Nav.Item>)
     })
 
