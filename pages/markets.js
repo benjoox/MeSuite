@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from "@auth0/auth0-react"
-import { AppContext } from '../pages/_app'
+import { AppContext } from './_app'
 import { Row, Tab, Col } from 'react-bootstrap'
 import * as API from '../apiCalls'
-import TradeActionsContainer from '../components/portfolio/Transaction/TradeActionsContainer'
-import { validateUploadedJSON, seperateTradesBySecurity } from '../components/portfolio/Transaction/_utils'
-import { NavItems, TabItems }  from '../components/portfolio/Menu'
+import TradeActionsContainer from '../components/markets/forms/TradeActionsContainer'
+import { validateUploadedJSON, seperateTradesBySecurity } from '../components/markets/forms/_utils'
+import { NavItems, TabItems }  from '../components/markets/menu'
 
 export const TradesContext = React.createContext('Trades')
 
 const ENTITY = 'transactions'
 
-export default function Portfolio() {
+export default function Markets() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [trades, setTrades] = useState([])
     const [tradesMap, setTradesMap] = useState(null)

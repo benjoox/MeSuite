@@ -8,22 +8,22 @@ export default function Home () {
     return <Row style={{ textAlign: 'center', marginTop: '100px' }}>
                     <Col xs={4}>
                         <Jumbotron>
-                            <Link href='/portfolio'>
-                                <a> MePortfolio </a>
+                            <Link href='/markets'>
+                                <a> MeMarkets</a>
                             </Link>
                         </Jumbotron>
                     </Col>
                     <Col xs={4}>
                         <Jumbotron>
                             <Link href='/accounts'>
-                                <a> MeAccounts </a>
+                                <a> MeAccounts</a>
                             </Link>
                         </Jumbotron>
                     </Col>
                     <Col xs={4}>
                         <Jumbotron>
                         <Link href='/calculator'>
-                                <a> MeCalculator </a>
+                                <a> MeCalculator</a>
                             </Link>
                         </Jumbotron>
                     </Col>

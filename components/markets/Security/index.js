@@ -1,12 +1,11 @@
-import React, { useContext } from 'react' 
+import React from 'react' 
 import Summary from './Summary'
 import Table from './Table'
 
 import { 
-    averagePriceForEachTransaction,
     buySummary,
     sellSummary 
-} from '../Transaction/_utils'
+} from '../forms/_utils'
 
 
 import SecurityContext from './Context'

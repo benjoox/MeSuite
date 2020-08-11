@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import Table from '../UIElements/Table'
+import Table from '../../shared/Table'
 import Consolidated from './Summary/Consolidated'
 import Context from './Context'
 

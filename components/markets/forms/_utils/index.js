@@ -1,9 +1,3 @@
-
-import {
-    getLastDBPrice,
-    addTransaction
-} from '../../api'
-
 export function transactionExists(newTransaction, existingTransactions) {
     return existingTransactions.find(trade => {
         return newTransaction.code === trade.code 
@@ -12,7 +6,6 @@ export function transactionExists(newTransaction, existingTransactions) {
             && price === trade.price
             && fees === trade.fees
         })
-
 }
 
 export function validateUploadedJSON(uploadedJSON, existingTransactions) {
@@ -29,9 +22,6 @@ export function validateUploadedJSON(uploadedJSON, existingTransactions) {
     }, { accepted: [], rejected: [] })
 }
   
-function convertToFloat(value) {
-    return typeof value === 'string' ? parseFloat(value.replace(",", "")) : parseFloat(value)
-}
 /**
  * Used only for the offline mode
  * @param {*} trades 
@@ -318,16 +308,3 @@ export function sellSummary(tradeList) {
         fees: parseFloat(temp.fees.toFixed(3))
     }
 }
-
-export async function getLastPriceForAcceptedTrades(trades) {
-    const resultArr = trades.map(async (trade) => {
-        const date = trade.date.format('DD/MM/YYYY')
-        const { lastPrice } = await getLastDBPrice(date, trade.code)
-        const  result = { ...trade, lastPrice }
-        await addTransaction(result)
-        return result 
-    })
-    const all =  await Promise.all(resultArr)
-    return all
-}
-

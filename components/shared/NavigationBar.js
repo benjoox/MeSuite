@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react"
 import Link from 'next/link'
 import { Navbar, Nav, Spinner } from 'react-bootstrap'
 import UserMenu from './UserMenu'
-import DataMode from '../portfolio/Transaction/DataMode'
+import DataMode from './DataMode'
 
 export default function NavigationBar() {
     const { isLoading } = useAuth0()
@@ -23,8 +23,8 @@ export default function NavigationBar() {
                     <Link href='/accounts' passHref>
                         <Nav.Link>Accounts</Nav.Link> 
                     </Link>
-                    <Link href='/portfolio' passHref>
-                        <Nav.Link>Portfolio</Nav.Link> 
+                    <Link href='/markets' passHref>
+                        <Nav.Link>Markets</Nav.Link> 
                     </Link>
                     <Link href='/calculator' passHref>
                         <Nav.Link>Calculator</Nav.Link> 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Form } from 'react-bootstrap'
-import { AppContext } from '../../../pages/_app'
+import { AppContext } from '../../pages/_app'
 
 const DataMode = () => {
     const { mode, switchMode } = useContext(AppContext)
