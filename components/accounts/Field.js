@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react'
 import moment from 'moment-timezone'
 import { Button } from 'react-bootstrap';
 import { AccountsContext } from '../../pages/accounts'
+import { AppContext } from '../../pages/_app'
+
 const TIMEZONE = 'AUSTRALIA/MELBOURNE'
 
 const convertTime = (timestamp, timezone=TIMEZONE) => {
@@ -13,6 +15,7 @@ export default function Field (props) {
     const [category, setCategory] = useState('')
     useEffect(() => setCategory(transaction.category), [])
     const { deleteAccountTransaction, updateAccountTransaction } = useContext(AccountsContext)
+    const { mode } = useContext(AppContext)
     
     return (
             <tr>
@@ -27,12 +30,21 @@ export default function Field (props) {
                     />
                 </td>
                 <td>{transaction.description ? transaction.description.toLowerCase() : ''}</td>
-                <td colSpan={5}>
-                    <Button onClick={() => updateAccountTransaction({ ...transaction, category })}>Save</Button>
-                </td> 
-                <td colSpan={5}>
-                    <Button onClick={() => deleteAccountTransaction(transaction.id)}>Delete</Button>
-                </td>   
+                {
+                    mode
+                    ?
+                    <>
+                        <td colSpan={5}>
+                            <Button onClick={() => updateAccountTransaction({ ...transaction, category })}>Save</Button>
+                        </td> 
+                        <td colSpan={5}>
+                            <Button onClick={() => deleteAccountTransaction(transaction.id)}>Delete</Button>
+                        </td> 
+                    </>  
+                    :
+                    ''
+                }
+                
             </tr>
     )
 }

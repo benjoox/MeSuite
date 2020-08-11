@@ -13,11 +13,13 @@ export default function Taglist(props) {
 
     return (
         <Container>
-            <Row>
-                <Col>
-                    { tagList.map(tag => <Badge pill variant="info" key={tag} >{tag}</Badge>) }
-                </Col>
-            </Row>
+            <div style={{ marginBottom: '15px' }}>
+                <Row>
+                    <Col>
+                        { tagList.map(tag => <Badge pill variant="info" key={tag} >{tag}</Badge>) }
+                    </Col>
+                </Row>
+            </div>
         </Container>
     )
 }

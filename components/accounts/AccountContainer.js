@@ -22,7 +22,8 @@ export default function AccountContainer(props) {
     useEffect(filterList, 
         [props.transactions, filterField, includingText, excludingText, startDate, endDate])
 
-    const { saveAccountTransaction, addAccountAndSave } = useContext(AccountsContext)
+    const { addAccountAndSave } = useContext(AccountsContext)
+    
 
     const isTextIncluded = text => text.toString().toLowerCase()
         .includes(includingText.toLowerCase())
@@ -50,7 +51,6 @@ export default function AccountContainer(props) {
     
     return <Container>
         { props.transactions.length > 0 ? <Taglist transactionList={props.transactions} /> : ''}
-        
         <Filter 
             includingText={includingText}
             excludingText={excludingText}
@@ -63,19 +63,21 @@ export default function AccountContainer(props) {
             setExcludingText={setExcludingText}
             updateFilterField={setFilterField}
         />
-        <Row>
-            <Col md={4} > The number of transactions are {props.transactions.length} </Col>
-            <Col md={4} > The number of filtered list are {filteredList.length} </Col>
-            <Col md={4} >
-                <UploadButton 
-                    uploadCSVFile={data => addAccountAndSave(data, props.name)} 
-                    headers={['date', 'amount', 'description', 'balance', 'category']}
-                    timestamped
-                >
-                    Upload transactions
-                </UploadButton>
-            </Col>
-        </Row>
+        <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+            <Row>
+                <Col md={4} > The number of transactions are {props.transactions.length} </Col>
+                <Col md={4} > The number of filtered list are {filteredList.length} </Col>
+                <Col md={4} >
+                    <UploadButton 
+                        uploadCSVFile={data => addAccountAndSave(data, props.name)} 
+                        headers={['date', 'amount', 'description', 'balance', 'category']}
+                        timestamped
+                    >
+                        Upload transactions
+                    </UploadButton>
+                </Col>
+            </Row>
+        </div>
         {
             filteredList.length > 0 
             ? 

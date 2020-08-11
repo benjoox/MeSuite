@@ -51,8 +51,11 @@ export default function Transctions(props) {
                         <th onClick={() => sort('description')}>
                             Description
                         </th>
-                        <th onClick={() => sort('description')}>
+                        <th  colSpan={5} onClick={() => sort('description')}>
                             Save
+                        </th>
+                        <th colSpan={5} onClick={() => sort('description')}>
+                            Delete
                         </th>
                     </tr>
                 </thead>

@@ -92,22 +92,24 @@ export default function Accounts() {
         <AccountsContext.Provider value={value} >
             <Container fluid>
                 {
-                    !mode && accounts.length < 1
+                    (!mode || !isAuthenticated) && accounts.length < 1
                     ?
                     <AccountOfflineForm />
                     :
                     ''
                 }
-                <Tab.Container defaultActiveKey='Temp account'>
-                    <Row>
-                        <Col sm={3}>
-                            <NavItems accounts={accounts} />
-                        </Col>
-                        <Col sm={9}>
-                            <TabItems accounts={accounts} />
-                        </Col>
-                    </Row>
-                </Tab.Container>
+                <div style={{ marginTop: '35px' }}>
+                    <Tab.Container defaultActiveKey='Temp account'>
+                        <Row>
+                            <Col sm={3}>
+                                <NavItems accounts={accounts} />
+                            </Col>
+                            <Col sm={9}>
+                                <TabItems accounts={accounts} />
+                            </Col>
+                        </Row>
+                    </Tab.Container>
+                </div>
                  
             </Container>
         </AccountsContext.Provider>

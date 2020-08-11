@@ -35,7 +35,7 @@ export default function(props) {
   }
   
  return (
-   <Container>
+   <>
      <Row>
         <DateFields 
           startDate={startDate}
@@ -66,7 +66,7 @@ export default function(props) {
             <TextField searchText={props.excludingText}  onTextChange={onTextChange} id='exclude'/>
           </Col>
      </Row>
-   </Container>
+   </>
  )   
 }
 
