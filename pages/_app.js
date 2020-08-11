@@ -11,7 +11,7 @@ export const AppContext = React.createContext('AppContext')
 function App({ Component, pageProps }) {
   const [mode, switchMode] = useState(false) // false correspond to offline
 
-  return (
+  return (<div>
     <Auth0Provider
       domain={process.env.AUTH_DOMAIN}
       clientId={process.env.AUTH_CLIENT_ID}
@@ -26,7 +26,8 @@ function App({ Component, pageProps }) {
         </Container>
       </AppContext.Provider>
     </Auth0Provider>
-  );
+    </div>
+  )
 }
 
 export default App;

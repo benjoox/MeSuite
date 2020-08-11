@@ -20,7 +20,7 @@ export default function Home () {
         </Col>
         <Col xs={4}>
             <Jumbotron>
-            <Link href='/calculator'>
+                <Link href='/calculator'>
                     <a>MeCalculator</a>
                 </Link>
             </Jumbotron>
