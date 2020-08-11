@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { Row, Tab, Col } from 'react-bootstrap'
 import { useAuth0 } from "@auth0/auth0-react"
 import { AppContext } from './_app'
-import { Row, Tab, Col } from 'react-bootstrap'
 import * as API from '../apiCalls'
 import TradeActionsContainer from '../components/markets/forms/TradeActionsContainer'
 import { validateUploadedJSON, seperateTradesBySecurity } from '../components/markets/forms/_utils'
@@ -13,7 +13,7 @@ const ENTITY = 'transactions'
 
 export default function Markets() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
-    const [trades, setTrades] = useState([])
+    const [trades] = useState([])
     const [tradesMap, setTradesMap] = useState(null)
     
     const { mode } = useContext(AppContext)
@@ -111,6 +111,6 @@ export default function Markets() {
                         </Col>
                     </Row>
                 </Tab.Container>
-        </TradesContext.Provider>
+            </TradesContext.Provider>
 }
 

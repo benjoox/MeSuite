@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Row, Col, Tab, Button, Container } from 'react-bootstrap';
 import { useAuth0 } from '@auth0/auth0-react'
+import { AppContext } from './_app'
 import Create from '../components/accounts/forms/AccountActionsModal'
 import * as API from '../apiCalls'
 import { NavItems, TabItems } from '../components/accounts/menu'
+import AccountOfflineForm from '../components/accounts/forms/AccountOfflineForm'
 
 export const AccountsContext = React.createContext('Accounts')
 
@@ -11,9 +13,15 @@ const ENTITY = 'accounts'
 export default function Accounts() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
-    const [show, setShow] = useState(false)
+    const { mode } = useContext(AppContext)
 
-    useEffect(() => { fetchAccounts() }, [])
+    useEffect(() => {
+        if(mode && isAuthenticated) {
+            fetchAccounts()
+        } else {
+            setAccounts([])
+        }
+    }, [mode, isAuthenticated])
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -60,42 +68,47 @@ export default function Accounts() {
             await fetchAccounts()
             if(!content) return  
         } catch(err) {
-            console.error('Error from the server ', err)
+            console.error(err)
         }
     }
 
-    if(!isAuthenticated) return <div>You are not authorised to see this page</div>
-    if(accounts.length < 1) return <div>No accounts were linked to this user</div>
-    
+    const addAccountAndSave = (transactions, account='Temp account') => {
+        if(mode && isAuthenticated) {
+            const transactionWithAccount = transactions.map(el => ({...el, account }))
+            saveAccountTransaction(transactionWithAccount)
+        } else {
+            setAccounts({ [account]: transactions})
+        }
+    }
+
     const value = { 
         deleteAccountTransaction,
         updateAccountTransaction,
-        saveAccountTransaction
+        saveAccountTransaction,
+        addAccountAndSave
     }
 
     return (
         <AccountsContext.Provider value={value} >
             <Container fluid>
-                <Tab.Container defaultActiveKey="cbaPersonalSmart">
+                {
+                    !mode && accounts.length < 1
+                    ?
+                    <AccountOfflineForm />
+                    :
+                    ''
+                }
+                <Tab.Container defaultActiveKey='Temp account'>
                     <Row>
                         <Col sm={3}>
                             <NavItems accounts={accounts} />
-                            <Button onClick={() => setShow(true)} >
-                                    Create
-                            </Button>
                         </Col>
                         <Col sm={9}>
-                            <Tab.Content>
-                                <TabItems accounts={accounts} />
-                            </Tab.Content>
+                            <TabItems accounts={accounts} />
                         </Col>
                     </Row>
                 </Tab.Container>
-                <Create 
-                    close={() => setShow(false)} 
-                    show={show} 
-                    save={saveAccountTransaction} 
-                />
+                 
             </Container>
         </AccountsContext.Provider>
     )

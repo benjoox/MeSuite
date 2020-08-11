@@ -44,7 +44,9 @@ export default function UploadButton(props) {
                     .then(rawData => {
                         const data = props.timestamped ? convertDates(rawData) : rawData
                         props.uploadCSVFile(data)
-                        formRef.current.reset()
+                        if(formRef.current) {
+                            formRef.current.reset()
+                        }
                     })
                     .catch(err => console.log('Error in converting CSV to JSON ', err.message))
             } catch(err) {

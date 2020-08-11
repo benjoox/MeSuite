@@ -22,7 +22,7 @@ export default function AccountContainer(props) {
     useEffect(filterList, 
         [props.transactions, filterField, includingText, excludingText, startDate, endDate])
 
-    const { saveAccountTransaction } = useContext(AccountsContext)
+    const { saveAccountTransaction, addAccountAndSave } = useContext(AccountsContext)
 
     const isTextIncluded = text => text.toString().toLowerCase()
         .includes(includingText.toLowerCase())
@@ -47,11 +47,6 @@ export default function AccountContainer(props) {
         })
         setFilteredList(updatedFilterList)
     }
-
-    const addAccountAndSave = transactions => {
-        const transactionWithAccount = transactions.map(el => ({...el, account: props.name}))
-        saveAccountTransaction(transactionWithAccount)
-    }
     
     return <Container>
         { props.transactions.length > 0 ? <Taglist transactionList={props.transactions} /> : ''}
@@ -73,7 +68,7 @@ export default function AccountContainer(props) {
             <Col md={4} > The number of filtered list are {filteredList.length} </Col>
             <Col md={4} >
                 <UploadButton 
-                    uploadCSVFile={addAccountAndSave} 
+                    uploadCSVFile={data => addAccountAndSave(data, props.name)} 
                     headers={['date', 'amount', 'description', 'balance', 'category']}
                     timestamped
                 >
