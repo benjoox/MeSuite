@@ -1,51 +1,81 @@
 {
-  "name": "portfolio-manager",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "test": "jest --watch"
-  },
-  "dependencies": {
-    "@auth0/auth0-react": "^1.0.0",
-    "@emotion/core": "^10.0.28",
-    "@emotion/styled": "^10.0.27",
-    "@fortawesome/fontawesome-svg-core": "^1.2.26",
-    "@fortawesome/free-solid-svg-icons": "^5.12.0",
-    "@fortawesome/react-fontawesome": "^0.1.8",
-    "@sls-next/serverless-component": "^1.15.0-alpha.4",
-    "@zeit/next-css": "^1.0.1",
-    "aws-sdk": "^2.706.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
-    "bootstrap": "^4.4.1",
-    "csvtojson": "^2.0.10",
-    "express-jwt": "^6.0.0",
-    "express-jwt-authz": "^2.4.0",
-    "isomorphic-fetch": "^2.2.1",
-    "isomorphic-unfetch": "^3.0.0",
-    "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^1.8.1",
-    "match-sorter": "^4.1.0",
-    "moment-timezone": "^0.5.28",
-    "next": "^9.4.4",
-    "node-html-parser": "^1.2.19",
-    "prop-types": "^15.7.2",
-    "react": "16.13.1",
-    "react-bootstrap": "^1.0.0-beta.16",
-    "react-csv-reader": "^3.0.5",
-    "react-datepicker": "^2.11.0",
-    "react-dom": "16.13.1",
-    "react-google-charts": "^3.0.15",
-    "react-scripts": "3.3.0",
-    "react-table": "^7.0.6",
-    "styled-components": "^5.1.0"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^5.5.0",
-    "@testing-library/react": "^10.0.3",
-    "babel-jest": "^25.4.0",
-    "jest": "^25.5.4"
-  }
+    "name": "portfolio-manager",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "test": "jest --watch"
+    },
+    "dependencies": {
+        "@auth0/auth0-react": "^1.0.0",
+        "@emotion/core": "^10.0.28",
+        "@emotion/styled": "^10.0.27",
+        "@fortawesome/fontawesome-svg-core": "^1.2.26",
+        "@fortawesome/free-solid-svg-icons": "^5.12.0",
+        "@fortawesome/react-fontawesome": "^0.1.8",
+        "@sls-next/serverless-component": "^1.15.0-alpha.4",
+        "@zeit/next-css": "^1.0.1",
+        "aws-sdk": "^2.706.0",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+        "bootstrap": "^4.4.1",
+        "csvtojson": "^2.0.10",
+        "express-jwt": "^6.0.0",
+        "express-jwt-authz": "^2.4.0",
+        "husky": "^4.2.5",
+        "isomorphic-fetch": "^2.2.1",
+        "isomorphic-unfetch": "^3.0.0",
+        "jsonwebtoken": "^8.5.1",
+        "jwks-rsa": "^1.8.1",
+        "lint-staged": "^10.2.11",
+        "match-sorter": "^4.1.0",
+        "moment-timezone": "^0.5.28",
+        "next": "^9.4.4",
+        "node-html-parser": "^1.2.19",
+        "prop-types": "^15.7.2",
+        "react": "16.13.1",
+        "react-bootstrap": "^1.0.0-beta.16",
+        "react-csv-reader": "^3.0.5",
+        "react-datepicker": "^2.11.0",
+        "react-dom": "16.13.1",
+        "react-google-charts": "^3.0.15",
+        "react-scripts": "3.3.0",
+        "react-table": "^7.0.6",
+        "styled-components": "^5.1.0"
+    },
+    "devDependencies": {
+        "@testing-library/jest-dom": "^5.5.0",
+        "@testing-library/react": "^10.0.3",
+        "@types/node": "^14.6.0",
+        "@types/react": "^16.9.46",
+        "@typescript-eslint/eslint-plugin": "^3.9.1",
+        "@typescript-eslint/parser": "^3.9.1",
+        "babel-eslint": "^10.1.0",
+        "babel-jest": "^25.4.0",
+        "eslint-config-airbnb": "^18.2.0",
+        "eslint-config-prettier": "^6.11.0",
+        "eslint-plugin-import": "^2.22.0",
+        "eslint-plugin-jsx-a11y": "^6.3.1",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.20.6",
+        "jest": "^25.5.4",
+        "prettier": "^2.0.5"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+            "prettier --write"
+        ]
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": true
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    }
 }
