@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
-import { Form, Col , Row } from 'react-bootstrap'
+import { Form, Col, Row } from 'react-bootstrap'
 import { Outcome, CalculatorForm } from '../components/Calculator'
 
 export default function CalculatorContainer() {
-    let [buyPrice, setBuy] = useState(55.00)
-    let [shares, setShares] = useState(1000)
-    let [fees, setFees] = useState(10)
-    let [sellPrice, setSell] = useState(55.00)
-    let [percentageMode, setMode] = useState(false)
+    let [buyPrice, setBuy] = useState(55.0)
+    const [shares, setShares] = useState(1000)
+    const [fees, setFees] = useState(10)
+    let [sellPrice, setSell] = useState(55.0)
+    const [percentageMode, setMode] = useState(false)
 
     buyPrice = parseFloat(buyPrice)
     sellPrice = parseFloat(sellPrice)
-    
+
     return (
-        <div style={{ textAlign: "left" }}>
+        <div style={{ textAlign: 'left' }}>
             <Row className="justify-content-between">
-                <CalculatorForm 
+                <CalculatorForm
                     buyPrice={buyPrice}
                     setBuy={setBuy}
                     sellPrice={sellPrice}
@@ -27,17 +27,19 @@ export default function CalculatorContainer() {
                 />
                 <Col xs md={6}>
                     <Col>
-                        <Form.Label></Form.Label>
-                        <Form.Check 
+                        <Form.Label />
+                        <Form.Check
                             type="switch"
                             id="custom-switch"
-                            label={percentageMode ? "Percentage" : "Dollar value" }
+                            label={
+                                percentageMode ? 'Percentage' : 'Dollar value'
+                            }
                             status={percentageMode ? 0 : 1}
                             onChange={() => setMode(!percentageMode)}
                         />
                     </Col>
-                
-                    <Outcome 
+
+                    <Outcome
                         buyPrice={buyPrice}
                         sellPrice={sellPrice}
                         shares={shares}
@@ -46,9 +48,6 @@ export default function CalculatorContainer() {
                     />
                 </Col>
             </Row>
-
-            
-            
         </div>
     )
 }

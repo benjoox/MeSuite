@@ -1,30 +1,31 @@
 import React from 'react'
 import { Form, Col } from 'react-bootstrap'
 
-const { Group, Label, Control, Row } = Form;
+const { Group, Label, Control, Row } = Form
 
 export default function InputWithSlider(props) {
-    const { value, onChange, label, placeholder = "", steps, min, max } = props 
+    const { value, onChange, label, placeholder = '', steps, min, max } = props
     return (
-        <Row style={{ 
+        <Row
+            style={{
                 borderRadius: '4px',
-                backgroundColor: 'lightgrey', 
-                margin: '10px 0', 
-                padding: '10px'
-            }}>
-            { props.children ? <Col xs={12}> {props.children} </Col> : "" }
-            <Col xs={6} 
+                backgroundColor: 'lightgrey',
+                margin: '10px 0',
+                padding: '10px',
+            }}
+        >
+            {props.children ? <Col xs={12}> {props.children} </Col> : ''}
+            <Col
+                xs={6}
                 style={{
                     paddingLeft: '5px',
                     flexDirection: 'column',
                     display: 'flex',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}
             >
                 <Group className="mb-3">
-                    <Label style={{ fontWeight: 'bold' }}>
-                        {label}
-                    </Label>
+                    <Label style={{ fontWeight: 'bold' }}>{label}</Label>
                     <Control
                         type="text"
                         placeholder={placeholder}
@@ -34,9 +35,16 @@ export default function InputWithSlider(props) {
                     />
                 </Group>
             </Col>
-            <Col xs={6} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
-                <Group className="mb-3" > 
-                    <Label></Label>
+            <Col
+                xs={6}
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                }}
+            >
+                <Group className="mb-3">
+                    <Label />
                     <Control
                         type="range"
                         onChange={onChange}
@@ -47,8 +55,6 @@ export default function InputWithSlider(props) {
                     />
                 </Group>
             </Col>
-            
-            
-        </Row>            
+        </Row>
     )
 }
