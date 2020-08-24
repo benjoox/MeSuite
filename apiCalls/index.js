@@ -1,11 +1,12 @@
+const headers = token => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+})
 export async function fetchEntity(token, entity) {
     try {
         const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
+            headers: headers(token)
         })
         const { content } = await response.json()
         return content
@@ -19,10 +20,7 @@ export async function save(account, token, entity) {
     try {
         return await fetch(`${process.env.API_URL}/${entity}`, {  
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+            headers: headers(token),
             body: JSON.stringify(account)
         })
     } 
@@ -36,10 +34,7 @@ export async function deleteEntity(id, token, entity) {
     try {
         const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+            headers: headers(token),
             body: JSON.stringify(id)
         })
         const { content } = await response.json()
@@ -54,10 +49,7 @@ export async function update(params, token, entity) {
     try {
         const response = await fetch(`${process.env.API_URL}/${entity}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
+            headers: headers(token),
             body: JSON.stringify(params)
         })
         const { content } = await response.json()

@@ -1,8 +1,8 @@
-import { 
-    getAccounts, 
-    createAccountTransaction, 
-    deleteAccountTransaction, 
-    updateAccountTransaction
+import {
+    getAccounts,
+    createAccountTransaction,
+    deleteAccountTransaction,
+    updateAccountTransaction,
 } from '../models/accounts/index.js'
 import { authoriseUser, createUser } from './users'
 
@@ -10,14 +10,15 @@ export default async (req, res) => {
     const { method, body, headers } = req
     const { authorization } = headers
     try {
-        switch(method) {
+        switch (method) {
             case 'GET': {
-                console.log('The GET method in accounts is called with headers')
+                console.log('with headers')
                 await authoriseUser(authorization)
+                console.log('User authorised')
                 const content = await getAccounts()
                 res.json({
-                    success: true, 
-                    content
+                    success: true,
+                    content,
                 })
                 break
             }
@@ -26,18 +27,18 @@ export default async (req, res) => {
                 const user = await authoriseUser(authorization)
                 const content = await createAccountTransaction(body, user)
                 res.json({
-                    success: true, 
-                    content
+                    success: true,
+                    content,
                 })
                 break
             }
-            case 'DELETE': {    
+            case 'DELETE': {
                 console.log('The DELETE method in account')
                 await authoriseUser(authorization)
                 const content = await deleteAccountTransaction(body)
                 res.json({
-                    success: true, 
-                    content
+                    success: true,
+                    content,
                 })
                 break
             }
@@ -46,22 +47,21 @@ export default async (req, res) => {
                 const user = await authoriseUser(authorization)
                 const content = await updateAccountTransaction(body)
                 res.json({
-                    success: true, 
-                    content
+                    success: true,
+                    content,
                 })
                 break
             }
             default:
                 console.log('The HTTP method requesed is not valid')
         }
-    } catch(err) {
+    } catch (err) {
         console.log('Error in accounts API ', err)
-        if(err.message === 'invalid signature') {
+        if (err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',
-                message: 'The user is not verfied. Try logging out and in'    
+                message: 'The user is not verfied. Try logging out and in',
             })
         }
     }
-
 }

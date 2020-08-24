@@ -35,17 +35,27 @@ const Accounts = {
 }
 
 export async function getAccounts() {
-    const response = await dynamodb.scan({
-        TableName: TABLENAME,
-    })
-    return accountsMap(response.Items)
+    try {
+        const response = await dynamodb.scan({
+            TableName: TABLENAME,
+        })
+        return accountsMap(response.Items)
+    } catch (err) {
+        if (err.code === 'ResourceNotFoundException') {
+            // create a new db
+            await dynamodb.create(Accounts)
+            const response = await dynamodb.scan({
+                TableName: TABLENAME,
+            })
+            return accountsMap(response.Items)
+        }
+    }
 }
 
 export function createAccountTransaction(params, user) {
     if (params.length === 1) {
         return dynamodb.putItem(accountPostParams(params[0], user))
-    }
-    if (params.length > 1) {
+    } else if (params.length > 1) {
         return dynamodb.batchWriteItem(batchPutParams(params, user))
     }
 }
