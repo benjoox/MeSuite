@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import { Row, Jumbotron } from 'react-bootstrap'
-// eslint-disable-next-line import/no-cycle
-import { AccountsContext } from '../../../pages/accounts'
+import { AccountsContext } from '../../../store/AccountContextProvider'
 import UploadButton from '../../shared/UploadButton'
 
 export default function AccountOfflineForm() {

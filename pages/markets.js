@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Row, Tab, Col } from 'react-bootstrap'
 import { useAuth0 } from '@auth0/auth0-react'
-import { AppContext } from './_app'
+import { AppContext } from '../store/AppContextProvider'
 import * as API from '../apiCalls'
 import TradeActionsContainer from '../components/markets/forms/TradeActionsContainer'
 import {

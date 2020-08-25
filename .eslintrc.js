@@ -29,6 +29,5 @@ module.exports = {
             'error',
             { builtinGlobals: false, hoist: 'functions', allow: [] },
         ],
-        'import/no-cycle': [2, { maxDepth: 1 }],
     },
 }

@@ -5,7 +5,7 @@ import Transactions from './Transactions'
 import Taglist from './TagList'
 import Charts from '../shared/Charts'
 import UploadButton from '../shared/UploadButton'
-import { AccountsContext } from '../../pages/accounts'
+import { AccountsContext } from '../../store/AccountContextProvider'
 
 const today = new Date()
 today.setMonth(2)
