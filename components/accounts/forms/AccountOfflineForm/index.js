@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Row, Jumbotron } from 'react-bootstrap'
-import { AccountsContext } from '../../../store/AccountContextProvider'
-import UploadButton from '../../shared/UploadButton'
+import { AccountsContext } from '../../../../store/AccountContextProvider'
+import UploadButton from '../../../shared/UploadButton'
 
 export default function AccountOfflineForm() {
     const { addAccountAndSave } = useContext(AccountsContext)
