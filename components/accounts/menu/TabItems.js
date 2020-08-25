@@ -4,13 +4,15 @@ import AccountContainer from '../AccountContainer'
 
 const TabItems = ({ accounts }) => {
     const menu = []
-    for (const k in accounts) {
+    Object.entries(accounts).map((el) => {
         menu.push(
-            <Tab.Pane eventKey={k} key={k}>
-                <AccountContainer name={k} transactions={accounts[k]} />
+            <Tab.Pane key={Math.random() * 1000} eventKey={el[0]}>
+                <AccountContainer transactions={el[1]} name={el[0]} />
             </Tab.Pane>
         )
-    }
+        return menu
+    })
+
     return <Tab.Content>{menu} </Tab.Content>
 }
 

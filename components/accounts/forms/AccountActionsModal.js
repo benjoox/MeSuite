@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import { bool, func } from 'prop-types'
 import moment from 'moment-timezone'
 import { Modal, Button } from 'react-bootstrap'
 import AccountTransactionForm from './AccountTransactionForm'
@@ -9,11 +9,10 @@ const timestamp = (
     dateFormat = 'YYYY-MM-DDTHH:mm:ss',
     zone = 'AUSTRALIA/MELBOURNE'
 ) => {
-    console.log('datetime ', datetime)
     return moment(datetime, dateFormat).tz(zone).unix()
 }
 
-export default function AccountActionsModal(props) {
+export default function AccountActionsModal({ show, close, save }) {
     const [account, setAccount] = useState({
         name: '',
         amount: 0,
@@ -31,24 +30,28 @@ export default function AccountActionsModal(props) {
         setAccount({ ...account, date })
     }
 
-    function save() {
-        for (const key in account) {
-            if (!account[key] || account[key] === '') {
-                setError(`The ${key} cannot be empty`)
-                return
-            }
+    function handleClick() {
+        try {
+            Object.entries(account).map((el) => {
+                if (!el[0] || el[1] === '') {
+                    throw Error(`The ${el[0]} cannot be empty`)
+                }
+                return true
+            })
+        } catch (err) {
+            setError(err)
         }
         setError()
-        props.save({
+        save({
             ...account,
             account: account.name,
             date: timestamp(account.date),
         })
-        props.close()
+        close()
     }
 
     return (
-        <Modal show={props.show} onHide={props.close}>
+        <Modal show={show} onHide={close}>
             <Modal.Header closeButton>
                 <Modal.Title>Add an account transaction</Modal.Title>
             </Modal.Header>
@@ -58,15 +61,15 @@ export default function AccountActionsModal(props) {
                     handleChange={handleChange}
                     updateDate={updateDate}
                     account={account}
-                    close={props.close}
-                    save={props.save}
+                    close={close}
+                    save={save}
                 />
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.close}>
+                <Button variant="secondary" onClick={close}>
                     Close
                 </Button>
-                <Button variant="primary" onClick={() => save(account)}>
+                <Button variant="primary" onClick={() => handleClick(account)}>
                     Save Changes
                 </Button>
             </Modal.Footer>
@@ -75,7 +78,6 @@ export default function AccountActionsModal(props) {
 }
 
 AccountActionsModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    close: PropTypes.func.isRequired,
-    title: PropTypes.string,
+    show: bool.isRequired,
+    close: func.isRequired,
 }

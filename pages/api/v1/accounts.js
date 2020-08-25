@@ -3,8 +3,9 @@ import {
     createAccountTransaction,
     deleteAccountTransaction,
     updateAccountTransaction,
-} from '../models/accounts/index.js'
-import { authoriseUser, createUser } from './users'
+} from '../models/accounts'
+
+import { authoriseUser } from './users'
 
 export default async (req, res) => {
     const { method, body, headers } = req
@@ -12,9 +13,7 @@ export default async (req, res) => {
     try {
         switch (method) {
             case 'GET': {
-                console.log('with headers')
                 await authoriseUser(authorization)
-                console.log('User authorised')
                 const content = await getAccounts()
                 res.json({
                     success: true,
@@ -23,7 +22,6 @@ export default async (req, res) => {
                 break
             }
             case 'POST': {
-                console.log('The POST method in account')
                 const user = await authoriseUser(authorization)
                 const content = await createAccountTransaction(body, user)
                 res.json({
@@ -33,7 +31,6 @@ export default async (req, res) => {
                 break
             }
             case 'DELETE': {
-                console.log('The DELETE method in account')
                 await authoriseUser(authorization)
                 const content = await deleteAccountTransaction(body)
                 res.json({
@@ -43,8 +40,7 @@ export default async (req, res) => {
                 break
             }
             case 'PUT': {
-                console.log('The PUT method in accounts')
-                const user = await authoriseUser(authorization)
+                await authoriseUser(authorization)
                 const content = await updateAccountTransaction(body)
                 res.json({
                     success: true,
@@ -53,10 +49,10 @@ export default async (req, res) => {
                 break
             }
             default:
-                console.log('The HTTP method requesed is not valid')
+                console.warn('The switch statement is fallen back to default')
         }
     } catch (err) {
-        console.log('Error in accounts API ', err)
+        console.error(err)
         if (err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',

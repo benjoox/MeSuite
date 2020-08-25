@@ -3,6 +3,7 @@ import Proptypes from 'prop-types'
 import { Col, Form, Row } from 'react-bootstrap'
 
 export default function TradeForm(props) {
+    const { handleChange, code, type, units, price, fees } = props
     return (
         <Form>
             <Form.Group>
@@ -10,8 +11,8 @@ export default function TradeForm(props) {
                 <Form.Control
                     id="code"
                     as="select"
-                    onChange={props.handleChange}
-                    value={props.code.toLowerCase()}
+                    onChange={handleChange}
+                    value={code.toLowerCase()}
                 >
                     <option value="" />
                     <option value="cba">CBA</option>
@@ -23,8 +24,8 @@ export default function TradeForm(props) {
                 <Form.Control
                     as="select"
                     id="type"
-                    onChange={props.handleChange}
-                    value={props.type.toLowerCase()}
+                    onChange={handleChange}
+                    value={type.toLowerCase()}
                 >
                     <option value="" />
                     <option value="b">Buy</option>
@@ -40,8 +41,8 @@ export default function TradeForm(props) {
                     placeholder="0"
                     name="units"
                     id="units"
-                    value={props.units}
-                    onChange={props.handleChange}
+                    value={units}
+                    onChange={handleChange}
                 />
             </Form.Group>
             <Form.Group>
@@ -52,8 +53,8 @@ export default function TradeForm(props) {
                     placeholder="0"
                     name="price"
                     id="price"
-                    value={props.price}
-                    onChange={props.handleChange}
+                    value={price}
+                    onChange={handleChange}
                 />
             </Form.Group>
             <Form.Group>
@@ -64,20 +65,18 @@ export default function TradeForm(props) {
                     placeholder="0"
                     name="fees"
                     id="fees"
-                    value={props.fees}
-                    onChange={props.handleChange}
+                    value={fees}
+                    onChange={handleChange}
                 />
             </Form.Group>
             <Row>
-                <Col>
-                    Total: {parseFloat(props.units) * parseFloat(props.price)}
-                </Col>
+                <Col>Total: {parseFloat(units) * parseFloat(price)}</Col>
             </Row>
         </Form>
     )
 }
 
-TradeForm.proptypes = {
+TradeForm.propTypes = {
     price: Proptypes.number.isRequired,
     fees: Proptypes.number.isRequired,
     type: Proptypes.string.isRequired,

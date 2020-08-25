@@ -4,6 +4,23 @@ const BUY = 'b'
 const SOLD = 's'
 
 /**
+ *
+ * @param {*} list list of buy transactions
+ */
+export function calculateBuyAverages(list) {
+    let costOfTrade = 0
+    let totalUnits = 0
+    for (let k = 0; k < list.length; k += 1) {
+        costOfTrade += list[k].price * list[k].units
+        totalUnits += list[k].units
+    }
+    return {
+        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
+        outstandingUnits: totalUnits,
+    }
+}
+
+/**
  * Create an object with assests and a list of trades for each asset
  * @param {*} tradeList // List of available trades
  *
@@ -11,7 +28,7 @@ const SOLD = 's'
  */
 export function seperateTradesByTickers(tradeList) {
     const tickers = new Map()
-    for (let k = 0; k < tradeList.length; k++) {
+    for (let k = 0; k < tradeList.length; k += 1) {
         const { ticker } = tradeList[k]
         if (!tickers.has(ticker)) {
             tickers.set(ticker, [])
@@ -31,10 +48,52 @@ export function sortTransactionsByDate(transactionList, orderBy = 'asc') {
     })
 }
 
+/**
+ *
+ * @param {*} list list of transactions
+ * @param {*} sellTrade
+ */
+export function calculateSellAverages(list, sellTrade) {
+    let costOfTrade = 0
+    let totalUnits = 0
+    for (let k = 0; k < list.length; k += 1) {
+        costOfTrade += list[k].price * list[k].units
+        totalUnits += list[k].units
+    }
+
+    return {
+        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
+        outstandingUnits: totalUnits - sellTrade.units,
+    }
+}
+
+function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
+    return (sellPrice * sellUnits - buyPrice * sellUnits).toFixed(3)
+}
+
+export function splitArray(list, capacity = 50) {
+    const { length } = list
+    const sizeOfLastSubArray = length % capacity
+    const partitionArray = []
+
+    for (let k = 0; k < Math.round(length / capacity); k += 1) {
+        const startIndex = k === 0 ? 0 : k * capacity + 1
+        const endIndex = (k + 1) * capacity
+        partitionArray.push(list.slice(startIndex, endIndex + 1))
+    }
+
+    // Add the remainder of the items
+    if (sizeOfLastSubArray > 0) {
+        const lastArray = list.slice(length - sizeOfLastSubArray)
+        partitionArray.push(lastArray)
+    }
+    return partitionArray
+}
+
 export const averagePriceForEachTransaction = (tradelist) => {
     let tempBuyList = []
     let result = []
-    for (let k = 0; k < tradelist.length; k++) {
+    for (let k = 0; k < tradelist.length; k += 1) {
         const trade = tradelist[k]
 
         if (trade.type === BUY) {
@@ -87,44 +146,4 @@ export const averagePriceForEachTransaction = (tradelist) => {
     }
 
     return result
-}
-
-/**
- *
- * @param {*} list list of buy transactions
- */
-export function calculateBuyAverages(list) {
-    let costOfTrade = 0
-    let totalUnits = 0
-    for (let k = 0; k < list.length; k++) {
-        costOfTrade += list[k].price * list[k].units
-        totalUnits += list[k].units
-    }
-    return {
-        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
-        outstandingUnits: totalUnits,
-    }
-}
-
-/**
- *
- * @param {*} list list of transactions
- * @param {*} sellTrade
- */
-export function calculateSellAverages(list, sellTrade) {
-    let costOfTrade = 0
-    let totalUnits = 0
-    for (let k = 0; k < list.length; k++) {
-        costOfTrade += list[k].price * list[k].units
-        totalUnits += list[k].units
-    }
-
-    return {
-        average: parseFloat((costOfTrade / totalUnits).toFixed(3)),
-        outstandingUnits: totalUnits - sellTrade.units,
-    }
-}
-
-function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
-    return (sellPrice * sellUnits - buyPrice * sellUnits).toFixed(3)
 }

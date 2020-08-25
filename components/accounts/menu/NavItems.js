@@ -3,13 +3,14 @@ import { Nav } from 'react-bootstrap'
 
 const NavItems = ({ accounts }) => {
     const menu = []
-    for (const k in accounts) {
+    Object.entries(accounts).map((el) => {
         menu.push(
-            <Nav.Item key={k}>
-                <Nav.Link eventKey={k}>{k}</Nav.Link>
+            <Nav.Item key={Math.random() * 1000}>
+                <Nav.Link eventKey={el[0]}>{el[0].toUpperCase()}</Nav.Link>
             </Nav.Item>
         )
-    }
+        return menu
+    })
 
     return (
         <Nav variant="pills" className="flex-column">

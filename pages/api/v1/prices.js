@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk')
+import * as dynamodb from '../services/dynamoDb'
 
 export default async (req, res) => {
     const { date, ticker } = req.query
@@ -17,7 +17,6 @@ export default async (req, res) => {
         }
 
         const { Responses } = await dynamodb.batchGetItem(params).promise()
-        console.log(Responses.prices[0].close.S)
 
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -27,12 +26,3 @@ export default async (req, res) => {
         res.end(JSON.stringify({ lastPrice: 0 }))
     }
 }
-
-const config = {
-    apiVersion: '2012-08-10',
-    accessKeyId: 'uclnoa',
-    secretAccessKey: 'xvpj8',
-    region: 'us-west-2',
-    endpoint: 'http://localhost:8000',
-}
-const dynamodb = new AWS.DynamoDB(config)

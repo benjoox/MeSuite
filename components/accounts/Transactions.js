@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { Container, Table, Button } from 'react-bootstrap'
 import Field from './Field'
 
@@ -59,7 +58,7 @@ export default function Transctions(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.list.map((transaction) => (
+                    {list.map((transaction) => (
                         <Field key={Math.random()} transaction={transaction} />
                     ))}
 

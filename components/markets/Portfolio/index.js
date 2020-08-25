@@ -2,65 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Table from '../../shared/Table'
 import OutstandingSecurities from './OutstandingSecurities'
 import Summary from './Summary'
-import { consolidate, 
-    consolidateOutstandings, 
+import {
+    consolidate,
+    consolidateOutstandings,
     getLastPrice,
-    summaryList 
+    summaryList,
 } from './__utils'
-
-export default function Portfolio(props) {
-    if(!props.tradesMap) return ''
-
-    const [loader, setLoader] = useState(false)
-    const [outstandingSecurities, setOutstandingSecurties] = useState([])
-
-    useEffect(() => { fetchPrice() }, [props])
-    
-    async function fetchPrice() {
-        setLoader(true)
-        const result = summary.map(el => {
-            return new Promise(async (res) => {
-                const { lastPrice } = await getLastPrice(el.ticker)
-                res({ ...el, lastPrice })
-            })
-        })
-        const allSecurities = await Promise.all(result)
-        setLoader(false)
-        const outstandingSecurities = allSecurities.filter(ticker => ticker.outstandingUnits > 0)
-        setOutstandingSecurties(outstandingSecurities)
-    }
-
-    const updatePrice = ev => {
-        ev.preventDefault()
-        const tempList = outstandingSecurities.map(ticker => {
-            if(ticker.ticker === ev.target.id) {
-                return {...ticker, lastPrice: ev.target.value}
-            }
-            return ticker
-        })
-
-        setOutstandingSecurties(tempList)
-    }
-
-    const summary = summaryList(props.tradesMap)
-    const consolidated = consolidate(summary)
-    const value = consolidateOutstandings(outstandingSecurities)
-
-    return  <div>
-                <h2>Portfolio</h2>
-                <Summary 
-                    totalBuy={consolidated.totalBuy}
-                    totalSell={consolidated.totalSell}
-                    value={value}
-                />
-                <OutstandingSecurities 
-                    loader={loader}
-                    outstandingSecurities={outstandingSecurities}
-                    updatePrice={updatePrice}
-                />
-                <Table list={summary} column={column} />
-            </div>
-}
 
 const column = [
     {
@@ -69,18 +16,77 @@ const column = [
     },
     {
         Header: 'Buy',
-        accessor: 'buy'
+        accessor: 'buy',
     },
     {
         Header: 'Sell',
-        accessor: 'sell'
+        accessor: 'sell',
     },
     {
         Header: 'Available # of assets',
-        accessor: 'outstandingUnits'
+        accessor: 'outstandingUnits',
     },
     {
         Header: 'Total cost (inc. fees)',
-        accessor: 'cost'
-    }
+        accessor: 'cost',
+    },
 ]
+
+export default function Portfolio({ tradesMap }) {
+    if (!tradesMap) return ''
+
+    const [loader, setLoader] = useState(false)
+    const [outstandingSecurities, setOutstandingSecurties] = useState([])
+
+    const summary = summaryList(tradesMap)
+    async function fetchPrice() {
+        setLoader(true)
+        const result = summary.map((el) => {
+            return async (res) => {
+                const { lastPrice } = await getLastPrice(el.ticker)
+                res({ ...el, lastPrice })
+            }
+        })
+        const allSecurities = await Promise.all(result)
+        setLoader(false)
+        setOutstandingSecurties(
+            allSecurities.filter((ticker) => ticker.outstandingUnits > 0)
+        )
+    }
+
+    useEffect(() => {
+        fetchPrice()
+    }, [tradesMap])
+
+    const updatePrice = (ev) => {
+        ev.preventDefault()
+        const tempList = outstandingSecurities.map((ticker) => {
+            if (ticker.ticker === ev.target.id) {
+                return { ...ticker, lastPrice: ev.target.value }
+            }
+            return ticker
+        })
+
+        setOutstandingSecurties(tempList)
+    }
+
+    const consolidated = consolidate(summary)
+    const value = consolidateOutstandings(outstandingSecurities)
+
+    return (
+        <div>
+            <h2>Portfolio</h2>
+            <Summary
+                totalBuy={consolidated.totalBuy}
+                totalSell={consolidated.totalSell}
+                value={value}
+            />
+            <OutstandingSecurities
+                loader={loader}
+                outstandingSecurities={outstandingSecurities}
+                updatePrice={updatePrice}
+            />
+            <Table list={summary} column={column} />
+        </div>
+    )
+}

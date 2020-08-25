@@ -1,11 +1,10 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-unresolved */
 import {
-    seperateTradesBySecurity,
     getSummaryForOneAsset,
     getAverageAndOutstandingNumber,
     addAveragePriceAfterEachSell,
 } from '../components/TradeContainer/_utils'
-
-const trades = require('./sampleTrade.json')
 
 describe('getSummaryForOneAsset', () => {
     const testData = [
@@ -121,7 +120,7 @@ describe('getAverageAndOutstandingNumber', () => {
         },
     ]
     test('summarise a list of trades', () => {
-        const result = getAverageAndOutstandingNumber(testData)
+        getAverageAndOutstandingNumber(testData)
     })
 })
 

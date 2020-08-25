@@ -7,10 +7,11 @@ import { buySummary, sellSummary } from '../forms/_utils'
 import SecurityContext from './Context'
 
 export default function Security(props) {
-    const buy = buySummary(props.trades)
-    const sell = sellSummary(props.trades)
+    const { trades, ticker } = props
+    const buy = buySummary(trades)
+    const sell = sellSummary(trades)
 
-    const { fees, profitAndLossBeforeFees } = props.trades.reduce(
+    const { fees, profitAndLossBeforeFees } = trades.reduce(
         (acc, cur) => ({
             fees: acc.fees + cur.fees,
             profitAndLossBeforeFees:
@@ -22,7 +23,7 @@ export default function Security(props) {
 
     const totalFees = fees
     const totalPandLBeforeFees = profitAndLossBeforeFees
-    const { trades } = props
+
     if (trades.length < 1) {
         return ''
     }
@@ -32,13 +33,13 @@ export default function Security(props) {
         trades,
         sell,
         buy,
-        ticker: props.ticker,
+        ticker,
     }
     return (
         <SecurityContext.Provider value={value}>
-            <h2>{props.ticker.toUpperCase()}</h2>
-            <Summary trades={props.trades} />
-            <Table trades={props.trades} />
+            <h2>{ticker.toUpperCase()}</h2>
+            <Summary trades={trades} />
+            <Table trades={trades} />
         </SecurityContext.Provider>
     )
 }

@@ -49,15 +49,18 @@ export async function getAccounts() {
             })
             return accountsMap(response.Items)
         }
+        throw err
     }
 }
 
 export function createAccountTransaction(params, user) {
     if (params.length === 1) {
         return dynamodb.putItem(accountPostParams(params[0], user))
-    } else if (params.length > 1) {
+    }
+    if (params.length > 1) {
         return dynamodb.batchWriteItem(batchPutParams(params, user))
     }
+    throw Error('Params passed to create a user cannot be empty')
 }
 
 export function deleteAccountTransaction(params) {

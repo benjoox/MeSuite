@@ -4,7 +4,16 @@ import { Form, Col } from 'react-bootstrap'
 const { Group, Label, Control, Row } = Form
 
 export default function InputWithSlider(props) {
-    const { value, onChange, label, placeholder = '', steps, min, max } = props
+    const {
+        value,
+        onChange,
+        label,
+        placeholder = '',
+        steps,
+        min,
+        max,
+        children,
+    } = props
     return (
         <Row
             style={{
@@ -14,7 +23,7 @@ export default function InputWithSlider(props) {
                 padding: '10px',
             }}
         >
-            {props.children ? <Col xs={12}> {props.children} </Col> : ''}
+            {children ? <Col xs={12}> {children} </Col> : ''}
             <Col
                 xs={6}
                 style={{

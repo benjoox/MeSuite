@@ -14,30 +14,43 @@ export default function TradeActionsModal(props) {
         ev.preventDefault()
         setTrade({ ...trade, [ev.target.id]: ev.target.value })
     }
-    function save(trade) {
-        for (const key in trade) {
-            if (!trade[key] || trade[key] === '') {
-                setError(`The ${key} cannot be empty`)
-                return
-            }
+    function save(params) {
+        try {
+            Object.entries(params).map((el) => {
+                if (!el[1] || el[1] === '') {
+                    throw Error(`The ${el[0]} cannot be empty`)
+                }
+                return el
+            })
+            props.setError()
+            props.save(params, props.action)
+            props.close()
+        } catch (err) {
+            setError(err.message)
         }
-        setError()
-        props.save(trade, props.action)
-        props.close()
     }
 
     if (!trade) return ''
+    const { show, close, title } = props
+    const { price, fees, type, units, code } = trade
     return (
-        <Modal show={props.show} onHide={props.close}>
+        <Modal show={show} onHide={close}>
             <Modal.Header closeButton>
-                <Modal.Title>{props.title}</Modal.Title>
+                <Modal.Title>{title}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {error ? <div>Error: {error} </div> : ''}
-                <TradeForm {...trade} handleChange={handleChange} />
+                <TradeForm
+                    price={price}
+                    fees={fees}
+                    type={type}
+                    units={units}
+                    code={code}
+                    handleChange={handleChange}
+                />
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={props.close}>
+                <Button variant="secondary" onClick={close}>
                     Close
                 </Button>
                 <Button variant="primary" onClick={() => save(trade)}>
@@ -48,9 +61,14 @@ export default function TradeActionsModal(props) {
     )
 }
 
+TradeActionsModal.defaultProps = {
+    title: '',
+}
+
 TradeActionsModal.propTypes = {
     show: PropTypes.bool.isRequired,
     close: PropTypes.func.isRequired,
     title: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
     trade: PropTypes.object.isRequired,
 }

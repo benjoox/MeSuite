@@ -5,43 +5,38 @@ import Outstandings from './Outstandings'
 import Consolidated from './Consolidated'
 import SecurityContext from '../Context'
 
-export default function Summary(props) {
+export default function Summary() {
     const [sharePrice, setPrice] = useState(0)
     const context = useContext(SecurityContext)
 
-    const { 
-        buy, 
-        sell, 
-        ticker,
-        totalFees
-    } = context
-     
+    const { buy, sell, ticker, totalFees } = context
+
     const outstandingUnits = buy.units - sell.units
-    const newTrade =  sharePrice ? (outstandingUnits * sharePrice) - 19.95 : 0
+    const newTrade = sharePrice ? outstandingUnits * sharePrice - 19.95 : 0
     const totalPandL = sell.cost - buy.cost - buy.fees - sell.fees + newTrade
     return (
         <>
             <Row className="justify-content-around">
                 <Col md={3}>
-                    <TransactionSide 
+                    <TransactionSide
                         units={buy.units}
                         cost={buy.cost}
                         fees={buy.fees}
-                        type='Buy'
-                   />
+                        type="Buy"
+                    />
                 </Col>
-                
+
                 <Col md={3}>
-                   <TransactionSide 
+                    <TransactionSide
                         units={sell.units}
                         cost={sell.cost}
                         fees={sell.fees}
-                        type='Sell'
-                   />
+                        type="Sell"
+                    />
                 </Col>
 
                 <Col md={5}>
-                    <Outstandings 
+                    <Outstandings
                         setPrice={setPrice}
                         units={outstandingUnits}
                         sharePrice={sharePrice}
@@ -49,7 +44,7 @@ export default function Summary(props) {
                     />
                 </Col>
             </Row>
-            <Consolidated 
+            <Consolidated
                 sharePrice={sharePrice}
                 totalFees={totalFees}
                 pAndL={totalPandL}

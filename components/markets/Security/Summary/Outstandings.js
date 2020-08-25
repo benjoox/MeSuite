@@ -1,36 +1,33 @@
 import React from 'react'
 
-export default function Outstandings (props) {
-
-    return <>
-        <div>
-            <label 
-                style={label} 
-                dangerouslySetInnerHTML={{__html : 'Number of outstanding shares: &nbsp'}} 
-            />
-            <span>{props.units}</span>
-        </div>
-        <div style={{ display: 'flex'}}>
-            <label 
-                style={label} 
-                dangerouslySetInnerHTML={{__html : `Enter a price for ${props.ticker.toUpperCase()} : &nbsp`}} 
-            />
-            <input 
-                type='number' 
-                onChange={ev => props.setPrice(ev.target.value)} 
-                value={props.sharePrice}
-            />
-        </div>
-        <div style={{ display: 'flex'}}>
-            <label 
-                style={label} 
-                dangerouslySetInnerHTML={{__html : `Value of outstanding shares : &nbsp`}} 
-            />
-            <span>{(props.sharePrice * props.units).toFixed(2)}</span>
-        </div>
-    </>
+const label = {
+    fontWeight: 'bold',
 }
 
-const label = { 
-    fontWeight: 'bold' 
+export default function Outstandings(props) {
+    const { units, ticker, sharePrice, setPrice } = props
+    return (
+        <>
+            <div>
+                <span style={label}>Number of outstanding shares: &nbsp;</span>
+                <span>{units}</span>
+            </div>
+            <div style={{ display: 'flex' }}>
+                <label style={label} htmlFor="price">
+                    Enter a price for ${ticker.toUpperCase()} : &nbsp;
+                </label>
+                <input
+                    id="price"
+                    type="number"
+                    onChange={(ev) => setPrice(ev.target.value)}
+                    value={sharePrice}
+                />
+            </div>
+            <div style={{ display: 'flex' }}>
+                <span style={label} />
+                Value of outstanding shares : &nbsp;
+                <span>{(sharePrice * units).toFixed(2)}</span>
+            </div>
+        </>
+    )
 }

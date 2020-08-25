@@ -4,6 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './_app'
 import * as API from '../apiCalls'
 import { NavItems, TabItems } from '../components/accounts/menu'
+// eslint-disable-next-line import/no-cycle
 import AccountOfflineForm from '../components/accounts/forms/AccountOfflineForm'
 
 export const AccountsContext = React.createContext('Accounts')
@@ -16,14 +17,6 @@ export default function Accounts() {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const { mode } = useContext(AppContext)
-
-    useEffect(() => {
-        if (mode && isAuthenticated) {
-            fetchAccounts()
-        } else {
-            setAccounts([])
-        }
-    }, [])
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -42,6 +35,14 @@ export default function Accounts() {
             console.error(err)
         }
     }
+
+    useEffect(() => {
+        if (mode && isAuthenticated) {
+            fetchAccounts()
+        } else {
+            setAccounts([])
+        }
+    }, [])
 
     async function saveAccountTransaction(account) {
         const params = Array.isArray(account) ? account : [account]
@@ -69,7 +70,6 @@ export default function Accounts() {
             const accessToken = await getAccessToken()
             await API.update(transaction, accessToken, ENTITY)
             await fetchAccounts()
-            if (!content) return
         } catch (err) {
             console.error(err)
         }

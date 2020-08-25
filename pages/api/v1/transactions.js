@@ -1,15 +1,12 @@
-import { get, put, batchPutItem, scan, scanAll } from '../models/transactions'
-import { authoriseUser, createUser } from './users'
+import { put, batchPutItem, scanAll } from '../models/transactions'
+import { authoriseUser } from './users'
 
 export default async (req, res) => {
-    const { method, body, headers } = req
+    const { method, headers } = req
     const { authorization } = headers
     try {
         switch (method) {
             case 'GET': {
-                console.log(
-                    'The GET method in transactions is called with headers'
-                )
                 await authoriseUser(authorization)
 
                 const content = await scanAll()
@@ -20,9 +17,8 @@ export default async (req, res) => {
                 break
             }
             case 'POST': {
-                console.log('The POST method in account')
                 const user = await authoriseUser(authorization)
-                response = await batchPutItem(req.body, user)
+                const content = await batchPutItem(req.body, user)
                 res.json({
                     success: true,
                     content,
@@ -30,17 +26,14 @@ export default async (req, res) => {
                 break
             }
             case 'DELETE': {
-                console.log('The DELETE method in account')
                 await authoriseUser(authorization)
-                const content = await deleteAccountTransaction(body)
                 res.json({
                     success: true,
-                    content,
+                    content: {},
                 })
                 break
             }
             case 'PUT': {
-                console.log('The PUT method in accounts')
                 await authoriseUser(authorization)
                 const content = await put(req.body)
                 res.json({
@@ -50,10 +43,9 @@ export default async (req, res) => {
                 break
             }
             default:
-                console.log('The HTTP method requesed is not valid')
+                console.error('The HTTP method requesed is not valid')
         }
     } catch (err) {
-        console.log('Error in trade API ', err)
         if (err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',

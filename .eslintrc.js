@@ -3,6 +3,7 @@ module.exports = {
         browser: true,
         es2020: true,
         node: true,
+        jest: true,
     },
     extends: [
         'plugin:react/recommended',
@@ -24,5 +25,10 @@ module.exports = {
     rules: {
         'react/prop-types': 0,
         'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+        'no-shadow': [
+            'error',
+            { builtinGlobals: false, hoist: 'functions', allow: [] },
+        ],
+        'import/no-cycle': [2, { maxDepth: 1 }],
     },
 }

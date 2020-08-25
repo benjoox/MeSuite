@@ -2,7 +2,8 @@ import * as React from 'react'
 import { Chart } from 'react-google-charts'
 
 export default function Charts(props) {
-    const temp = props.data.reduce((acc, transaction) => {
+    const { data } = props
+    const temp = data.reduce((acc, transaction) => {
         return {
             ...acc,
             [transaction.category]: acc[transaction.category]
@@ -11,10 +12,15 @@ export default function Charts(props) {
         }
     }, {})
 
-    const data = [['category', 'amount']]
-    for (const [k, v] of Object.entries(temp)) {
-        if (!k.includes('transfer')) data.push([k, v])
-    }
+    const axis = [['category', 'amount']]
+    Object.entries(temp).map((el) => {
+        if (el[0].includes('transfer')) {
+            axis.push(el[0], el[1])
+            return true
+        }
+        return false
+    })
+
     return (
         <div>
             <Chart
@@ -22,7 +28,7 @@ export default function Charts(props) {
                 height={550}
                 chartType="BarChart"
                 loader={<div>Loading Chart</div>}
-                data={data}
+                data={axis}
                 options={{
                     legend: 'none',
                 }}

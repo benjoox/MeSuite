@@ -2,20 +2,25 @@ import React from 'react'
 import { Nav } from 'react-bootstrap'
 
 const NavItems = ({ tickers }) => {
-    if(!tickers ) return ''
+    if (!tickers) return ''
     const menu = []
-    tickers.forEach((val, key) => {
-        menu.push(<Nav.Item key={key} >
-            <Nav.Link eventKey={key} >{key.toUpperCase()}</Nav.Link>
-        </Nav.Item>)
+    Object.entries(tickers).map((el) => {
+        menu.push(
+            <Nav.Item key={Math.random() * 1000}>
+                <Nav.Link eventKey={el[0]}>{el[1].toUpperCase()}</Nav.Link>
+            </Nav.Item>
+        )
+        return menu
     })
 
-    return <Nav variant='pills' className='flex-column'> 
-            <Nav.Item key='portfolio' >
-                <Nav.Link eventKey='portfolio' >Portfolio</Nav.Link>
+    return (
+        <Nav variant="pills" className="flex-column">
+            <Nav.Item key="portfolio">
+                <Nav.Link eventKey="portfolio">Portfolio</Nav.Link>
             </Nav.Item>
-            { menu } 
+            {menu}
         </Nav>
+    )
 }
 
-export default NavItems 
+export default NavItems

@@ -1,13 +1,14 @@
-
-
-export const scanParams = (tableName, ticker) => ({
+const scanParams = (tableName, ticker) => ({
     ExpressionAttributeValues: {
-        ":a": {
-            S: ticker
-        }
-    }, 
+        ':a': {
+            S: ticker,
+        },
+    },
     Select: 'ALL_ATTRIBUTES',
-    FilterExpression: "ticker = :a", 
+    FilterExpression: 'ticker = :a',
     ReturnConsumedCapacity: 'TOTAL',
-    TableName: tableName
+    TableName: tableName,
 })
+
+// eslint-disable-next-line import/prefer-default-export
+export { scanParams }

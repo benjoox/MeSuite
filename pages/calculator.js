@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 import { Form, Col, Row } from 'react-bootstrap'
-import { Outcome, CalculatorForm } from '../components/Calculator'
+import { Outcome, CalculatorForm } from '../components/calculator'
 
 export default function CalculatorContainer() {
-    let [buyPrice, setBuy] = useState(55.0)
+    const [buyPrice, setBuy] = useState((x = 55.0) => parseFloat(x))
     const [shares, setShares] = useState(1000)
     const [fees, setFees] = useState(10)
-    let [sellPrice, setSell] = useState(55.0)
+    const [sellPrice, setSell] = useState((x = 55.0) => parseFloat(x))
     const [percentageMode, setMode] = useState(false)
-
-    buyPrice = parseFloat(buyPrice)
-    sellPrice = parseFloat(sellPrice)
 
     return (
         <div style={{ textAlign: 'left' }}>

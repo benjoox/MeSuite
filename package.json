@@ -44,7 +44,8 @@
         "react-google-charts": "^3.0.15",
         "react-scripts": "3.3.0",
         "react-table": "^7.0.6",
-        "styled-components": "^5.1.0"
+        "styled-components": "^5.1.0",
+        "webpack": "^4.44.1"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "^5.5.0",
@@ -71,7 +72,8 @@
             "prettier --write"
         ],
         "**/*.{js,jsx}": [
-            "eslint . --fix", "git add"
+            "eslint . --fix",
+            "git add"
         ]
     },
     "prettier": {

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 import * as dynamodb from '../../services/dynamoDb'
 import { getParams } from './get'
 import { batchPutParams } from './put'
@@ -6,11 +8,12 @@ import {
     seperateTradesByTickers,
     sortTransactionsByDate,
     averagePriceForEachTransaction,
+    splitArray,
 } from './_utils'
 
 const TABLENAME = 'Transactions'
 
-const schema = {
+const Transactions = {
     AttributeDefinitions: [
         {
             AttributeName: 'date',
@@ -44,24 +47,29 @@ export function get(params) {
 }
 
 export async function scan(ticker) {
-    const response = await dynamodb.scan(scanParams(TABLENAME, ticker))
-    const result = []
-    response.Items.forEach((v, k) => {
-        let obj = {}
-        for (const k1 in v) {
-            for (const k2 in v[k1]) {
-                obj = { ...obj, [k1]: v[k1][k2] }
+    try {
+        const response = await dynamodb.scan(scanParams(TABLENAME, ticker))
+        const result = []
+        response.Items.forEach((v) => {
+            let obj = {}
+            for (const k1 in v) {
+                for (const k2 in v[k1]) {
+                    obj = { ...obj, [k1]: v[k1][k2] }
+                }
             }
-        }
-        result.push(obj)
-    })
-    return result
+            result.push(obj)
+        })
+        return result
+    } catch (err) {
+        await dynamodb.create(Transactions)
+        return scan(ticker)
+    }
 }
 
 export async function scanAll() {
     const response = await dynamodb.scan(scanAllParams(TABLENAME))
     const result = []
-    response.Items.forEach((v, k) => {
+    response.Items.forEach((v) => {
         let obj = {}
         for (const k1 in v) {
             for (const k2 in v[k1]) {
@@ -85,7 +93,7 @@ export async function scanAll() {
     return newMap
 }
 
-export function put(item) {
+export function put() {
     // return dynamodb.batchGetItem(parameters(date, ticker))
 }
 
@@ -98,43 +106,4 @@ export async function batchPutItem(itemList, user) {
     })
 
     await Promise.all(newAddedPromises)
-}
-
-async function getTables() {
-    const params = {
-        ExclusiveStartTableName: 'STRING_VALUE',
-        Limit: 10,
-    }
-    await dynamodb.listTables(params).promise()
-}
-
-function splitArray(list, capacity = 50) {
-    const { length } = list
-    console.group('Splitting the array')
-    console.log('The length of the item list is ', length)
-    console.log('capacity ', capacity)
-    const sizeOfLastSubArray = length % capacity
-    console.log('The number of sub arrays are ', Math.round(length / capacity))
-    console.log(`The length of the last subArray is ${sizeOfLastSubArray}`)
-    const partitionArray = []
-
-    for (let k = 0; k < Math.round(length / capacity); k++) {
-        const startIndex = k === 0 ? 0 : k * capacity + 1
-        const endIndex = (k + 1) * capacity
-        partitionArray.push(list.slice(startIndex, endIndex + 1))
-    }
-
-    // Add the remainder of the items
-    if (sizeOfLastSubArray > 0) {
-        const lastArray = list.slice(length - sizeOfLastSubArray)
-        console.log('The length of the last array ', lastArray.length)
-        partitionArray.push(lastArray)
-    }
-
-    console.log(
-        'Accumulated number of elements in the arrays are ',
-        sizeOfLastSubArray + Math.round(length / capacity) * capacity
-    )
-    console.groupEnd()
-    return partitionArray
 }

@@ -1,4 +1,14 @@
-export function transactionExists(newTransaction, existingTransactions) {
+import moment from 'moment-timezone'
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+export function transactionExists(
+    newTransaction,
+    existingTransactions,
+    units,
+    price,
+    fees
+) {
     return existingTransactions.find((trade) => {
         return (
             newTransaction.code === trade.code &&
@@ -8,22 +18,6 @@ export function transactionExists(newTransaction, existingTransactions) {
             fees === trade.fees
         )
     })
-}
-
-export function validateUploadedJSON(uploadedJSON, existingTransactions) {
-    return uploadedJSON.reduce(
-        (accumulator, current) => {
-            if (!validateTransactionData(current)) return []
-            const cleansedTransactions = cleanseTransactionData(current)
-
-            if (transactionExists(cleansedTransactions, existingTransactions))
-                accumulator.rejected.push(current)
-            else accumulator.accepted.push(cleansedTransactions)
-
-            return accumulator
-        },
-        { accepted: [], rejected: [] }
-    )
 }
 
 /**
@@ -74,10 +68,84 @@ export function getAverageAndOutstandingNumber(list) {
     )
 }
 
+/**
+ * Check if the transaction has all the required keys with truthy values
+ *
+ * @param {*} transaction
+ * @returns bool
+ */
+export function validateTransactionData(transaction) {
+    const requiredKeys = [
+        'orderNumber',
+        'date',
+        'type',
+        'code',
+        'units',
+        'price',
+        'fees',
+    ]
+
+    for (const key in requiredKeys) {
+        const targetKey = requiredKeys[key]
+        if (
+            !transaction.hasOwnProperty(targetKey) ||
+            transaction[targetKey] == null ||
+            transaction[targetKey] === ''
+        )
+            throw Error(
+                `Validation failed. The key: "${targetKey}" does not exists or has no value`
+            )
+    }
+
+    return true
+}
+
+/**
+ *
+ * @param {*} transaction
+ * @returns Object { type: string, code: string, units: int, price: float, fees: float, date: Moment}
+ */
+export function cleanseTransactionData(transaction) {
+    try {
+        const { date, type, code, units, price, fees } = transaction
+        return {
+            type: type.toLowerCase(),
+            code: code.toLowerCase(),
+            units: parseInt(
+                typeof units === 'string' ? units.replace(',', '') : units,
+                10
+            ),
+            price: parseFloat(
+                typeof price === 'string' ? price.replace('$', '') : price
+            ),
+            fees: parseFloat(
+                typeof fees === 'string' ? fees.replace('$', '') : fees
+            ),
+            date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne'),
+        }
+    } catch (err) {
+        throw Error(`Failed to cleanse the transaction data ${err}`)
+    }
+}
+
+export function validateUploadedJSON(uploadedJSON, existingTransactions) {
+    return uploadedJSON.reduce(
+        (accumulator, current) => {
+            if (!validateTransactionData(current)) return []
+            const cleansedTransactions = cleanseTransactionData(current)
+
+            if (transactionExists(cleansedTransactions, existingTransactions))
+                accumulator.rejected.push(current)
+            else accumulator.accepted.push(cleansedTransactions)
+
+            return accumulator
+        },
+        { accepted: [], rejected: [] }
+    )
+}
+
 export function addAveragePriceAfterEachSell(tradeList) {
     let buyUntilSold = []
-    let averagePrice
-    let outstandingNumberOfSecurity
     // TODO : Assuming the order of tradelist is desc by timestamp
     const temp = [...tradeList]
     return temp.reverse().map((trade) => {
@@ -119,6 +187,7 @@ export function addAveragePriceAfterEachSell(tradeList) {
                 profitAndLossBeforeFees: units * (price - averagePrice),
             }
         }
+        return ''
     })
 }
 /**
@@ -145,7 +214,6 @@ export function getSummaryForOneAsset(tradeList) {
         totalBuyFees: 0,
         totalSellCost: 0,
         totalNumberSell: 0,
-        totalBuyFees: 0,
         totalSellFees: 0,
         averagePrice: 0,
         outstandingNumberOfsecurity: 0,
@@ -157,7 +225,7 @@ export function getSummaryForOneAsset(tradeList) {
         const tradeCost = price * units
 
         if (trade.type.toLowerCase() === BUY) {
-            acc = {
+            return {
                 ...acc,
                 totalBuyCost: acc.totalBuyCost
                     ? acc.totalBuyCost + tradeCost
@@ -167,8 +235,9 @@ export function getSummaryForOneAsset(tradeList) {
                     : units,
                 totalBuyFees: acc.totalBuyFees ? acc.totalBuyFees + fees : fees,
             }
-        } else if (trade.type.toLowerCase() === SOLD) {
-            acc = {
+        }
+        if (trade.type.toLowerCase() === SOLD) {
+            return {
                 ...acc,
                 totalSellCost: acc.totalSellCost
                     ? acc.totalSellCost + tradeCost
@@ -184,7 +253,7 @@ export function getSummaryForOneAsset(tradeList) {
                     trade.outstandingNumberOfsecurity || 0,
             }
         }
-        return acc
+        return {}
     }, initialValue)
 }
 
@@ -193,14 +262,14 @@ export function getTradeSummary(trades) {
         const { price } = trade
         const { units } = trade
         const { fees } = trade
-
-        if (!result[trade.code]) result = { ...result, [trade.code]: {} }
+        let res = result
+        if (!result[trade.code]) res = { ...res, [trade.code]: {} }
         const tradeCost = price * units
         const temp = result[trade.code]
 
         if (trade.type.toLowerCase() === 'b') {
-            result = {
-                ...result,
+            res = {
+                ...res,
                 [trade.code]: {
                     ...temp,
                     totalBuyCost: temp.totalBuyCost
@@ -215,8 +284,8 @@ export function getTradeSummary(trades) {
                 },
             }
         } else if (trade.type.toLowerCase() === 's') {
-            result = {
-                ...result,
+            res = {
+                ...res,
                 [trade.code]: {
                     ...temp,
                     totalSellCost: temp.totalSellCost
@@ -232,7 +301,7 @@ export function getTradeSummary(trades) {
             }
         }
 
-        return result
+        return res
     }, {})
 }
 
@@ -244,7 +313,7 @@ export function getTradeSummary(trades) {
  */
 export function seperateTradesByDate(tradeList) {
     const tickers = new Map()
-    for (let k = 0; k < tradeList.length; k++) {
+    for (let k = 0; k < tradeList.length; k += 1) {
         const date = tradeList[k].date.toString()
         if (!tickers.has(date)) {
             tickers.set(date, [])
@@ -252,65 +321,6 @@ export function seperateTradesByDate(tradeList) {
         tickers.set(date, [...tickers.get(date), tradeList[k]])
     }
     return tickers
-}
-
-/**
- *
- * @param {*} transaction
- * @returns Object { type: string, code: string, units: int, price: float, fees: float, date: Moment}
- */
-export function cleanseTransactionData(transaction) {
-    const moment = require('moment-timezone')
-    try {
-        const { date, type, code, units, price, fees } = transaction
-        return {
-            type: type.toLowerCase(),
-            code: code.toLowerCase(),
-            units: parseInt(
-                typeof units === 'string' ? units.replace(',', '') : units,
-                10
-            ),
-            price: parseFloat(
-                typeof price === 'string' ? price.replace('$', '') : price
-            ),
-            fees: parseFloat(
-                typeof fees === 'string' ? fees.replace('$', '') : fees
-            ),
-            date: moment(date, 'DD/MM/YYYY', true).tz('Australia/Melbourne'),
-        }
-    } catch (err) {
-        throw `Failed to cleanse the transaction data ${err}`
-    }
-}
-
-/**
- * Check if the transaction has all the required keys with truthy values
- *
- * @param {*} transaction
- * @returns bool
- */
-export function validateTransactionData(transaction) {
-    const requiredKeys = [
-        'orderNumber',
-        'date',
-        'type',
-        'code',
-        'units',
-        'price',
-        'fees',
-    ]
-
-    for (const key in requiredKeys) {
-        const targetKey = requiredKeys[key]
-        if (
-            !transaction.hasOwnProperty(targetKey) ||
-            transaction[targetKey] == null ||
-            transaction[targetKey] === ''
-        )
-            throw `Validation failed. The key: "${targetKey}" does not exists or has no value`
-    }
-
-    return true
 }
 
 /**
