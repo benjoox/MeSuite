@@ -5,15 +5,10 @@ import '@testing-library/jest-dom/extend-expect'
 import AccountOfflineForm from '.'
 
 test('renders the message and a button', async () => {
-    const { getByText } = render(<AccountOfflineForm />)
+    const testMessage = 'This is a test message'
+    const { getByText } = render(<AccountOfflineForm message={testMessage} />)
 
-    expect(
-        getByText(
-            /^In the offline mode you can upload a CSV file and analyse your account without saving any data/
-        )
-    ).toHaveTextContent(
-        'In the offline mode you can upload a CSV file and analyse your account without saving any data'
-    )
+    expect(getByText(testMessage)).toHaveTextContent(testMessage)
     expect(getByText(/^Upload Transactions/)).toHaveTextContent(
         'Upload Transactions'
     )

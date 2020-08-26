@@ -31,15 +31,18 @@ export const convertItemToAccountObj = (item) => {
  *
  * @param {*} itemList
  */
-export const accountsMap = (itemList) => {
-    const map = {}
+export const accountList = (itemList) => {
+    const accounts = {}
     for (let k = 0; k < itemList.length; k += 1) {
         const accountName = itemList[k].account.S
-        if (!map[accountName]) {
-            map[accountName] = []
+        if (!accounts[accountName]) {
+            accounts[accountName] = []
         }
-        map[accountName].push(convertItemToAccountObj(itemList[k]))
+        accounts[accountName].push(convertItemToAccountObj(itemList[k]))
     }
 
-    return accountsMap
+    return accounts
 }
+
+export const isEmpty = (obj) =>
+    Object.keys(obj).length === 0 && obj.constructor === Object

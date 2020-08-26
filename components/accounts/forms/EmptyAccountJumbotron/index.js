@@ -3,7 +3,7 @@ import { Row, Jumbotron } from 'react-bootstrap'
 import { AccountsContext } from '../../../../store/AccountContextProvider'
 import UploadButton from '../../../shared/UploadButton'
 
-export default function AccountOfflineForm() {
+export default function AccountOfflineForm({ message }) {
     const { addAccountAndSave } = useContext(AccountsContext)
     return (
         <Row
@@ -11,10 +11,7 @@ export default function AccountOfflineForm() {
             style={{ margin: '1rem' }}
         >
             <Jumbotron>
-                <p>
-                    In the offline mode you can upload a CSV file and analyse
-                    your account without saving any data
-                </p>
+                <p> {message} </p>
 
                 <div style={{ textAlign: 'center' }}>
                     <UploadButton

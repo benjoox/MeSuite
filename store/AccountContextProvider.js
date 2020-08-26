@@ -10,7 +10,7 @@ const isEmpty = (obj) =>
 
 const ENTITY = 'accounts'
 
-export default function AccountContextProvider(children) {
+export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const { mode } = useContext(AppContext)
@@ -39,7 +39,7 @@ export default function AccountContextProvider(children) {
         } else {
             setAccounts([])
         }
-    }, [])
+    }, [mode])
 
     async function saveAccountTransaction(account) {
         const params = Array.isArray(account) ? account : [account]

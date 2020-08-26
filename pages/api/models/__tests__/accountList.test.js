@@ -1,6 +1,6 @@
-import { accountsMap } from '../accounts/__utils'
+import { accountList } from '../accounts/__utils'
 
-describe('accountsMap', () => {
+describe('accountList', () => {
     const testCase = [
         {
             user_account_date_amount: {
@@ -45,7 +45,7 @@ describe('accountsMap', () => {
     ]
 
     test('returns the correct number of individual accounts ', () => {
-        const result = accountsMap(testCase)
+        const result = accountList(testCase)
 
         expect(typeof result).toBe('object')
         expect(result).toHaveProperty('nabPersonal')
@@ -53,7 +53,7 @@ describe('accountsMap', () => {
     })
 
     test('returns the correct number transactions for each account', () => {
-        const result = accountsMap(testCase)
+        const result = accountList(testCase)
 
         expect(typeof result).toBe('object')
         expect(result.nabPersonal.length).toBe(1)

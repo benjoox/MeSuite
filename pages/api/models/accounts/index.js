@@ -2,7 +2,7 @@ import * as dynamodb from '../../services/dynamoDb'
 import { accountPostParams, batchPutParams } from './post'
 import { accountDeleteParams } from './delete'
 import { accountPutParams } from './put'
-import { accountsMap } from './__utils'
+import { accountList } from './__utils'
 
 const TABLENAME = 'Accounts'
 
@@ -39,7 +39,8 @@ export async function getAccounts() {
         const response = await dynamodb.scan({
             TableName: TABLENAME,
         })
-        return accountsMap(response.Items)
+
+        return accountList(response.Items)
     } catch (err) {
         if (err.code === 'ResourceNotFoundException') {
             // create a new db
@@ -47,7 +48,7 @@ export async function getAccounts() {
             const response = await dynamodb.scan({
                 TableName: TABLENAME,
             })
-            return accountsMap(response.Items)
+            return accountList(response.Items)
         }
         throw err
     }
