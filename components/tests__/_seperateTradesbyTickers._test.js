@@ -10,7 +10,7 @@ import {
     cleanseTransactionData,
     buySummary,
     sellSummary,
-} from '../markets/forms/_utils'
+} from '../MarketContainer/forms/_utils'
 
 const trades = require('./sampleTrade.json')
 

@@ -2,14 +2,12 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import AccountOfflineForm from '.'
+import EmptyAccountJumbotron from '.'
 
-test('renders the message and a button', async () => {
-    const testMessage = 'This is a test message'
-    const { getByText } = render(<AccountOfflineForm message={testMessage} />)
-
-    expect(getByText(testMessage)).toHaveTextContent(testMessage)
-    expect(getByText(/^Upload Transactions/)).toHaveTextContent(
-        'Upload Transactions'
+test('renders the message', async () => {
+    const { getByText } = render(
+        <EmptyAccountJumbotron message="test message" />
     )
+
+    expect(getByText(/^test message/)).toHaveTextContent('test message')
 })

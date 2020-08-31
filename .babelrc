@@ -1,21 +1,19 @@
 {
-	"env": {
-		"production": {
-			"presets": [
-				"@babel/preset-react"
-			]
-		},
-		"development": {
-			"plugins": ["@babel/plugin-transform-flow-strip-types"],
-			"presets": [
-				"@babel/preset-react"
-			]
-		},
-		"test": {
-			"plugins": ["transform-es2015-modules-commonjs", "@babel/plugin-proposal-class-properties"],
-			"presets": [
-				"@babel/preset-react"
-			]
-		}
-	}
+    "env": {
+        "production": {
+            "presets": ["@babel/preset-react"]
+        },
+        "development": {
+            "plugins": ["@babel/plugin-transform-flow-strip-types"],
+            "presets": ["@babel/preset-react"]
+        },
+        "test": {
+            "plugins": [
+                "transform-es2015-modules-commonjs",
+                "@babel/plugin-proposal-class-properties",
+                "@babel/plugin-transform-flow-strip-types"
+            ],
+            "presets": ["@babel/preset-react"]
+        }
+    }
 }

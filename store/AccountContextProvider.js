@@ -10,10 +10,15 @@ const isEmpty = (obj) =>
 
 const ENTITY = 'accounts'
 
+export type Transaction = {
+    date: any,
+}
+
 export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const { mode } = useContext(AppContext)
+    const [uploadedTransactions, setUploadedTransactions] = useState({})
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -78,7 +83,8 @@ export default function AccountContextProvider({ children }) {
                 ...el,
                 account,
             }))
-            saveAccountTransaction(transactionWithAccount)
+            setUploadedTransactions(transactionWithAccount)
+            // saveAccountTransaction(transactionWithAccount)
         } else {
             setAccounts({ [account]: transactions })
         }
@@ -91,6 +97,7 @@ export default function AccountContextProvider({ children }) {
         addAccountAndSave,
         fetchAccounts,
         accounts,
+        uploadedTransactions,
     }
 
     return (

@@ -3,7 +3,7 @@ import { Row, Jumbotron } from 'react-bootstrap'
 import { AccountsContext } from '../../../../store/AccountContextProvider'
 import UploadButton from '../../../shared/UploadButton'
 
-export default function AccountOfflineForm({ message }) {
+export default function EmptyAccountJumbotron({ message }) {
     const { addAccountAndSave } = useContext(AccountsContext)
     return (
         <Row

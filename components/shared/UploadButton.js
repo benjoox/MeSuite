@@ -38,10 +38,10 @@ export default function UploadButton(props) {
         uploaderRef.current.click()
     }
 
-    const onFileChange = (ev) => {
+    const onFileChange = (event) => {
         const reader = new FileReader()
-        reader.readAsText(ev.target.files[0])
-        reader.onload = () => {
+        reader.readAsText(event.target.files[0])
+        reader.onload = (ev) => {
             ev.preventDefault()
             try {
                 const target = ev.target.result

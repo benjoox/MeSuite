@@ -14,6 +14,7 @@ module.exports = {
         'prettier/flowtype',
         'prettier/react',
     ],
+    parser: 'babel-eslint',
     parserOptions: {
         ecmaFeatures: {
             jsx: true,
