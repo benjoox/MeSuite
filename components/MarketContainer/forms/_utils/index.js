@@ -373,3 +373,14 @@ export function sellSummary(tradeList) {
         fees: parseFloat(temp.fees.toFixed(3)),
     }
 }
+
+
+export function sortTransactionsByDate(transactionList, orderBy = 'asc') {
+    return transactionList.sort((a, b) => {
+        const aDate = moment(a.date)
+        const bDate = moment(b.date)
+        if (aDate.isBefore(bDate)) return orderBy === 'asc' ? -1 : 1
+        if (aDate.isAfter(bDate)) return orderBy === 'asc' ? 1 : -1
+        return a.type === 'b' ? -1 : 1
+    })
+}

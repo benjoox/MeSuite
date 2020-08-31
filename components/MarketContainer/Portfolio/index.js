@@ -38,7 +38,8 @@ export default function Portfolio({ tradesMap }) {
     const [loader, setLoader] = useState(false)
     const [outstandingSecurities, setOutstandingSecurties] = useState([])
 
-    const summary = summaryList(tradesMap)
+    console.log('calling the portfolio function with tradeMaps ', tradesMap)
+    const summary = summaryList(Object.entries(tradesMap))
     async function fetchPrice() {
         setLoader(true)
         const result = summary.map((el) => {

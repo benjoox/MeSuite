@@ -9,19 +9,19 @@ export default function TransactionLeg(props) {
     return (
         <>
             <div>
-                <div style={labelStyle}>Total ${type} cost: &nbsp;</div>
+                <div style={labelStyle}>Total {type} cost: &nbsp;</div>
                 <span>{cost}</span>
             </div>
             <div>
-                <div style={labelStyle}>Total number ${type}: &nbsp;</div>
+                <div style={labelStyle}>Total number {type}: &nbsp;</div>
                 <span>{units}</span>
             </div>
             <div>
-                <div style={labelStyle}>Total ${type} fees: &nbsp;</div>
+                <div style={labelStyle}>Total {type} fees: &nbsp;</div>
                 <span>{fees}</span>
             </div>
             <div>
-                <div style={labelStyle}>Average ${type} price: &nbsp;</div>
+                <div style={labelStyle}>Average {type} price: &nbsp;</div>
                 <span>{(cost / units).toFixed(3)}</span>
             </div>
         </>

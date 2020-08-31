@@ -7,7 +7,7 @@ const NavItems = ({ tickers }) => {
     Object.entries(tickers).map((el) => {
         menu.push(
             <Nav.Item key={Math.random() * 1000}>
-                <Nav.Link eventKey={el[0]}>{el[1].toUpperCase()}</Nav.Link>
+                <Nav.Link eventKey={el[0]}>{el[0].toUpperCase()}</Nav.Link>
             </Nav.Item>
         )
         return menu

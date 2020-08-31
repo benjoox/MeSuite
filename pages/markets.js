@@ -3,12 +3,18 @@ import { Row, Tab, Col } from 'react-bootstrap'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from '../store/AppContextProvider'
 import * as API from '../apiCalls'
-import TradeActionsContainer from '../components/markets/forms/TradeActionsContainer'
+import TradeActionsContainer from '../components/MarketContainer/forms/TradeActionsContainer'
 import {
     validateUploadedJSON,
     seperateTradesBySecurity,
-} from '../components/markets/forms/_utils'
-import { NavItems, TabItems } from '../components/markets/menu'
+} from '../components/MarketContainer/forms/_utils'
+
+import {
+    sortTransactionsByDate,
+    averagePriceForEachTransaction,
+} from './api/models/transactions/_utils'
+
+import { NavItems, TabItems } from '../components/MarketContainer/menu'
 
 export const TradesContext = React.createContext('Trades')
 
@@ -83,7 +89,14 @@ export default function Markets() {
         if (mode) {
             updateTradeTransaction(accepted)
         } else {
-            setTradesMap(seperateTradesBySecurity(accepted))
+            const newtradesMap = seperateTradesBySecurity(accepted)
+            const newMap = {}
+            newtradesMap.forEach((value, key) => {
+                const sortedList = sortTransactionsByDate(value)
+                const listWithAvg = averagePriceForEachTransaction(sortedList)
+                newMap[key] = listWithAvg
+            })
+            setTradesMap(newMap)
         }
     }
 

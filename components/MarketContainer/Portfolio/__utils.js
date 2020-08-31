@@ -34,7 +34,9 @@ export async function getLastDBPrice(date) {
 
 export const summaryList = (tradesMap) => {
     const result = []
-    tradesMap.forEach((value, key) => {
+    tradesMap.forEach((v) => {
+        const value = v[1]
+        const key = v[0]
         const buy = buySummary(value)
         const sell = sellSummary(value)
 
