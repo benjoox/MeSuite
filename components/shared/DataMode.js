@@ -3,16 +3,16 @@ import { Form } from 'react-bootstrap'
 import { AppContext } from '../../store/AppContextProvider'
 
 const DataMode = () => {
-    const { mode, switchMode } = useContext(AppContext)
+    const { modeIsOnline, switchMode } = useContext(AppContext)
 
     return (
         <Form style={{ color: '#007bff' }}>
             <Form.Check
                 type="switch"
                 id="modeSwtich"
-                label={mode ? 'Online' : 'Offline'}
-                onChange={() => switchMode(!mode)}
-                checked={mode}
+                label={modeIsOnline ? 'Online' : 'Offline'}
+                onChange={() => switchMode(!modeIsOnline)}
+                checked={modeIsOnline}
                 secondary={1}
             />
         </Form>

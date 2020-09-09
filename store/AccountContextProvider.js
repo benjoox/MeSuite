@@ -5,8 +5,7 @@ import * as API from '../apiCalls'
 
 export const AccountsContext = React.createContext('Accounts')
 
-const isEmpty = (obj) =>
-    Object.keys(obj).length === 0 && obj.constructor === Object
+const isEmpty = (obj) => Object.keys(obj).length === 0
 
 const ENTITY = 'accounts'
 
@@ -16,7 +15,7 @@ export type Transaction = {
 
 export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
-    const [accounts, setAccounts] = useState([])
+    const [accounts, setAccounts] = useState({})
     const { mode } = useContext(AppContext)
     const [uploadedTransactions, setUploadedTransactions] = useState({})
 
@@ -77,7 +76,7 @@ export default function AccountContextProvider({ children }) {
         }
     }
 
-    const addAccountAndSave = (transactions, account = 'Temp account') => {
+    const addAccountAndSave = (transactions, account = 'temp') => {
         if (mode && isAuthenticated) {
             const transactionWithAccount = transactions.map((el) => ({
                 ...el,
@@ -98,6 +97,7 @@ export default function AccountContextProvider({ children }) {
         fetchAccounts,
         accounts,
         uploadedTransactions,
+        accountsAvailable: !isEmpty(accounts),
     }
 
     return (
