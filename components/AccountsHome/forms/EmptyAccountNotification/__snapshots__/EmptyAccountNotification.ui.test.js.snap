@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="justify-content-center column row"
+  style={
+    Object {
+      "margin": "1rem",
+    }
+  }
+>
+  <div
+    className="jumbotron"
+    style={
+      Object {
+        "textAlign": "center",
+      }
+    }
+  >
+    <p
+      style={
+        Object {
+          "height": "90px",
+        }
+      }
+    >
+       
+      this is a message
+       
+    </p>
+    <div>
+      <form>
+        <button
+          className="btn btn-outline-dark"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          Upload Transactions
+        </button>
+        <input
+          accept=".csv"
+          hidden={true}
+          onChange={[Function]}
+          type="file"
+        />
+      </form>
+    </div>
+  </div>
+</div>
+`;

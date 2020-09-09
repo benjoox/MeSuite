@@ -1,11 +1,11 @@
 import React from 'react'
 import AccountContextProvider from '../store/AccountContextProvider'
-import Menu from '../components/accounts/menu'
+import AccountsHome from '../components/AccountsHome'
 
 export default function Accounts() {
     return (
         <AccountContextProvider>
-            <Menu />
+            <AccountsHome />
         </AccountContextProvider>
     )
 }
