@@ -74,7 +74,7 @@ export default function UploadButton(props) {
     return (
         <form ref={formRef}>
             <Button variant="outline-dark" onClick={handleClick}>
-                Upload Transactions
+                Upload
             </Button>
             <input
                 type="file"

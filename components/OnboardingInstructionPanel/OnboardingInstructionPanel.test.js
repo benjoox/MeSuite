@@ -6,12 +6,8 @@ import { useAuth0 } from '@auth0/auth0-react'
 import AccountsHome from '.'
 import { AppContext } from '../../store/AppContextProvider'
 import { AccountsContext } from '../../store/AccountContextProvider'
-import NavItems from './menu/NavItems'
-import TabItems from './menu/TabItems'
 
 jest.mock('@auth0/auth0-react')
-jest.mock('./menu/NavItems')
-jest.mock('./menu/TabItems')
 
 describe('Account home for authenticated users and no accounts', () => {
     beforeEach(() => {
@@ -81,8 +77,6 @@ describe('Account home for authenticated users and one or more accounts', () => 
         useAuth0.mockReturnValue({
             isAuthenticated: true,
         })
-        NavItems.mockReturnValue(<div>Nothing</div>)
-        TabItems.mockReturnValue(<div>Nothing</div>)
     })
     const accounts = ['']
     it(`Test 1: 
@@ -218,6 +212,9 @@ describe('Account home tests for user who are non-authenticated and one or more 
         expect(textOnScreen).toHaveTextContent(
             'Upload another account. You will loose this page.'
         )
+
+        const buttonText = screen.getByText(/^Upload another account/)
+        expect(buttonText).toHaveTextContent('Upload another account')
 
         const nonExistingText = screen.queryByText(
             /^In the offline mode you can upload a CSV file and analyse your account without saving any data/
