@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="row"
+  style={
+    Object {
+      "marginTop": "100px",
+      "textAlign": "center",
+    }
+  }
+>
+  <div
+    className="col-4"
+  >
+    <div
+      className="jumbotron"
+    >
+      <a
+        href="/markets"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+      >
+        MeMarkets
+      </a>
+    </div>
+  </div>
+  <div
+    className="col-4"
+  >
+    <div
+      className="jumbotron"
+    >
+      <a
+        href="/accounts"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+      >
+        MeAccounts
+      </a>
+    </div>
+  </div>
+  <div
+    className="col-4"
+  >
+    <div
+      className="jumbotron"
+    >
+      <a
+        href="/calculator"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+      >
+        MeCalculator
+      </a>
+    </div>
+  </div>
+</div>
+`;

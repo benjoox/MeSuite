@@ -5,7 +5,7 @@ import * as API from '../apiCalls'
 import {
     validateUploadedJSON,
     seperateTradesBySecurity,
-} from '../components/MarketContainer/forms/_utils'
+} from '../components/MarketPage/forms/_utils'
 
 import {
     sortTransactionsByDate,

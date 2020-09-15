@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Row, Tab, Col } from 'react-bootstrap'
 import { MarketContext } from '../store/MarketContextProvider'
 
-import { NavItems, TabItems } from '../components/MarketContainer/menu'
+import { NavItems, TabItems } from '../components/MarketPage/menu'
 
 export const TradesContext = React.createContext('Trades')
 

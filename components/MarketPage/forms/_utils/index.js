@@ -374,7 +374,6 @@ export function sellSummary(tradeList) {
     }
 }
 
-
 export function sortTransactionsByDate(transactionList, orderBy = 'asc') {
     return transactionList.sort((a, b) => {
         const aDate = moment(a.date)
