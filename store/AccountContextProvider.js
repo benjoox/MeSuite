@@ -2,10 +2,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './AppContextProvider'
 import * as API from '../apiCalls'
+import isEmpty from './__utils'
 
 export const AccountsContext = React.createContext('Accounts')
-
-const isEmpty = (obj) => Object.keys(obj).length === 0
 
 const ENTITY = 'accounts'
 
@@ -76,7 +75,7 @@ export default function AccountContextProvider({ children }) {
         }
     }
 
-    const addAccountAndSave = (transactions, account = 'temp') => {
+    const uploadAccountTransactionFile = (transactions, account = 'temp') => {
         if (mode && isAuthenticated) {
             const transactionWithAccount = transactions.map((el) => ({
                 ...el,
@@ -93,11 +92,18 @@ export default function AccountContextProvider({ children }) {
         deleteAccountTransaction,
         updateAccountTransaction,
         saveAccountTransaction,
-        addAccountAndSave,
+        uploadAccountTransactionFile,
         fetchAccounts,
         accounts,
         uploadedTransactions,
         accountsAvailable: !isEmpty(accounts),
+        ACCOUNT_FILE_HEADERS: [
+            'date',
+            'amount',
+            'description',
+            'balance',
+            'category',
+        ],
     }
 
     return (

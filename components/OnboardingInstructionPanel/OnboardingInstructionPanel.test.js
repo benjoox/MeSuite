@@ -2,18 +2,25 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
+import { useRouter } from 'next/router'
 import { useAuth0 } from '@auth0/auth0-react'
+
 import AccountsHome from '.'
 import { AppContext } from '../../store/AppContextProvider'
 import { AccountsContext } from '../../store/AccountContextProvider'
+import { ACCOUNT_PAGE_ROUTE_NAME } from './Panels'
 
 jest.mock('@auth0/auth0-react')
+jest.mock('next/router')
 
 describe('Account home for authenticated users and no accounts', () => {
     beforeEach(() => {
         // Mock the Auth0 hook and make it return a logged in state
         useAuth0.mockReturnValue({
             isAuthenticated: true,
+        })
+        useRouter.mockReturnValue({
+            pathname: ACCOUNT_PAGE_ROUTE_NAME,
         })
     })
     const accounts = []
@@ -78,14 +85,15 @@ describe('Account home for authenticated users and one or more accounts', () => 
             isAuthenticated: true,
         })
     })
-    const accounts = ['']
+    const accountsAvailable = true
+
     it(`Test 1: 
         isOnline: false,
         result: small notification: Upload another account. You will loose this page.`, () => {
         const modeIsOnline = false
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>
@@ -109,7 +117,7 @@ describe('Account home for authenticated users and one or more accounts', () => 
         const modeIsOnline = true
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>
@@ -133,14 +141,14 @@ describe('Account home tests for user who are non-authenticated and no accounts'
         })
     })
 
-    const accounts = []
+    const accountsAvailable = false
     it(`Test 1. 
         isOnline: false,
         result: jumbo notification: Upload your account and explore your data without saving them. Login and change to online mode to save your data.`, () => {
         const modeIsOnline = false
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>
@@ -165,7 +173,7 @@ describe('Account home tests for user who are non-authenticated and no accounts'
         const modeIsOnline = true
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>
@@ -193,14 +201,14 @@ describe('Account home tests for user who are non-authenticated and one or more 
         })
     })
 
-    const accounts = ['']
+    const accountsAvailable = true
     it(`Test 1. 
         isOnline: false,
         result: jumbo notification: Upload another account. You will loose this page.`, () => {
         const modeIsOnline = false
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>
@@ -230,7 +238,7 @@ describe('Account home tests for user who are non-authenticated and one or more 
         const modeIsOnline = true
         render(
             <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
+                <AccountsContext.Provider value={{ accountsAvailable }}>
                     <AccountsHome />
                 </AccountsContext.Provider>
             </AppContext.Provider>

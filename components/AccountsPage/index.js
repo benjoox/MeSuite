@@ -9,23 +9,26 @@ const container = {
     marginBottom: '24px',
 }
 
-export default function AccountHome() {
-    const { accounts } = useContext(AccountsContext)
-
+export default function AccountPage() {
+    const { accounts, accountsAvailable } = useContext(AccountsContext)
     return (
         <Container fluid style={container}>
-            <div style={{ marginTop: '35px' }}>
-                <Tab.Container defaultActiveKey="Temp account">
-                    <Row>
-                        <Col sm={3}>
-                            <NavItems accounts={accounts} />
-                        </Col>
-                        <Col sm={9}>
-                            <TabItems accounts={accounts} />
-                        </Col>
-                    </Row>
-                </Tab.Container>
-            </div>
+            {accountsAvailable ? (
+                <div style={{ marginTop: '35px' }}>
+                    <Tab.Container defaultActiveKey="Temp account">
+                        <Row>
+                            <Col sm={3}>
+                                <NavItems accounts={accounts} />
+                            </Col>
+                            <Col sm={9}>
+                                <TabItems accounts={accounts} />
+                            </Col>
+                        </Row>
+                    </Tab.Container>
+                </div>
+            ) : (
+                ''
+            )}
         </Container>
     )
 }

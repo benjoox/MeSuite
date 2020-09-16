@@ -29,7 +29,7 @@ const convertDates = (list, format = 'DD/MM/YYYY') =>
         date: moment(el.date, format, true).tz('Australia/Melbourne').unix(),
     }))
 
-export default function UploadButton(props) {
+export default function UploadButton({ handleUpload, headers, timestamped }) {
     const uploaderRef = useRef()
     const formRef = useRef()
 
@@ -43,17 +43,18 @@ export default function UploadButton(props) {
         reader.readAsText(event.target.files[0])
         reader.onload = (ev) => {
             ev.preventDefault()
+            console.log(' handle upload ', handleUpload)
             try {
                 const target = ev.target.result
-                const headers = extractHeader(target)
-                validateHeaders(props.headers, headers)
+                const fileHeaders = extractHeader(target)
+                validateHeaders(headers, fileHeaders)
                 csv()
                     .fromString(ev.target.result)
                     .then((rawData) => {
-                        const data = props.timestamped
+                        const data = timestamped
                             ? convertDates(rawData)
                             : rawData
-                        props.uploadCSVFile(data)
+                        handleUpload(data)
                         if (formRef.current) {
                             formRef.current.reset()
                         }

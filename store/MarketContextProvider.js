@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './AppContextProvider'
 import * as API from '../apiCalls'
+import isEmpty from './__utils'
 import {
     validateUploadedJSON,
     seperateTradesBySecurity,
@@ -23,7 +24,7 @@ export type Transaction = {
 export default function MarketContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [trades] = useState([])
-    const [tradesMap, setTradesMap] = useState(null)
+    const [tradesMap, setTradesMap] = useState({})
 
     const { mode } = useContext(AppContext)
 
@@ -48,7 +49,7 @@ export default function MarketContextProvider({ children }) {
         if (mode && isAuthenticated) {
             fetchTrades()
         } else {
-            setTradesMap(null)
+            setTradesMap({})
         }
     }, [mode, isAuthenticated])
 
@@ -83,7 +84,7 @@ export default function MarketContextProvider({ children }) {
         }
     }
 
-    async function uploadCSVFile(uploadedJSON) {
+    async function uploadMarketTransactionsFile(uploadedJSON) {
         const { accepted } = validateUploadedJSON(uploadedJSON, trades)
 
         if (mode) {
@@ -99,17 +100,30 @@ export default function MarketContextProvider({ children }) {
             setTradesMap(newMap)
         }
     }
+
     const value = {
         deleteTradeTransaction,
         updateTradeTransaction,
         saveTradeTransaction,
-        uploadCSVFile,
+        uploadMarketTransactionsFile,
         tradesMap,
+        trades,
+        tradesAvailable: !isEmpty(tradesMap),
+        MARKET_FILE_HEADERS: [
+            'orderNumber',
+            'date',
+            'type',
+            'code',
+            'units',
+            'price',
+            'fees',
+            'net',
+        ],
     }
 
     return (
-        <MarketContextProvider.Provider value={value}>
+        <MarketContext.Provider value={value}>
             {children}
-        </MarketContextProvider.Provider>
+        </MarketContext.Provider>
     )
 }

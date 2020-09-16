@@ -4,7 +4,6 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import { Container } from 'react-bootstrap'
 import Navbar from '../components/shared/NavigationBar'
 import AppContextProvider from '../store/AppContextProvider'
-import OnboardingInstructionPanel from '../components/OnboardingInstructionPanel'
 
 import '../components/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -22,7 +21,6 @@ function App({ Component, pageProps }) {
                 <AppContextProvider>
                     <Container fluid>
                         <Navbar />
-                        <OnboardingInstructionPanel />
                         <Component {...pageProps} />
                     </Container>
                 </AppContextProvider>

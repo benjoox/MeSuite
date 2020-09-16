@@ -1,25 +1,26 @@
 // @flow
 
 import React from 'react'
-import { Row, Jumbotron } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 
 type Props = {
     children: React.Element,
     message: string,
 }
 
-const text = { height: '90px' }
-
 function TinyInstructionPanel({ children, message }: Props): React.Node {
     return (
         <Row
-            className="justify-content-center column"
-            style={{ margin: '1rem' }}
+            style={{
+                margin: '1rem',
+                padding: '1rem',
+                backgroundColor: '#e9ecef',
+            }}
         >
-            <Jumbotron style={{ textAlign: 'center' }}>
-                <p style={text}>{message}</p>
-                {children}
-            </Jumbotron>
+            <Col sm={10}>
+                <p>{message}</p>
+            </Col>
+            <Col sm={2}>{children}</Col>
         </Row>
     )
 }

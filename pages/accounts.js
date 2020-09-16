@@ -1,11 +1,13 @@
 import React from 'react'
 import AccountContextProvider from '../store/AccountContextProvider'
-import AccountsHome from '../components/AccountsPage'
+import AccountsPage from '../components/AccountsPage'
+import OnboardingInstructionPanel from '../components/OnboardingInstructionPanel'
 
 export default function Accounts() {
     return (
         <AccountContextProvider>
-            <AccountsHome />
+            <OnboardingInstructionPanel />
+            <AccountsPage />
         </AccountContextProvider>
     )
 }
