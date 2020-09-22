@@ -14,7 +14,7 @@ export type Transaction = {
 
 export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
-    const [accounts, setAccounts] = useState({})
+    const [accounts, setAccounts] = useState([])
     const { mode } = useContext(AppContext)
     const [uploadedTransactions, setUploadedTransactions] = useState({})
 

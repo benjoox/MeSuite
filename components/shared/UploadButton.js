@@ -43,7 +43,6 @@ export default function UploadButton({ handleUpload, headers, timestamped }) {
         reader.readAsText(event.target.files[0])
         reader.onload = (ev) => {
             ev.preventDefault()
-            console.log(' handle upload ', handleUpload)
             try {
                 const target = ev.target.result
                 const fileHeaders = extractHeader(target)

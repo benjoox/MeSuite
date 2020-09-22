@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { func, object } from 'prop-types'
 import { Row, Jumbotron } from 'react-bootstrap'
+import ReactCSVUploadTest from 'react-csv-upload-test'
 import TradeActionsModal from './TradeActionsModal'
-import UploadButton from '../../shared/UploadButton'
 
 const sampleTrade = {
     code: '',
@@ -38,8 +38,8 @@ export default function TradeActionsContainer(props) {
                     </p>
 
                     <div style={{ textAlign: 'center' }}>
-                        <UploadButton
-                            uploadCSVFile={uploadCSVFile}
+                        <ReactCSVUploadTest
+                            handleFile={uploadCSVFile}
                             headers={[
                                 'orderNumber',
                                 'date',

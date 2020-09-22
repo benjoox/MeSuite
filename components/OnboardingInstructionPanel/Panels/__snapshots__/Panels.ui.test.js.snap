@@ -28,8 +28,6 @@ exports[`Panel section  renders correctly 1`] = `
     </p>
     <form>
       <button
-        className="btn btn-outline-dark"
-        disabled={false}
         onClick={[Function]}
         type="button"
       >
@@ -41,6 +39,7 @@ exports[`Panel section  renders correctly 1`] = `
         onChange={[Function]}
         type="file"
       />
+      
     </form>
   </div>
 </div>

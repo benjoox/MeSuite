@@ -4,12 +4,10 @@ import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { useRouter } from 'next/router'
 import Panel, { ACCOUNT_PAGE_ROUTE_NAME, MARKET_PAGE_ROUTE_NAME } from '.'
-import UploadButton from '../../shared/UploadButton'
 import { AccountsContext } from '../../../store/AccountContextProvider'
 import { MarketContext } from '../../../store/MarketContextProvider'
 
 jest.mock('next/router')
-jest.mock('../../shared/UploadButton')
 jest.mock('../../../store/AccountContextProvider')
 jest.mock('../../../store/MarketContextProvider')
 
@@ -18,7 +16,6 @@ describe('Panel test for accounts page ', () => {
         useRouter.mockReturnValue({
             pathname: ACCOUNT_PAGE_ROUTE_NAME,
         })
-        UploadButton.mockReturnValue(<div>A button</div>)
     })
     const value = {
         accountsAvailable: true,
@@ -39,7 +36,6 @@ describe('Panel test for market page ', () => {
         useRouter.mockReturnValue({
             pathname: MARKET_PAGE_ROUTE_NAME,
         })
-        UploadButton.mockReturnValue(<div>A button</div>)
     })
     const value = {
         tradesAvailable: true,

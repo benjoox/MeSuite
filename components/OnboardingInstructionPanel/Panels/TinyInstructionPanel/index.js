@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { Row, Col } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 
 type Props = {
     children: React.Element,
@@ -12,15 +12,14 @@ function TinyInstructionPanel({ children, message }: Props): React.Node {
     return (
         <Row
             style={{
-                margin: '1rem',
-                padding: '1rem',
+                margin: '0',
+                padding: '15px',
                 backgroundColor: '#e9ecef',
+                justifyContent: 'center',
             }}
         >
-            <Col sm={10}>
-                <p>{message}</p>
-            </Col>
-            <Col sm={2}>{children}</Col>
+            <p>{message}</p>
+            {children}
         </Row>
     )
 }

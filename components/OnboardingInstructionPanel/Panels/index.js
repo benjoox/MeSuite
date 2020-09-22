@@ -1,12 +1,12 @@
 // @flow
 
 import React, { useContext } from 'react'
+import ReactCSVUpload from 'react-csv-upload-test'
 import { useRouter } from 'next/router'
 import JumboInstructionPanel from './JumboInstructionPanel'
 import TinyInstructionPanel from './TinyInstructionPanel'
 import { AccountsContext } from '../../../store/AccountContextProvider'
 import { MarketContext } from '../../../store/MarketContextProvider'
-import UploadButton from '../../shared/UploadButton'
 
 type Props = {
     message: string,
@@ -30,12 +30,12 @@ export default function Panels({ message }: Props) {
         MARKET_FILE_HEADERS,
     } = useContext(MarketContext)
 
-    const handleUpload = () => {
+    const handleUpload = (file) => {
         if (route === ACCOUNT_PAGE_ROUTE_NAME) {
-            return uploadAccountTransactionFile
+            return uploadAccountTransactionFile(file)
         }
         if (route === MARKET_PAGE_ROUTE_NAME) {
-            return uploadMarketTransactionsFile
+            return uploadMarketTransactionsFile(file)
         }
         return null
     }
@@ -55,16 +55,16 @@ export default function Panels({ message }: Props) {
         <>
             {accountsAvailable || tradesAvailable ? (
                 <TinyInstructionPanel message={message}>
-                    <UploadButton
-                        handleUpload={handleUpload()}
+                    <ReactCSVUpload
                         headers={headers()}
+                        handleFile={handleUpload}
                     />
                 </TinyInstructionPanel>
             ) : (
                 <JumboInstructionPanel message={message}>
-                    <UploadButton
-                        handleUpload={handleUpload()}
+                    <ReactCSVUpload
                         headers={headers()}
+                        handleFile={handleUpload}
                     />
                 </JumboInstructionPanel>
             )}

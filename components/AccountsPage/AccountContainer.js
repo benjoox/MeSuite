@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
+import ReactCSVUploadTest from 'react-csv-upload-test'
 import Filter from './Filters'
 import Transactions from './Transactions'
 import Taglist from './TagList'
 import Charts from '../shared/Charts'
-import UploadButton from '../shared/UploadButton'
 import { AccountsContext } from '../../store/AccountContextProvider'
 
 const today = new Date()
@@ -56,11 +56,13 @@ export default function AccountContainer({ transactions, name }) {
         endDate,
     ])
 
-    const { addAccountAndSave } = useContext(AccountsContext)
+    const { uploadAccountTransactionFile, accountsAvailable } = useContext(
+        AccountsContext
+    )
 
     return (
         <Container>
-            {transactions.length > 0 ? (
+            {accountsAvailable ? (
                 <Taglist transactionList={transactions} />
             ) : (
                 ''
@@ -92,9 +94,9 @@ export default function AccountContainer({ transactions, name }) {
                         }{' '}
                     </Col>
                     <Col md={4}>
-                        <UploadButton
-                            uploadCSVFile={(data) =>
-                                addAccountAndSave(data, name)
+                        <ReactCSVUploadTest
+                            handleFile={(data) =>
+                                uploadAccountTransactionFile(data, name)
                             }
                             headers={[
                                 'date',
@@ -103,10 +105,7 @@ export default function AccountContainer({ transactions, name }) {
                                 'balance',
                                 'category',
                             ]}
-                            timestamped
-                        >
-                            Upload transactions
-                        </UploadButton>
+                        />
                     </Col>
                 </Row>
             </div>
