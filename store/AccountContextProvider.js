@@ -16,7 +16,12 @@ export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
     const { modeIsOnline } = useContext(AppContext)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState({ status: false, message: '' })
 
+    function resetError() {
+        setError({ status: false, message: '' })
+    }
     function getAccessToken() {
         return getAccessTokenSilently({
             audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
@@ -25,13 +30,19 @@ export default function AccountContextProvider({ children }) {
     }
 
     async function fetchAccounts() {
+        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             const content = await API.fetchEntity(accessToken, ENTITY)
 
             setAccounts(isEmpty(content) ? [] : content)
+            setLoading(false)
         } catch (err) {
-            console.error(err)
+            setError({
+                status: true,
+                message: err.message,
+            })
+            setLoading(false)
         }
     }
 
@@ -44,33 +55,48 @@ export default function AccountContextProvider({ children }) {
     }, [modeIsOnline])
 
     async function saveAccountTransaction(account) {
+        setLoading(true)
         const params = Array.isArray(account) ? account : [account]
         try {
             const accessToken = await getAccessToken()
             await API.save(params, accessToken, ENTITY)
             await fetchAccounts()
         } catch (err) {
-            console.error(err)
+            setError({
+                status: true,
+                message: err.message,
+            })
+            setLoading(false)
         }
     }
 
     async function deleteAccountTransaction(id) {
+        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             await API.deleteEntity(id, accessToken, ENTITY)
             await fetchAccounts()
         } catch (err) {
-            console.error(err)
+            setError({
+                status: true,
+                message: err.message,
+            })
+            setLoading(false)
         }
     }
 
     async function updateAccountTransaction(transaction) {
+        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             await API.update(transaction, accessToken, ENTITY)
             await fetchAccounts()
         } catch (err) {
-            console.error(err)
+            setError({
+                status: true,
+                message: err.message.message,
+            })
+            setLoading(false)
         }
     }
 
@@ -103,6 +129,9 @@ export default function AccountContextProvider({ children }) {
             'balance',
             'category',
         ],
+        loading,
+        error,
+        resetError,
     }
 
     return (

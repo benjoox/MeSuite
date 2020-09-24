@@ -42,6 +42,7 @@ exports[`Panel section  renders correctly 1`] = `
       </label>
       <input
         accept=".csv"
+        hidden={true}
         id="upload-button"
         onChange={[Function]}
         type="file"

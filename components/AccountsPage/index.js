@@ -3,6 +3,7 @@ import { Row, Col, Tab, Container } from 'react-bootstrap'
 import { AccountsContext } from '../../store/AccountContextProvider'
 import NavItems from './menu/NavItems'
 import TabItems from './menu/TabItems'
+import Spinner from '../shared/Spinner'
 
 const container = {
     marginTop: '24px',
@@ -10,7 +11,8 @@ const container = {
 }
 
 export default function AccountPage() {
-    const { accounts, accountsAvailable } = useContext(AccountsContext)
+    const { accounts, accountsAvailable, loading } = useContext(AccountsContext)
+    if (loading) return <Spinner />
     return (
         <Container fluid style={container}>
             {accountsAvailable ? (

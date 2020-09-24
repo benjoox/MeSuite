@@ -51,6 +51,16 @@ export default async (req, res) => {
                 error: 'Unauthorized',
                 message: 'The user is not verfied. Try logging out and in',
             })
+        } else if (err.errno === 'ECONNREFUSED') {
+            res.status(500).send({
+                error: 'Server error',
+                message: 'Cannot connect to the database',
+            })
+        } else {
+            res.status(500).send({
+                error: 'Server error',
+                message: err,
+            })
         }
     }
 }
