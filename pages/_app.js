@@ -7,6 +7,7 @@ import AppContextProvider from '../store/AppContextProvider'
 
 import '../components/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '../node_modules/react-csv-upload-test/App.css'
 
 function App({ Component, pageProps }) {
     return (

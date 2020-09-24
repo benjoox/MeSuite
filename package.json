@@ -6,8 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "test:dev": "jest --watch --verbose",
-        "test": "jest",
+        "test:dev": "jest --watch --verbose --env=jest-environment-jsdom-sixteen",
+        "test": "jest --env=jest-environment-jsdom-sixteen",
         "lint": "eslint '**/*.{js,jsx}'",
         "lint-fix": "eslint --fix  '**/*.{js,jsx}' --ext js,jsx",
         "flow": "flow"
@@ -42,7 +42,7 @@
         "react": "16.13.1",
         "react-bootstrap": "^1.0.0-beta.16",
         "react-csv-reader": "^3.0.5",
-        "react-csv-upload-test": "^0.1.8",
+        "react-csv-upload-test": "^0.1.12",
         "react-datepicker": "^2.11.0",
         "react-dom": "16.13.1",
         "react-google-charts": "^3.0.15",
@@ -73,6 +73,7 @@
         "eslint-plugin-react-hooks": "^4.1.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^25.5.4",
+        "jest-environment-jsdom-sixteen": "^1.0.3",
         "prettier": "^2.0.5",
         "react-test-renderer": "^16.13.1"
     },

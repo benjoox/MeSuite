@@ -26,7 +26,7 @@ export default function MarketContextProvider({ children }) {
     const [trades] = useState([])
     const [tradesMap, setTradesMap] = useState({})
 
-    const { mode } = useContext(AppContext)
+    const { modeIsOnline } = useContext(AppContext)
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -46,12 +46,12 @@ export default function MarketContextProvider({ children }) {
     }
 
     useEffect(() => {
-        if (mode && isAuthenticated) {
+        if (modeIsOnline && isAuthenticated) {
             fetchTrades()
         } else {
             setTradesMap({})
         }
-    }, [mode, isAuthenticated])
+    }, [modeIsOnline, isAuthenticated])
 
     async function saveTradeTransaction(transaction) {
         const params = Array.isArray(transaction) ? transaction : [transaction]
@@ -87,7 +87,7 @@ export default function MarketContextProvider({ children }) {
     async function uploadMarketTransactionsFile(uploadedJSON) {
         const { accepted } = validateUploadedJSON(uploadedJSON, trades)
 
-        if (mode) {
+        if (modeIsOnline) {
             updateTradeTransaction(accepted)
         } else {
             const newtradesMap = seperateTradesBySecurity(accepted)

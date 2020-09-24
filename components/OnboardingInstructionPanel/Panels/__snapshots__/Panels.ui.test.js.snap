@@ -27,15 +27,22 @@ exports[`Panel section  renders correctly 1`] = `
       this is a message
     </p>
     <form>
-      <button
-        onClick={[Function]}
-        type="button"
+      <label
+        htmlFor="upload-button"
+        style={
+          Object {
+            "border": "solid grey 1px",
+            "borderRadius": "3px",
+            "cursor": "pointer",
+            "padding": "8px 10px",
+          }
+        }
       >
         Upload
-      </button>
+      </label>
       <input
         accept=".csv"
-        hidden={true}
+        id="upload-button"
         onChange={[Function]}
         type="file"
       />

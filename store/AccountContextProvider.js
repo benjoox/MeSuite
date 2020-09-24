@@ -15,8 +15,7 @@ export type Transaction = {
 export default function AccountContextProvider({ children }) {
     const { isAuthenticated, getAccessTokenSilently } = useAuth0()
     const [accounts, setAccounts] = useState([])
-    const { mode } = useContext(AppContext)
-    const [uploadedTransactions, setUploadedTransactions] = useState({})
+    const { modeIsOnline } = useContext(AppContext)
 
     function getAccessToken() {
         return getAccessTokenSilently({
@@ -37,12 +36,12 @@ export default function AccountContextProvider({ children }) {
     }
 
     useEffect(() => {
-        if (mode && isAuthenticated) {
+        if (modeIsOnline && isAuthenticated) {
             fetchAccounts()
         } else {
             setAccounts([])
         }
-    }, [mode])
+    }, [modeIsOnline])
 
     async function saveAccountTransaction(account) {
         const params = Array.isArray(account) ? account : [account]
@@ -76,13 +75,14 @@ export default function AccountContextProvider({ children }) {
     }
 
     const uploadAccountTransactionFile = (transactions, account = 'temp') => {
-        if (mode && isAuthenticated) {
+        setAccounts([])
+
+        if (modeIsOnline && isAuthenticated) {
             const transactionWithAccount = transactions.map((el) => ({
                 ...el,
                 account,
             }))
-            setUploadedTransactions(transactionWithAccount)
-            // saveAccountTransaction(transactionWithAccount)
+            saveAccountTransaction(transactionWithAccount)
         } else {
             setAccounts({ [account]: transactions })
         }
@@ -95,7 +95,6 @@ export default function AccountContextProvider({ children }) {
         uploadAccountTransactionFile,
         fetchAccounts,
         accounts,
-        uploadedTransactions,
         accountsAvailable: !isEmpty(accounts),
         ACCOUNT_FILE_HEADERS: [
             'date',

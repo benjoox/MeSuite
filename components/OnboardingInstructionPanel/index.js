@@ -7,7 +7,7 @@ import { AccountsContext } from '../../store/AccountContextProvider'
 import { MarketContext } from '../../store/MarketContextProvider'
 import Panels from './Panels'
 
-export default function AccountHome() {
+export default function OnboardingInstructionPanel() {
     const { isAuthenticated } = useAuth0()
     const { modeIsOnline } = useContext(AppContext)
     const { accountsAvailable } = useContext(AccountsContext)
