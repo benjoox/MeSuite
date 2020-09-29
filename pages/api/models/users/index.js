@@ -9,7 +9,7 @@ const Users = {
     ],
     AttributeDefinitions: [
         { AttributeName: 'email', AttributeType: 'S' },
-        { AttributeName: 'createAt', AttributeType: 'N' },
+        { AttributeName: 'createdAt', AttributeType: 'N' },
     ],
 
     ProvisionedThroughput: {

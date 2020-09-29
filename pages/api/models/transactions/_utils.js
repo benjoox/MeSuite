@@ -71,25 +71,6 @@ function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
     return (sellPrice * sellUnits - buyPrice * sellUnits).toFixed(3)
 }
 
-export function splitArray(list, capacity = 50) {
-    const { length } = list
-    const sizeOfLastSubArray = length % capacity
-    const partitionArray = []
-
-    for (let k = 0; k < Math.round(length / capacity); k += 1) {
-        const startIndex = k === 0 ? 0 : k * capacity + 1
-        const endIndex = (k + 1) * capacity
-        partitionArray.push(list.slice(startIndex, endIndex + 1))
-    }
-
-    // Add the remainder of the items
-    if (sizeOfLastSubArray > 0) {
-        const lastArray = list.slice(length - sizeOfLastSubArray)
-        partitionArray.push(lastArray)
-    }
-    return partitionArray
-}
-
 export const averagePriceForEachTransaction = (tradelist) => {
     let tempBuyList = []
     let result = []

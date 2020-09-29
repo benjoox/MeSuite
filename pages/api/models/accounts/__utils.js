@@ -19,7 +19,7 @@ export const convertItemToAccountObj = (item) => {
                 id: item[k].S,
             }
         } else {
-            result = { ...result, [k]: item[k].S }
+            result = { ...result, [k]: item[k].S || item[k].N }
         }
     }
     return result
@@ -40,7 +40,6 @@ export const accountList = (itemList) => {
         }
         accounts[accountName].push(convertItemToAccountObj(itemList[k]))
     }
-
     return accounts
 }
 

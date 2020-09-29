@@ -1,10 +1,38 @@
+// @flow
+
 import React from 'react'
+
 import { InputGroup, Form } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { datetimeObject } from '../../../src/__utils'
+import type { MomentType } from '../../../src/__utils'
 
-const DateFields = (props) => {
-    const { startDate, endDate, updateStartDate, updateEndDate } = props
+type DateFieldsProps = {
+    startDate: MomentType,
+    endDate: MomentType,
+    updateStartDate: (date: MomentType) => void,
+    updateEndDate: (date: MomentType) => void,
+}
+
+const DateFields = ({
+    startDate,
+    endDate,
+    updateStartDate,
+    updateEndDate,
+}: DateFieldsProps) => {
+    function handleStartDateChange(date: string) {
+        updateStartDate(
+            datetimeObject(date.toString(), 'dd MMM DD YYYY hh:mm:ss')
+        )
+    }
+
+    function handleEndDateChange(date: string) {
+        updateEndDate(
+            datetimeObject(date.toString(), 'dd MMM DD YYYY hh:mm:ss')
+        )
+    }
+
     return (
         <Form.Group controlId="exampleForm.ControlSelect1">
             <InputGroup className="mb-3" size="md">
@@ -13,12 +41,12 @@ const DateFields = (props) => {
                         Start date
                     </InputGroup.Text>
                     <DatePicker
-                        selected={startDate}
-                        onChange={(date) => updateStartDate(date)}
+                        selected={startDate.toDate()}
+                        onChange={handleStartDateChange}
                         dateFormat="dd/MM/yyyy"
                         selectsStart
-                        startDate={startDate}
-                        endDate={endDate}
+                        startDate={startDate.toDate()}
+                        endDate={endDate.toDate()}
                     />
                 </InputGroup.Prepend>
             </InputGroup>
@@ -28,13 +56,13 @@ const DateFields = (props) => {
                         End date
                     </InputGroup.Text>
                     <DatePicker
-                        selected={endDate}
-                        onChange={(date) => updateEndDate(date)}
+                        selected={endDate.toDate()}
+                        onChange={handleEndDateChange}
                         dateFormat="dd/MM/yyyy"
                         selectsEnd
-                        startDate={startDate}
-                        endDate={endDate}
-                        minDate={startDate}
+                        startDate={startDate.toDate()}
+                        endDate={endDate.toDate()}
+                        minDate={startDate.toDate()}
                     />
                 </InputGroup.Prepend>
             </InputGroup>

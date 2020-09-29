@@ -6,10 +6,7 @@ import Transactions from './Transactions'
 import Taglist from './TagList'
 import Charts from '../shared/Charts'
 import { AccountsContext } from '../../store/AccountContextProvider'
-
-const today = new Date()
-today.setMonth(2)
-today.setDate(15)
+import { today } from '../../src/__utils'
 
 export default function AccountContainer({ transactions, name }) {
     const [filteredList, setFilteredList] = useState([])
@@ -17,16 +14,17 @@ export default function AccountContainer({ transactions, name }) {
     const [includingText, setIncludingText] = useState('')
     const [excludingText, setExcludingText] = useState('')
     const [startDate, setStartDate] = useState(today)
-    const [endDate, setEndDate] = useState(new Date())
-
+    const [endDate, setEndDate] = useState(today)
+    /** date is timestamp */
     const isDateIncluded = (date) => {
-        const startDateTimestamp = startDate.getTime() / 1000
-        const endDateTimestamp = endDate.getTime() / 1000
+        const startDateTimestamp = startDate.unix()
+        const endDateTimestamp = endDate.unix()
         return startDateTimestamp <= date && date <= endDateTimestamp
     }
 
-    const filteredByDate = () =>
-        transactions.filter(({ date }) => isDateIncluded(date))
+    const filteredByDate = () => {
+        return transactions.filter(({ timestamp }) => isDateIncluded(timestamp))
+    }
 
     const isTextIncluded = (text) =>
         text.toString().toLowerCase().includes(includingText.toLowerCase())

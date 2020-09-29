@@ -52,7 +52,6 @@ export default async (req, res) => {
                 console.warn('The switch statement is fallen back to default')
         }
     } catch (err) {
-        console.error(err)
         if (err.message === 'invalid signature') {
             res.status(401).send({
                 error: 'Unauthorized',
@@ -62,6 +61,12 @@ export default async (req, res) => {
             res.status(500).send({
                 error: 'Server error',
                 message: 'Cannot connect to the database',
+            })
+        } else if (err.code === 'ValidationException') {
+            res.status(500).send({
+                error: 'Server error',
+                message:
+                    'The data could not be validated. Too many items to process might be a reason.',
             })
         } else {
             res.status(500).send({

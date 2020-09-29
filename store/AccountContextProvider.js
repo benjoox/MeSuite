@@ -3,10 +3,12 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './AppContextProvider'
 import * as API from '../apiCalls'
 import isEmpty from './__utils'
+import { timestamp, datetimeDisplay, datetimeObject } from '../src/__utils'
 
 export const AccountsContext = React.createContext('Accounts')
 
 const ENTITY = 'accounts'
+export const ACCOUNT_PAGE_ROUTE_NAME = 'accounts'
 
 export type Transaction = {
     date: any,
@@ -103,14 +105,17 @@ export default function AccountContextProvider({ children }) {
     const uploadAccountTransactionFile = (transactions, account = 'temp') => {
         setAccounts([])
 
+        const transactionWithFormattedDates = transactions.map((el) => ({
+            ...el,
+            datetimeDisplay: datetimeDisplay(el.date),
+            datetimeObject: datetimeObject(el.date),
+            timestamp: timestamp(el.date),
+        }))
+
         if (modeIsOnline && isAuthenticated) {
-            const transactionWithAccount = transactions.map((el) => ({
-                ...el,
-                account,
-            }))
-            saveAccountTransaction(transactionWithAccount)
+            saveAccountTransaction(transactionWithFormattedDates)
         } else {
-            setAccounts({ [account]: transactions })
+            setAccounts({ [account]: transactionWithFormattedDates })
         }
     }
 
@@ -126,8 +131,9 @@ export default function AccountContextProvider({ children }) {
             'date',
             'amount',
             'description',
-            'balance',
             'category',
+            'account',
+            'balance',
         ],
         loading,
         error,

@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useContext } from 'react'
 import { Jumbotron, Table } from 'react-bootstrap'
 import {

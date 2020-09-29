@@ -5,7 +5,10 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useRouter } from 'next/router'
 
 import { AppContext } from '../../store/AppContextProvider'
-import { AccountsContext } from '../../store/AccountContextProvider'
+import {
+    AccountsContext,
+    ACCOUNT_PAGE_ROUTE_NAME,
+} from '../../store/AccountContextProvider'
 import AccountsPage from '../../components/AccountsPage'
 import OnboardingInstructionPanel from '../../components/OnboardingInstructionPanel'
 
@@ -57,6 +60,7 @@ describe('Account page content', () => {
 
         const testCase = {
             modeIsOnline: true,
+            ACCOUNT_PAGE_ROUTE_NAME: `/${ACCOUNT_PAGE_ROUTE_NAME}`,
             headers: ['date', 'amount', 'description', 'balance', 'category'],
             uploadAccountTransactionFile: uploadAccountTransactionFileMock,
             accountsAvailable: false,
@@ -65,7 +69,7 @@ describe('Account page content', () => {
 
         const csvArray = [
             'date, amount, description, balance, category',
-            `06/08/2020,"-1409.12","AIRBNB * HM5XFCTTFY Surry Hills AU AUS Card xx3285 Value Date: 02/08/2020","+54.49","Travel"`,
+            `06/08/2020 10:08:00,"-1409.12","AIRBNB * HM5XFCTTFY Surry Hills AU AUS Card xx3285 Value Date: 02/08/2020","+54.49","Travel"`,
         ]
         const button = screen.getByLabelText('Upload')
         const csvFile = new Blob([csvArray.join('\n')], { type: 'text/csv' })
@@ -83,7 +87,7 @@ describe('Account page content', () => {
         fireEvent.click(confirmButton)
         const testCaseExpectation = [
             {
-                date: '06/08/2020',
+                date: '06/08/2020 08:08:00',
                 amount: '-1409.12',
                 description:
                     'AIRBNB * HM5XFCTTFY Surry Hills AU AUS Card xx3285 Value Date: 02/08/2020',
@@ -140,6 +144,7 @@ describe('Account page content', () => {
             modeIsOnline: false,
             accountsAvailable: true,
             accounts: { accountTestCase },
+            ACCOUNT_PAGE_ROUTE_NAME: `/${ACCOUNT_PAGE_ROUTE_NAME}`,
         }
 
         accountPage(testCase)

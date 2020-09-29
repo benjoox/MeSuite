@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { useRouter } from 'next/router'
 import { useAuth0 } from '@auth0/auth0-react'
 
-import AccountsHome from '.'
+import OnboardingInstructionPanel from '.'
 import { AppContext } from '../../store/AppContextProvider'
 import { AccountsContext } from '../../store/AccountContextProvider'
 import { ACCOUNT_PAGE_ROUTE_NAME } from './Panels'
@@ -12,6 +12,15 @@ import { ACCOUNT_PAGE_ROUTE_NAME } from './Panels'
 jest.mock('@auth0/auth0-react')
 jest.mock('next/router')
 
+const customReneder = (appContextValues, accountContextValues) => {
+    render(
+        <AppContext.Provider value={appContextValues}>
+            <AccountsContext.Provider value={accountContextValues}>
+                <OnboardingInstructionPanel />
+            </AccountsContext.Provider>
+        </AppContext.Provider>
+    )
+}
 describe('Account home for authenticated users and no accounts', () => {
     beforeEach(() => {
         // Mock the Auth0 hook and make it return a logged in state
@@ -19,7 +28,7 @@ describe('Account home for authenticated users and no accounts', () => {
             isAuthenticated: true,
         })
         useRouter.mockReturnValue({
-            pathname: ACCOUNT_PAGE_ROUTE_NAME,
+            pathname: `/${ACCOUNT_PAGE_ROUTE_NAME}`,
         })
     })
     const accounts = []
@@ -28,14 +37,22 @@ describe('Account home for authenticated users and no accounts', () => {
         isOnline: false
         accounts: []
         result: jumbo notification: Import your first account and explore it in offline mode ...`, () => {
-        const modeIsOnline = false
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: false,
+        }
+        const accountContextValues = {
+            accounts,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Import your first account and explore it in offline mode. Nothing will be saved and you will use your work if you refresh/
@@ -54,15 +71,22 @@ describe('Account home for authenticated users and no accounts', () => {
         isOnline: true,
         result:
         'jumbo notification: Upload a CSV file. We will save it for you.',`, () => {
-        const modeIsOnline = true
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accounts }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: true,
+        }
+        const accountContextValues = {
+            accounts,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
 
+        customReneder(appContextValues, accountContextValues)
         const textOnScreen = screen.getByText(
             /^Upload a CSV file. We will save it for you./
         )
@@ -89,14 +113,22 @@ describe('Account home for authenticated users and one or more accounts', () => 
     it(`Test 1: 
         isOnline: false,
         result: small notification: Upload another account. You will loose this page.`, () => {
-        const modeIsOnline = false
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: false,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Upload another account. You will loose this page./
@@ -113,15 +145,22 @@ describe('Account home for authenticated users and one or more accounts', () => 
     it(`Test 2: 
         isOnline: true,
         result: 'Add a new account.'`, () => {
-        const modeIsOnline = true
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: true,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
 
+        customReneder(appContextValues, accountContextValues)
         const textOnScreen = screen.getByText(/^Add a new account./)
         expect(textOnScreen).toHaveTextContent('Add a new account.')
 
@@ -144,14 +183,22 @@ describe('Account home tests for user who are non-authenticated and no accounts'
     it(`Test 1. 
         isOnline: false,
         result: jumbo notification: Upload your account and explore your data without saving them. Login and change to online mode to save your data.`, () => {
-        const modeIsOnline = false
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: false,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Upload your account and explore your data without saving them. Login and change to online mode to save your data./
@@ -169,14 +216,22 @@ describe('Account home tests for user who are non-authenticated and no accounts'
     it(`Test 2: 
         isOnline: true,
         result: 'jumbo notification: Import an account and explore it without saving any data. Login to save your data.'`, () => {
-        const modeIsOnline = true
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: true,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Import an account and explore it without saving any data. Login to save your data./
@@ -204,14 +259,23 @@ describe('Account home tests for user who are non-authenticated and one or more 
     it(`Test 1. 
         isOnline: false,
         result: jumbo notification: Upload another account. You will loose this page.`, () => {
-        const modeIsOnline = false
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: false,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            accounts: [],
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Upload another account. You will loose this page./
@@ -234,14 +298,22 @@ describe('Account home tests for user who are non-authenticated and one or more 
     it(`Test 2: 
         isOnline: true,
         result: jumbo notification: Upload a new account to explore them without saving or login to save your data.`, () => {
-        const modeIsOnline = true
-        render(
-            <AppContext.Provider value={{ modeIsOnline }}>
-                <AccountsContext.Provider value={{ accountsAvailable }}>
-                    <AccountsHome />
-                </AccountsContext.Provider>
-            </AppContext.Provider>
-        )
+        const appContextValues = {
+            modeIsOnline: true,
+        }
+        const accountContextValues = {
+            accountsAvailable,
+            ACCOUNT_FILE_HEADERS: [
+                'date',
+                'amount',
+                'description',
+                'category',
+                'account',
+                'balance',
+            ],
+        }
+
+        customReneder(appContextValues, accountContextValues)
 
         const textOnScreen = screen.getByText(
             /^Upload a new account to explore them without saving or login to save your data./

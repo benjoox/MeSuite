@@ -2,9 +2,10 @@
 
 import React from 'react'
 import { Row, Jumbotron } from 'react-bootstrap'
+import type { Element } from 'react'
 
 type Props = {
-    children: React.Node,
+    children: Element<string>,
     message: string,
 }
 

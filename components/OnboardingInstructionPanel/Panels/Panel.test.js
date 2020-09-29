@@ -3,22 +3,32 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { useRouter } from 'next/router'
-import Panel, { ACCOUNT_PAGE_ROUTE_NAME, MARKET_PAGE_ROUTE_NAME } from '.'
-import { AccountsContext } from '../../../store/AccountContextProvider'
+import Panel, { MARKET_PAGE_ROUTE_NAME } from '.'
+import {
+    AccountsContext,
+    ACCOUNT_PAGE_ROUTE_NAME,
+} from '../../../store/AccountContextProvider'
 import { MarketContext } from '../../../store/MarketContextProvider'
 
 jest.mock('next/router')
 jest.mock('../../../store/AccountContextProvider')
-jest.mock('../../../store/MarketContextProvider')
 
 describe('Panel test for accounts page ', () => {
     beforeEach(() => {
         useRouter.mockReturnValue({
-            pathname: ACCOUNT_PAGE_ROUTE_NAME,
+            pathname: `/${ACCOUNT_PAGE_ROUTE_NAME}`,
         })
     })
     const value = {
         accountsAvailable: true,
+        ACCOUNT_FILE_HEADERS: [
+            'date',
+            'amount',
+            'description',
+            'category',
+            'account',
+            'balance',
+        ],
     }
     test('should display the message passed to the panel', async () => {
         const { getByText } = render(
@@ -34,11 +44,19 @@ describe('Panel test for accounts page ', () => {
 describe('Panel test for market page ', () => {
     beforeEach(() => {
         useRouter.mockReturnValue({
-            pathname: MARKET_PAGE_ROUTE_NAME,
+            pathname: `/${MARKET_PAGE_ROUTE_NAME}`,
         })
     })
     const value = {
         tradesAvailable: true,
+        ACCOUNT_FILE_HEADERS: [
+            'date',
+            'amount',
+            'description',
+            'category',
+            'account',
+            'balance',
+        ],
     }
     test('should display the message passed to the panel', async () => {
         const { getByText } = render(

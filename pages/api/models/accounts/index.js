@@ -1,8 +1,12 @@
+// @flow
+
 import * as dynamodb from '../../services/dynamoDb'
 import { accountPostParams, batchPutParams } from './post'
 import { accountDeleteParams } from './delete'
 import { accountPutParams } from './put'
 import { accountList } from './__utils'
+import { splitArray } from '../__utils'
+import { IAccount, IUser } from './types'
 
 const TABLENAME = 'Accounts'
 
@@ -39,12 +43,12 @@ export async function getAccounts() {
         const response = await dynamodb.scan({
             TableName: TABLENAME,
         })
-
         return accountList(response.Items)
     } catch (err) {
         if (err.code === 'ResourceNotFoundException') {
             // create a new db
             await dynamodb.create(Accounts)
+
             const response = await dynamodb.scan({
                 TableName: TABLENAME,
             })
@@ -54,20 +58,25 @@ export async function getAccounts() {
     }
 }
 
-export function createAccountTransaction(params, user) {
+export function createAccountTransaction(params: IAccount[], user: IUser) {
     if (params.length === 1) {
         return dynamodb.putItem(accountPostParams(params[0], user))
     }
     if (params.length > 1) {
-        return dynamodb.batchWriteItem(batchPutParams(params, user))
+        const partitionArray = splitArray(params, 20)
+        const newAddedPromises = partitionArray.map(async (partition) => {
+            return dynamodb.batchWriteItem(batchPutParams(partition, user))
+        })
+
+        return Promise.all(newAddedPromises)
     }
     throw Error('Params passed to create a user cannot be empty')
 }
 
-export function deleteAccountTransaction(params) {
+export function deleteAccountTransaction(params: IAccount[]) {
     return dynamodb.deleteItem(accountDeleteParams(params))
 }
 
-export async function updateAccountTransaction(params) {
+export async function updateAccountTransaction(params: IAccount[]) {
     return dynamodb.putItem(accountPutParams(params))
 }

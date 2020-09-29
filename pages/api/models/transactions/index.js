@@ -8,8 +8,9 @@ import {
     seperateTradesByTickers,
     sortTransactionsByDate,
     averagePriceForEachTransaction,
-    splitArray,
 } from './_utils'
+
+import { splitArray } from '../__utils'
 
 const TABLENAME = 'Transactions'
 

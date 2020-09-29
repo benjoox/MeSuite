@@ -2,13 +2,14 @@
 
 import React from 'react'
 import { Row } from 'react-bootstrap'
+import type { Element } from 'react'
 
 type Props = {
-    children: React.Element,
+    children: Element<string>,
     message: string,
 }
 
-function TinyInstructionPanel({ children, message }: Props): React.Node {
+function TinyInstructionPanel({ children, message }: Props) {
     return (
         <Row
             style={{

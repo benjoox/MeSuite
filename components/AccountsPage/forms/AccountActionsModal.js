@@ -1,16 +1,8 @@
 import React, { useState } from 'react'
 import { bool, func } from 'prop-types'
-import moment from 'moment-timezone'
 import { Modal, Button } from 'react-bootstrap'
 import AccountTransactionForm from './AccountTransactionForm'
-
-const timestamp = (
-    datetime,
-    dateFormat = 'YYYY-MM-DDTHH:mm:ss',
-    zone = 'AUSTRALIA/MELBOURNE'
-) => {
-    return moment(datetime, dateFormat).tz(zone).unix()
-}
+import { timestamp } from '../../shared/__utils/DateTime'
 
 export default function AccountActionsModal({ show, close, save }) {
     const [account, setAccount] = useState({
