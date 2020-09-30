@@ -1,5 +1,17 @@
 import moment from 'moment-timezone'
 
+const isEmpty = (obj) => Object.keys(obj).length === 0
+
+function sortTransactionsByDate(transactionList, orderBy = 'asc') {
+    return transactionList.sort((a, b) => {
+        const aDate = moment(a.date)
+        const bDate = moment(b.date)
+        if (aDate.isBefore(bDate)) return orderBy === 'asc' ? -1 : 1
+        if (aDate.isAfter(bDate)) return orderBy === 'asc' ? 1 : -1
+        return a.type === 'b' ? -1 : 1
+    })
+}
+
 const BUY = 'b'
 const SOLD = 's'
 
@@ -29,11 +41,11 @@ export function calculateBuyAverages(list) {
 export function seperateTradesByCode(tradeList) {
     const tickers = new Map()
     for (let k = 0; k < tradeList.length; k += 1) {
-        const { ticker } = tradeList[k]
-        if (!tickers.has(ticker)) {
-            tickers.set(ticker, [])
+        const { code } = tradeList[k]
+        if (!tickers.has(code)) {
+            tickers.set(code, [])
         }
-        tickers.set(ticker, [...tickers.get(ticker), tradeList[k]])
+        tickers.set(code, [...tickers.get(code), tradeList[k]])
     }
     return tickers
 }
@@ -58,10 +70,10 @@ export function calculateSellAverages(list, sellTrade) {
 }
 
 function profitAndLossBeforeFees(buyPrice, sellPrice, sellUnits) {
-    return (sellPrice * sellUnits - buyPrice * sellUnits).toFixed(3)
+    return parseFloat((sellPrice * sellUnits - buyPrice * sellUnits).toFixed(3))
 }
 
-export const averagePriceForEachTransaction = (tradelist) => {
+const averagePriceForEachTransaction = (tradelist) => {
     let tempBuyList = []
     let result = []
     for (let k = 0; k < tradelist.length; k += 1) {
@@ -119,12 +131,4 @@ export const averagePriceForEachTransaction = (tradelist) => {
     return result
 }
 
-export function sortTransactionsByDate(transactionList, orderBy = 'asc') {
-    return transactionList.sort((a, b) => {
-        const aDate = moment(a.date)
-        const bDate = moment(b.date)
-        if (aDate.isBefore(bDate)) return orderBy === 'asc' ? -1 : 1
-        if (aDate.isAfter(bDate)) return orderBy === 'asc' ? 1 : -1
-        return a.type === 'b' ? -1 : 1
-    })
-}
+export { isEmpty, sortTransactionsByDate, averagePriceForEachTransaction }

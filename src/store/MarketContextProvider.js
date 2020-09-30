@@ -2,16 +2,16 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './AppContextProvider'
 import * as API from '../apiCalls'
-import isEmpty from './__utils'
 import {
     validateUploadedJSON,
     seperateTradesBySecurity,
 } from '../components/MarketPage/forms/_utils'
 
 import {
+    isEmpty,
     sortTransactionsByDate,
     averagePriceForEachTransaction,
-} from '../pages/api/models/transactions/_utils'
+} from './__utils'
 
 export const MarketContext = React.createContext('Trades')
 

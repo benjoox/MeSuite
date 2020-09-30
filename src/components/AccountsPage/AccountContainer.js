@@ -6,7 +6,7 @@ import Transactions from './Transactions'
 import Taglist from './TagList'
 import Charts from '../shared/Charts'
 import { AccountsContext } from '../../store/AccountContextProvider'
-import { today } from '../../src/__utils'
+import { today } from '../../__utils'
 
 export default function AccountContainer({ transactions, name }) {
     const [filteredList, setFilteredList] = useState([])

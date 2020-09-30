@@ -5,7 +5,7 @@ import { getParams } from './get'
 import { batchPutParams } from './put'
 import { scanParams, scanAllParams } from './scan'
 import {
-    seperateTradesByTickers,
+    seperateTradesByCode,
     sortTransactionsByDate,
     averagePriceForEachTransaction,
 } from './_utils'
@@ -84,7 +84,7 @@ export async function scanAll() {
         }
         result.push(obj)
     })
-    const tradesMap = seperateTradesByTickers(result)
+    const tradesMap = seperateTradesByCode(result)
     const newMap = {}
     tradesMap.forEach((value, key) => {
         const sortedList = sortTransactionsByDate(value)

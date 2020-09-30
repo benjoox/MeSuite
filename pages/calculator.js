@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Form, Col, Row } from 'react-bootstrap'
-import { Outcome, CalculatorForm } from '../components/CalculatorPage'
+import { Outcome, CalculatorForm } from '../src/components/CalculatorPage'
 
 export default function CalculatorContainer() {
     const [buyPrice, setBuy] = useState((x = 55.0) => parseFloat(x))

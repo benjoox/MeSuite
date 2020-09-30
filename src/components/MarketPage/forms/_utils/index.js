@@ -1,4 +1,14 @@
 import moment from 'moment-timezone'
+
+const sanatiseDollarSign = (arg) => {
+    let sanitizedArg = arg
+    if (typeof arg === 'string') {
+        sanitizedArg = arg.replace('$', '')
+        sanitizedArg = parseFloat(parseFloat(sanitizedArg).toFixed(3))
+    }
+
+    return sanitizedArg
+}
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
@@ -47,11 +57,15 @@ const SOLD = 's'
 export function getAverageAndOutstandingNumber(list) {
     return list.reduce(
         (acc, item) => {
-            const costSum = acc.costSum + item.units * item.price
-            const numberSum = acc.numberSum + item.units
+            const { units, price } = item
+            const sanitizedPrice = sanatiseDollarSign(price)
+            const sanitizedUnits = parseFloat(units)
+
+            const costSum = acc.costSum + sanitizedUnits * sanitizedPrice
+            const numberSum = acc.numberSum + sanitizedUnits
             let averagePrice
             if (!numberSum) {
-                averagePrice = item.price
+                averagePrice = sanitizedPrice
             } else if (item.units < 0) {
                 // indicate a sell. Average does not change with a sell
                 averagePrice = acc.averagePrice
@@ -108,6 +122,10 @@ export function validateTransactionData(transaction) {
 export function cleanseTransactionData(transaction) {
     try {
         const { date, type, code, units, price, fees } = transaction
+        if (!units) {
+            throw Error('Number of units are not defined for this transaction')
+        }
+
         return {
             type: type.toLowerCase(),
             code: code.toLowerCase(),
@@ -151,6 +169,10 @@ export function addAveragePriceAfterEachSell(tradeList) {
     return temp.reverse().map((trade) => {
         const { price, units, fees } = trade
 
+        const sanitizedPrice = sanatiseDollarSign(price)
+        const sanitizedFees = sanatiseDollarSign(fees)
+        const sanitizedUnits = parseInt(units, 10)
+
         if (trade.type.toLowerCase() === BUY) {
             buyUntilSold.push({ units, price })
             const {
@@ -160,9 +182,9 @@ export function addAveragePriceAfterEachSell(tradeList) {
             } = getAverageAndOutstandingNumber(buyUntilSold)
             return {
                 ...trade,
-                price,
-                units,
-                fees,
+                price: sanitizedPrice,
+                units: sanitizedUnits,
+                fees: sanitizedFees,
                 averagePrice,
                 outstandingNumberOfSecurity: numberSum,
                 costSum,
@@ -178,18 +200,20 @@ export function addAveragePriceAfterEachSell(tradeList) {
             buyUntilSold = [{ units: numberSum, price: averagePrice }]
             return {
                 ...trade,
-                price,
-                units,
-                fees,
+                price: sanitizedPrice,
+                units: sanitizedUnits,
+                fees: sanitizedFees,
                 averagePrice,
                 outstandingNumberOfSecurity: numberSum,
                 costSum,
-                profitAndLossBeforeFees: units * (price - averagePrice),
+                profitAndLossBeforeFees:
+                    sanitizedUnits * (sanitizedPrice - averagePrice),
             }
         }
         return ''
     })
 }
+
 /**
  *
  *
@@ -220,34 +244,43 @@ export function getSummaryForOneAsset(tradeList) {
     }
 
     return tradeList.reduce((acc, trade) => {
-        const { price, units, fees } = trade
+        const { price, units, fees, type } = trade
+        if (!price || !units || !fees || !type) {
+            throw Error(
+                'A required field for one of the transactions is not available. Required fields are price, units, type and fees'
+            )
+        }
+        const sanitizedPrice = sanatiseDollarSign(price)
+        const sanitizedFees = sanatiseDollarSign(fees)
+        const sanitizedUnits = parseInt(units, 10)
+        const tradeCost = sanitizedPrice * sanitizedUnits
 
-        const tradeCost = price * units
-
-        if (trade.type.toLowerCase() === BUY) {
+        if (type.toLowerCase() === BUY) {
             return {
                 ...acc,
                 totalBuyCost: acc.totalBuyCost
                     ? acc.totalBuyCost + tradeCost
                     : tradeCost,
                 totalNumberBuy: acc.totalNumberBuy
-                    ? acc.totalNumberBuy + units
-                    : units,
-                totalBuyFees: acc.totalBuyFees ? acc.totalBuyFees + fees : fees,
+                    ? acc.totalNumberBuy + sanitizedUnits
+                    : sanitizedUnits,
+                totalBuyFees: acc.totalBuyFees
+                    ? acc.totalBuyFees + sanitizedFees
+                    : sanitizedFees,
             }
         }
-        if (trade.type.toLowerCase() === SOLD) {
+        if (type.toLowerCase() === SOLD) {
             return {
                 ...acc,
                 totalSellCost: acc.totalSellCost
                     ? acc.totalSellCost + tradeCost
                     : tradeCost,
                 totalNumberSell: acc.totalNumberSell
-                    ? acc.totalNumberSell + units
-                    : units,
+                    ? acc.totalNumberSell + sanitizedUnits
+                    : sanitizedUnits,
                 totalSellFees: acc.totalSellFees
-                    ? acc.totalSellFees + fees
-                    : fees,
+                    ? acc.totalSellFees + sanitizedFees
+                    : sanitizedFees,
                 averagePrice: trade.averagePrice || 0,
                 outstandingNumberOfsecurity:
                     trade.outstandingNumberOfsecurity || 0,
@@ -372,14 +405,4 @@ export function sellSummary(tradeList) {
         units: temp.units,
         fees: parseFloat(temp.fees.toFixed(3)),
     }
-}
-
-export function sortTransactionsByDate(transactionList, orderBy = 'asc') {
-    return transactionList.sort((a, b) => {
-        const aDate = moment(a.date)
-        const bDate = moment(b.date)
-        if (aDate.isBefore(bDate)) return orderBy === 'asc' ? -1 : 1
-        if (aDate.isAfter(bDate)) return orderBy === 'asc' ? 1 : -1
-        return a.type === 'b' ? -1 : 1
-    })
 }

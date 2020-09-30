@@ -1,22 +1,22 @@
 import {
-    seperateTradesByTickers,
+    seperateTradesByCode,
     calculateBuyAverages,
     calculateSellAverages,
     averagePriceForEachTransaction,
-} from '../../pages/api/models/transactions/_utils'
+} from '../__utils'
 
 import {
     validateTransactionData,
     cleanseTransactionData,
     buySummary,
     sellSummary,
-} from '../MarketPage/forms/_utils'
+} from '../../components/MarketPage/forms/_utils'
 
 const trades = require('./sampleTrade.json')
 
-describe('seperateTradesByTickers', () => {
+describe('seperateTradesByCode', () => {
     test('seperate into correct number of unique assets', () => {
-        const result = seperateTradesByTickers(trades)
+        const result = seperateTradesByCode(trades)
 
         expect(typeof result).toBe('object')
         expect(result.size).toEqual(5)
@@ -122,6 +122,7 @@ describe('cleanseTransactionData', () => {
             price: '$62.5',
             fees: 19.95,
             net: '6,230.05',
+            units: undefined,
         }
         expect(() => cleanseTransactionData(sampleTrade)).toThrow()
     })
@@ -462,7 +463,7 @@ describe('averagePriceForEachTransaction', () => {
         expect(result[2].outstandingUnits).toEqual(150)
         expect(result[2].profitAndLossBeforeFees).toEqual(200)
 
-        expect(result[3].average).toEqual(58.08)
+        expect(result[3].average).toEqual(58.075)
         expect(result[3].outstandingUnits).toEqual(200)
         expect(result[3].profitAndLossBeforeFees).toEqual(0)
     })

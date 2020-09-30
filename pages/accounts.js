@@ -1,8 +1,8 @@
 import React from 'react'
-import AccountContextProvider from '../store/AccountContextProvider'
-import AccountsPage from '../components/AccountsPage'
-import OnboardingInstructionPanel from '../components/OnboardingInstructionPanel'
-import AccountError from '../components/AccountsPage/AccountErrors'
+import AccountContextProvider from '../src/store/AccountContextProvider'
+import AccountsPage from '../src/components/AccountsPage'
+import OnboardingInstructionPanel from '../src/components/OnboardingInstructionPanel'
+import AccountError from '../src/components/AccountsPage/AccountErrors'
 
 export default function Accounts() {
     return (

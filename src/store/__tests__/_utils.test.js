@@ -4,7 +4,7 @@ import {
     getSummaryForOneAsset,
     getAverageAndOutstandingNumber,
     addAveragePriceAfterEachSell,
-} from '../components/TradeContainer/_utils'
+} from '../../components/MarketPage/forms/_utils'
 
 describe('getSummaryForOneAsset', () => {
     const testData = [
@@ -228,12 +228,12 @@ describe('getSummaryForOneAsset when prices and fees include $ sign', () => {
         const result = getSummaryForOneAsset(testData)
 
         expect(typeof result).toBe('object')
-        // console.log(result)
-        expect(result.totalBuyCost).anything()
-        expect(result.totalNumberBuy).anything()
-        expect(result.totalBuyFees).anything()
-        expect(result.totalSellCost).anything()
-        expect(result.totalSellFees).anything()
+
+        expect(result.totalBuyCost).toBe(18193.5)
+        expect(result.totalNumberBuy).toBe(300)
+        expect(result.totalBuyFees).toBe(69.85)
+        expect(result.totalSellCost).toBe(12357)
+        expect(result.totalSellFees).toBe(39.9)
     })
 })
 
@@ -294,23 +294,22 @@ describe('addAveragePriceAfterEachSell when prices and fees include $ sign', () 
         const result = addAveragePriceAfterEachSell(testData)
 
         expect(typeof result).toBe('object')
-        // console.log(result)
-        expect(result[2]).toHaveProperty('averagePrice')
-        expect(result[2].averagePrice).anything()
-
-        expect(result[2]).toHaveProperty('outstandingNumberOfSecurity')
-        expect(result[2].outstandingNumberOfSecurity).anything()
 
         expect(result[0]).toHaveProperty('averagePrice')
-        expect(result[0].averagePrice).anything()
+        expect(result[0].averagePrice).toBe(61.6)
 
         expect(result[0]).toHaveProperty('outstandingNumberOfSecurity')
-        expect(result[0].outstandingNumberOfSecurity).anything()
+        expect(result[0].outstandingNumberOfSecurity).toBe(200)
 
         expect(result[1]).toHaveProperty('averagePrice')
-        expect(result[1].averagePrice).anything()
+        expect(result[1].averagePrice).toBe(61.6)
 
-        expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
+        expect(result[2]).toHaveProperty('averagePrice')
+        expect(result[2].averagePrice).toBe(62.5)
+
+        expect(result[2]).toHaveProperty('outstandingNumberOfSecurity')
+        expect(result[2].outstandingNumberOfSecurity).toBe(0)
+
         expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
     })
 })

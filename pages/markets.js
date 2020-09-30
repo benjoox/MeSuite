@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import MarketContextProvider, {
     MarketContext,
-} from '../store/MarketContextProvider'
-import OnboardingInstructionPanel from '../components/OnboardingInstructionPanel'
-import MarketPage from '../components/MarketPage'
+} from '../src/store/MarketContextProvider'
+import OnboardingInstructionPanel from '../src/components/OnboardingInstructionPanel'
+import MarketPage from '../src/components/MarketPage'
 
 export default function Markets() {
     const value = useContext(MarketContext)

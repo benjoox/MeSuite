@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { AppContext } from './AppContextProvider'
 import * as API from '../apiCalls'
-import isEmpty from './__utils'
-import { timestamp, datetimeDisplay, datetimeObject } from '../src/__utils'
+import { isEmpty } from './__utils'
+import { timestamp, datetimeDisplay, datetimeObject } from '../__utils'
 
 export const AccountsContext = React.createContext('Accounts')
 

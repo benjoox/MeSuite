@@ -2,10 +2,10 @@
 import React from 'react'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { Container } from 'react-bootstrap'
-import Navbar from '../components/shared/NavigationBar'
-import AppContextProvider from '../store/AppContextProvider'
+import Navbar from '../src/components/shared/NavigationBar'
+import AppContextProvider from '../src/store/AppContextProvider'
 
-import '../components/App.css'
+import '../src/components/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../node_modules/react-csv-upload-test/App.css'
 
