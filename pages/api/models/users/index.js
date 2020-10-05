@@ -5,12 +5,8 @@ const Users = {
     TableName: TABLENAME,
     KeySchema: [
         { AttributeName: 'email', KeyType: 'HASH' }, // Partition key
-        { AttributeName: 'createdAt', KeyType: 'RANGE' }, // Sort key
     ],
-    AttributeDefinitions: [
-        { AttributeName: 'email', AttributeType: 'S' },
-        { AttributeName: 'createdAt', AttributeType: 'N' },
-    ],
+    AttributeDefinitions: [{ AttributeName: 'email', AttributeType: 'S' }],
 
     ProvisionedThroughput: {
         ReadCapacityUnits: 5,
@@ -18,24 +14,18 @@ const Users = {
     },
 }
 
-const userItem = (email) => ({
-    Item: {
+const userItem = (arg) => ({
+    Key: {
         email: {
-            S: email,
-        },
-        createdAt: {
-            N: `${Date.now()}`,
+            S: arg,
         },
     },
-    TableName: TABLENAME,
-    ReturnValues: 'ALL_OLD',
+    TableName: 'Users',
 })
 
 const create = async (email) => {
     try {
-        const user = userItem(email)
-        const table = await db.putItem(user)
-        return table
+        return await db.getItem(userItem(email))
     } catch (err) {
         if (err.code === 'ResourceNotFoundException') {
             // create a new db

@@ -44,7 +44,7 @@ describe('accountList', () => {
         },
     ]
 
-    test('returns the correct number of individual accounts ', () => {
+    it('returns the correct number of individual accounts ', () => {
         const result = accountList(testCase)
 
         expect(typeof result).toBe('object')
@@ -52,7 +52,7 @@ describe('accountList', () => {
         expect(result).toHaveProperty('cbaPersonalSmart')
     })
 
-    test('returns the correct number transactions for each account', () => {
+    it('returns the correct number transactions for each account', () => {
         const result = accountList(testCase)
 
         expect(typeof result).toBe('object')

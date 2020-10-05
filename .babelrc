@@ -1,7 +1,8 @@
 {
     "env": {
         "production": {
-            "presets": ["@babel/preset-react"]
+            "presets": ["@babel/preset-react"],
+            "plugins": ["@babel/plugin-transform-flow-strip-types"]
         },
         "development": {
             "plugins": ["@babel/plugin-transform-flow-strip-types"],

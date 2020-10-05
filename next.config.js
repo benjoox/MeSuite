@@ -59,7 +59,7 @@ const env = (phase) => {
         API_URL: (() => `/api/v1`)(),
         AUTH_REDIRECT_URI: (() => {
             if (isDev) return 'http://localhost:3000'
-            if (isProd) return 'https://alidadkashani.com'
+            if (isProd) return 'https://de0ywuzdg59uh.cloudfront.net/'
             if (isStaging) return 'TO DO'
             return 'AUTH_REDIRECT_URI: not (isDev,isProd && !isStaging,isProd && isStaging)'
         })(),

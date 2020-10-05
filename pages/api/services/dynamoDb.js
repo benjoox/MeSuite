@@ -7,13 +7,16 @@ const config = {
     region: 'us-west-2',
     endpoint: 'http://localhost:8000',
 }
-const dynamodb = new AWS.DynamoDB(config)
+const dynamodb = new AWS.DynamoDB(
+    process.env.NODE_ENV === 'development' ? config : {}
+)
 
 export function batchGetItem(params) {
     return dynamodb.batchGetItem(params).promise()
 }
 
 export function getItem(params) {
+    console.log(' dynamodb.getItem(params).promise() ', params)
     return dynamodb.getItem(params).promise()
 }
 
@@ -43,4 +46,12 @@ export function putItem(params) {
 
 export function deleteItem(params) {
     return dynamodb.deleteItem(params).promise()
+}
+
+export function putInBatch() {
+    console.log('To be implmeneted')
+}
+
+export function describeTable(params) {
+    return dynamodb.describeTable(params).promise()
 }

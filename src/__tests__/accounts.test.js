@@ -4,13 +4,13 @@ import '@testing-library/jest-dom/extend-expect'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useRouter } from 'next/router'
 
-import { AppContext } from '../../src/store/AppContextProvider'
+import { AppContext } from '../store/AppContextProvider'
 import {
     AccountsContext,
     ACCOUNT_PAGE_ROUTE_NAME,
-} from '../../src/store/AccountContextProvider'
-import AccountsPage from '../../src/components/AccountsPage'
-import OnboardingInstructionPanel from '../../src/components/OnboardingInstructionPanel'
+} from '../store/AccountContextProvider'
+import AccountsPage from '../components/AccountsPage'
+import OnboardingInstructionPanel from '../components/OnboardingInstructionPanel'
 
 jest.mock('@auth0/auth0-react')
 jest.mock('next/router')
