@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Button } from 'react-bootstrap'
 import ReactCSVUploadTest from 'react-csv-upload-test'
 import Filter from './Filters'
 import Transactions from './Transactions'
@@ -54,12 +54,19 @@ export default function AccountContainer({ transactions, name }) {
         endDate,
     ])
 
-    const { uploadAccountTransactionFile, accountsAvailable } = useContext(
-        AccountsContext
-    )
+    const {
+        uploadAccountTransactionFile,
+        accountsAvailable,
+        deleteAccount,
+    } = useContext(AccountsContext)
 
     return (
         <Container>
+            <div style={{ position: 'absolute', right: 0 }}>
+                <Button variant="dark" onClick={() => deleteAccount()}>
+                    Delete Account
+                </Button>
+            </div>
             {accountsAvailable ? (
                 <Taglist transactionList={transactions} />
             ) : (

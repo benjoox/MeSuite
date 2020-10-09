@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { accessToken } from './_utils'
 import { create } from '../models/users'
 
-async function authorise(authorization) {
+async function getUserFromAuth0(authorization) {
     const decoded = jwt.verify(
         accessToken(authorization),
         process.env.AUTH_PUBLIC_KEY
@@ -24,7 +24,7 @@ export default async (req, res) => {
     switch (method) {
         case 'GET': {
             const { authorization } = req.headers
-            const user = authorise(authorization)
+            const user = getUserFromAuth0(authorization)
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify(user))
             break
@@ -39,7 +39,7 @@ export function createUser(email) {
 }
 
 export async function authoriseUser(authorization) {
-    const user = await authorise(authorization)
+    const user = await getUserFromAuth0(authorization)
     const { email } = user
     await createUser(email)
     return email

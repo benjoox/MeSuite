@@ -2,7 +2,7 @@
 
 import * as dynamodb from '../../services/dynamoDb'
 import { accountPostParams, batchPutParams } from './post'
-import { accountDeleteParams } from './delete'
+import { accountDeleteParams, batchDeleteParams } from './delete'
 import { accountPutParams } from './put'
 import { accountList } from './__utils'
 import { splitArray } from '../__utils'
@@ -79,4 +79,14 @@ export function deleteAccountTransaction(params: IAccount[]) {
 
 export async function updateAccountTransaction(params: IAccount[]) {
     return dynamodb.putItem(accountPutParams(params))
+}
+
+export async function deleteAccount(name: string) {
+    const transactionList = await getAccounts()
+
+    return Promise.all(
+        splitArray(transactionList[name], 20).map(async (partition) => {
+            return dynamodb.batchWriteItem(batchDeleteParams(partition))
+        })
+    )
 }

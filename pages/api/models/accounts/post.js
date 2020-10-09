@@ -1,27 +1,6 @@
-const TABLENAME = 'Accounts'
-const accountItem = (params, user) => {
-    const {
-        timestamp,
-        amount,
-        account,
-        description = '',
-        category = '',
-        datetimeDisplay,
-        date,
-    } = params
+import accountItem from './accountItem'
 
-    return {
-        user_account_date_amount: {
-            S: `${user}_${account}_${timestamp}_${amount}`,
-        },
-        account: { S: account },
-        description: { S: description },
-        category: { S: category },
-        datetimeDisplay: { S: datetimeDisplay },
-        date: { S: date },
-        timestamp: { N: timestamp.toString() },
-    }
-}
+const TABLENAME = 'Accounts'
 
 const putItemList = (paramsList, user) => {
     const map = new Map()

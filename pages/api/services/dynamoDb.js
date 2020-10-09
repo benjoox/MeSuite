@@ -16,7 +16,6 @@ export function batchGetItem(params) {
 }
 
 export function getItem(params) {
-    console.log(' dynamodb.getItem(params).promise() ', params)
     return dynamodb.getItem(params).promise()
 }
 

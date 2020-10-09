@@ -7,7 +7,8 @@ import { timestamp, datetimeDisplay, datetimeObject } from '../__utils'
 
 export const AccountsContext = React.createContext('Accounts')
 
-const ENTITY = 'accounts'
+const ACCOUNT_TRANSACTIONS = 'accountTransactions'
+const ACCOUNTS = 'accounts'
 export const ACCOUNT_PAGE_ROUTE_NAME = 'accounts'
 
 export type Transaction = {
@@ -20,6 +21,7 @@ export default function AccountContextProvider({ children }) {
     const { modeIsOnline } = useContext(AppContext)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState({ status: false, message: '' })
+    const [selectedAccount, setSelectedAccount] = useState({ name: '', 1: {} })
 
     function resetError() {
         setError({ status: false, message: '' })
@@ -35,10 +37,11 @@ export default function AccountContextProvider({ children }) {
         setLoading(true)
         try {
             const accessToken = await getAccessToken()
-            const content = await API.fetchEntity(accessToken, ENTITY)
+            const content = await API.fetchEntity(accessToken, ACCOUNTS)
 
             setAccounts(isEmpty(content) ? [] : content)
             setLoading(false)
+            resetError()
         } catch (err) {
             setError({
                 status: true,
@@ -61,7 +64,7 @@ export default function AccountContextProvider({ children }) {
         const params = Array.isArray(account) ? account : [account]
         try {
             const accessToken = await getAccessToken()
-            await API.save(params, accessToken, ENTITY)
+            await API.save(params, accessToken, ACCOUNT_TRANSACTIONS)
             await fetchAccounts()
         } catch (err) {
             setError({
@@ -76,7 +79,26 @@ export default function AccountContextProvider({ children }) {
         setLoading(true)
         try {
             const accessToken = await getAccessToken()
-            await API.deleteEntity(id, accessToken, ENTITY)
+            await API.deleteEntity(id, accessToken, ACCOUNT_TRANSACTIONS)
+            await fetchAccounts()
+        } catch (err) {
+            setError({
+                status: true,
+                message: err.message,
+            })
+            setLoading(false)
+        }
+    }
+
+    async function deleteAccount() {
+        setLoading(true)
+        try {
+            const accessToken = await getAccessToken()
+            await API.deleteEntity(
+                { name: selectedAccount.name },
+                accessToken,
+                ACCOUNTS
+            )
             await fetchAccounts()
         } catch (err) {
             setError({
@@ -91,7 +113,7 @@ export default function AccountContextProvider({ children }) {
         setLoading(true)
         try {
             const accessToken = await getAccessToken()
-            await API.update(transaction, accessToken, ENTITY)
+            await API.update(transaction, accessToken, ACCOUNT_TRANSACTIONS)
             await fetchAccounts()
         } catch (err) {
             setError({
@@ -119,6 +141,10 @@ export default function AccountContextProvider({ children }) {
         }
     }
 
+    function selectAccount(accountName) {
+        setSelectedAccount({ name: accountName })
+    }
+
     const value = {
         deleteAccountTransaction,
         updateAccountTransaction,
@@ -138,6 +164,9 @@ export default function AccountContextProvider({ children }) {
         loading,
         error,
         resetError,
+        selectedAccountName: selectedAccount.name,
+        selectAccount,
+        deleteAccount,
     }
 
     return (

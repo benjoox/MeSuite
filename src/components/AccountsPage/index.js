@@ -11,13 +11,23 @@ const container = {
 }
 
 export default function AccountPage() {
-    const { accounts, accountsAvailable, loading } = useContext(AccountsContext)
+    const {
+        accounts,
+        accountsAvailable,
+        loading,
+        selectedAccountName,
+        selectAccount,
+    } = useContext(AccountsContext)
+
     if (loading) return <Spinner />
     return (
         <Container fluid style={container}>
             {accountsAvailable ? (
                 <div style={{ marginTop: '35px' }}>
-                    <Tab.Container defaultActiveKey="Temp account">
+                    <Tab.Container
+                        activeKey={selectedAccountName}
+                        onSelect={selectAccount}
+                    >
                         <Row>
                             <Col sm={3}>
                                 <NavItems accounts={accounts} />
