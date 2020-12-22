@@ -1,24 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Container, Table, Button } from 'react-bootstrap'
 import Field from './Field'
+import { FilterContext } from '../../store/FilterContextProvider'
 
-export default function Transctions(props) {
+export default function Transctions() {
     const [balance, setBalance] = useState(0)
     const [debit, setDebit] = useState(0)
     const [credit, setCredit] = useState(0)
+    const { setFilteredList, filteredList } = useContext(FilterContext)
 
-    const { list } = props
+    if (filteredList.length < 1) return ''
+
     function sort(sortBy) {
-        const sortedArray = list.sort((a, b) => {
+        const sortedArray = filteredList.sort((a, b) => {
             if (a[sortBy] > b[sortBy]) return -1
             if (b[sortBy] > a[sortBy]) return 1
             return 0
         })
-        props.updateFilteredList([...sortedArray])
+        setFilteredList([...sortedArray])
     }
 
     function calcTotal() {
-        const totalObj = list.reduce(
+        const totalObj = filteredList.reduce(
             (acc, transaction) => {
                 return {
                     debit:
@@ -58,7 +61,7 @@ export default function Transctions(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {list.map((transaction) => (
+                    {filteredList.map((transaction) => (
                         <Field key={Math.random()} transaction={transaction} />
                     ))}
 

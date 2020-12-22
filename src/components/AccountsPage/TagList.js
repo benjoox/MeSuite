@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Container, Row, Col, Badge } from 'react-bootstrap'
+import { FilterContext } from '../../store/FilterContextProvider'
 
 export default function Taglist(props) {
     const { transactionList } = props
     const [tagList, setTaglist] = useState([])
+    const { filterByTag } = useContext(FilterContext)
 
     function extractTags() {
         const newTagList = [
@@ -20,7 +22,12 @@ export default function Taglist(props) {
                 <Row>
                     <Col>
                         {tagList.map((tag) => (
-                            <Badge pill variant="info" key={tag}>
+                            <Badge
+                                onClick={() => filterByTag(tag)}
+                                pill
+                                variant="info"
+                                key={tag}
+                            >
                                 {tag}
                             </Badge>
                         ))}

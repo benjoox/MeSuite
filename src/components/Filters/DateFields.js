@@ -5,8 +5,8 @@ import React from 'react'
 import { InputGroup, Form } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { datetimeObject } from '../../../__utils'
-import type { MomentType } from '../../../__utils'
+import { datetimeObject } from '../../__utils'
+import type { MomentType } from '../../__utils'
 
 type DateFieldsProps = {
     startDate: MomentType,

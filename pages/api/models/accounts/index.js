@@ -77,8 +77,11 @@ export function deleteAccountTransaction(params: IAccount[]) {
     return dynamodb.deleteItem(accountDeleteParams(params))
 }
 
-export async function updateAccountTransaction(params: IAccount[]) {
-    return dynamodb.putItem(accountPutParams(params))
+export async function updateAccountTransaction(
+    params: IAccount[],
+    username: string
+) {
+    return dynamodb.putItem(accountPutParams(params, username))
 }
 
 export async function deleteAccount(name: string) {

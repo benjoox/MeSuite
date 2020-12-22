@@ -21,7 +21,10 @@ export default function AccountContextProvider({ children }) {
     const { modeIsOnline } = useContext(AppContext)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState({ status: false, message: '' })
-    const [selectedAccount, setSelectedAccount] = useState({ name: '', 1: {} })
+    const [selectedAccount, setSelectedAccount] = useState({
+        name: '',
+        transactions: {},
+    })
 
     function resetError() {
         setError({ status: false, message: '' })
@@ -34,12 +37,13 @@ export default function AccountContextProvider({ children }) {
     }
 
     async function fetchAccounts() {
-        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             const content = await API.fetchEntity(accessToken, ACCOUNTS)
-
             setAccounts(isEmpty(content) ? [] : content)
+            const { name } = selectedAccount
+
+            setSelectedAccount({ name, transactions: content[name] })
             setLoading(false)
             resetError()
         } catch (err) {
@@ -47,7 +51,6 @@ export default function AccountContextProvider({ children }) {
                 status: true,
                 message: err.message,
             })
-            setLoading(false)
         }
     }
 
@@ -60,7 +63,6 @@ export default function AccountContextProvider({ children }) {
     }, [modeIsOnline])
 
     async function saveAccountTransaction(account) {
-        setLoading(true)
         const params = Array.isArray(account) ? account : [account]
         try {
             const accessToken = await getAccessToken()
@@ -71,12 +73,10 @@ export default function AccountContextProvider({ children }) {
                 status: true,
                 message: err.message,
             })
-            setLoading(false)
         }
     }
 
     async function deleteAccountTransaction(id) {
-        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             await API.deleteEntity(id, accessToken, ACCOUNT_TRANSACTIONS)
@@ -86,7 +86,6 @@ export default function AccountContextProvider({ children }) {
                 status: true,
                 message: err.message,
             })
-            setLoading(false)
         }
     }
 
@@ -110,7 +109,6 @@ export default function AccountContextProvider({ children }) {
     }
 
     async function updateAccountTransaction(transaction) {
-        setLoading(true)
         try {
             const accessToken = await getAccessToken()
             await API.update(transaction, accessToken, ACCOUNT_TRANSACTIONS)
@@ -120,7 +118,6 @@ export default function AccountContextProvider({ children }) {
                 status: true,
                 message: err.message.message,
             })
-            setLoading(false)
         }
     }
 
@@ -142,7 +139,14 @@ export default function AccountContextProvider({ children }) {
     }
 
     function selectAccount(accountName) {
-        setSelectedAccount({ name: accountName })
+        setSelectedAccount({
+            name: accountName,
+            transactions: accounts[accountName],
+        })
+    }
+
+    function filterByTag() {
+        console.log('')
     }
 
     const value = {
@@ -164,9 +168,10 @@ export default function AccountContextProvider({ children }) {
         loading,
         error,
         resetError,
-        selectedAccountName: selectedAccount.name,
+        selectedAccount,
         selectAccount,
         deleteAccount,
+        filterByTag,
     }
 
     return (

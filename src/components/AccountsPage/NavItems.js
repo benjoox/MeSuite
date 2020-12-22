@@ -5,7 +5,7 @@ const NavItems = ({ accounts }) => {
     const menu = []
     Object.entries(accounts).map((el) => {
         menu.push(
-            <Nav.Item key={Math.random() * 1000}>
+            <Nav.Item key={el[0]}>
                 <Nav.Link eventKey={el[0]}>{el[0].toUpperCase()}</Nav.Link>
             </Nav.Item>
         )

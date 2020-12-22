@@ -30,8 +30,8 @@ export default async (req, res) => {
                 break
             }
             case 'PUT': {
-                await authoriseUser(authorization)
-                const content = await updateAccountTransaction(body)
+                const user = await authoriseUser(authorization)
+                const content = await updateAccountTransaction(body, user)
                 res.json({
                     success: true,
                     content,

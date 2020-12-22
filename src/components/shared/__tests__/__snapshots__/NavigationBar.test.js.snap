@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationBar should match the snapshot 1`] = `
+<nav
+  className="d-flex navbar navbar-expand-lg navbar-light bg-dark"
+>
+  <a
+    className="nav-link"
+    href="/"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    onMouseEnter={[Function]}
+  >
+    <h3>
+      Me Suite
+    </h3>
+  </a>
+  <button
+    aria-controls="navbar-nav"
+    aria-label="Toggle navigation"
+    className="navbar-toggler collapsed"
+    onClick={[Function]}
+    type="button"
+  >
+    <span
+      className="navbar-toggler-icon"
+    />
+  </button>
+  <div
+    aria-expanded={null}
+    className="d-flex justify-content-end navbar-collapse collapse"
+    id="navbar-nav"
+  >
+    <div>
+      <form
+        className=""
+        style={
+          Object {
+            "color": "#007bff",
+          }
+        }
+      >
+        <div
+          className="custom-control custom-switch"
+        >
+          <input
+            className="custom-control-input"
+            disabled={false}
+            id="modeSwtich"
+            onChange={[Function]}
+            secondary={1}
+            type="checkbox"
+          />
+          <label
+            className="custom-control-label"
+            htmlFor="modeSwtich"
+            title=""
+          >
+            Offline
+          </label>
+        </div>
+      </form>
+    </div>
+    <a
+      className=" selected nav-link"
+      href="/accounts"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+    >
+      Accounts
+    </a>
+    <a
+      className="nav-link"
+      href="/markets"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+    >
+      Markets
+    </a>
+    <a
+      className="nav-link"
+      href="/calculator"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      onMouseEnter={[Function]}
+    >
+      Calculator
+    </a>
+    <div
+      className="spinner-border"
+      role="status"
+    >
+      <span
+        className="sr-only"
+      >
+        Loading...
+      </span>
+    </div>
+  </div>
+</nav>
+`;

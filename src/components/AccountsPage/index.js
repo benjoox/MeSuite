@@ -1,9 +1,11 @@
 import React, { useContext } from 'react'
 import { Row, Col, Tab, Container } from 'react-bootstrap'
 import { AccountsContext } from '../../store/AccountContextProvider'
-import NavItems from './menu/NavItems'
-import TabItems from './menu/TabItems'
+import FilterContextProvider from '../../store/FilterContextProvider'
+import NavItems from './NavItems'
+import AccountContainer from './AccountContainer'
 import Spinner from '../shared/Spinner'
+import Taglist from './TagList'
 
 const container = {
     marginTop: '24px',
@@ -15,32 +17,57 @@ export default function AccountPage() {
         accounts,
         accountsAvailable,
         loading,
-        selectedAccountName,
+        selectedAccount,
         selectAccount,
     } = useContext(AccountsContext)
 
     if (loading) return <Spinner />
+
+    const isAccountSelected = () =>
+        accountsAvailable && selectedAccount.name !== ''
     return (
-        <Container fluid style={container}>
-            {accountsAvailable ? (
-                <div style={{ marginTop: '35px' }}>
-                    <Tab.Container
-                        activeKey={selectedAccountName}
-                        onSelect={selectAccount}
-                    >
-                        <Row>
-                            <Col sm={3}>
-                                <NavItems accounts={accounts} />
-                            </Col>
-                            <Col sm={9}>
-                                <TabItems accounts={accounts} />
-                            </Col>
-                        </Row>
-                    </Tab.Container>
-                </div>
-            ) : (
-                ''
-            )}
-        </Container>
+        <FilterContextProvider primaryList={selectedAccount}>
+            <Container fluid style={container}>
+                {accountsAvailable ? (
+                    <div style={{ marginTop: '35px' }}>
+                        <Tab.Container
+                            activeKey={selectedAccount.name}
+                            onSelect={selectAccount}
+                        >
+                            <Row>
+                                <Col sm={3}>
+                                    <NavItems accounts={accounts} />
+                                    {isAccountSelected() ? (
+                                        <Taglist
+                                            transactionList={
+                                                selectedAccount.transactions
+                                            }
+                                        />
+                                    ) : (
+                                        ''
+                                    )}
+                                </Col>
+                                {isAccountSelected() ? (
+                                    <>
+                                        <Col sm={9}>
+                                            <AccountContainer
+                                                transactions={
+                                                    selectedAccount.transactions
+                                                }
+                                                name={selectedAccount.name}
+                                            />
+                                        </Col>
+                                    </>
+                                ) : (
+                                    ''
+                                )}
+                            </Row>
+                        </Tab.Container>
+                    </div>
+                ) : (
+                    ''
+                )}
+            </Container>
+        </FilterContextProvider>
     )
 }

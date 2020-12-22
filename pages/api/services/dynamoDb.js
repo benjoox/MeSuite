@@ -48,7 +48,7 @@ export function deleteItem(params) {
 }
 
 export function putInBatch() {
-    console.log('To be implmeneted')
+    // TODO: To be implmeneted
 }
 
 export function describeTable(params) {

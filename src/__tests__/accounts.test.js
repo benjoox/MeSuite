@@ -21,6 +21,7 @@ const accountPage = ({
     accountsAvailable,
     accounts,
     uploadAccountTransactionFile,
+    selectedAccount,
 }) => {
     render(
         <AppContext.Provider value={{ modeIsOnline }}>
@@ -30,6 +31,7 @@ const accountPage = ({
                     ACCOUNT_FILE_HEADERS: headers,
                     accountsAvailable,
                     accounts,
+                    selectedAccount,
                 }}
             >
                 <OnboardingInstructionPanel />
@@ -64,6 +66,7 @@ describe('Account page content', () => {
             headers: ['date', 'amount', 'description', 'balance', 'category'],
             uploadAccountTransactionFile: uploadAccountTransactionFileMock,
             accountsAvailable: false,
+            selectedAccount: { name: '', transactions: {} },
         }
         accountPage(testCase)
 
@@ -145,6 +148,7 @@ describe('Account page content', () => {
             accountsAvailable: true,
             accounts: { accountTestCase },
             ACCOUNT_PAGE_ROUTE_NAME: `/${ACCOUNT_PAGE_ROUTE_NAME}`,
+            selectedAccount: { name: '', transactions: {} },
         }
 
         accountPage(testCase)

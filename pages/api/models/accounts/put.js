@@ -2,8 +2,8 @@ import accountItem from './accountItem'
 
 const TABLENAME = 'Accounts'
 
-const accountPutParams = (params) => ({
-    Item: accountItem(params),
+const accountPutParams = (params, username) => ({
+    Item: accountItem(params, username),
     ReturnConsumedCapacity: 'TOTAL',
     TableName: TABLENAME,
 })

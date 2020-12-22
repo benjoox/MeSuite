@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FormGroup, Form, Row, Col } from 'react-bootstrap'
-
+import { FilterContext } from '../../store/FilterContextProvider'
 import TextField from './TextField'
 import DateFields from './DateFields'
 
@@ -9,23 +9,23 @@ const label = {
     marginBottom: '0.5rem',
 }
 
-export default function Filters(props) {
+export default function Filters() {
     const {
         startDate,
         endDate,
         setIncludingText,
         setExcludingText,
-        updateFilterField,
-        updateStartDate,
-        updateEndDate,
+        setFilterField,
+        setStartDate,
+        setEndDate,
         filterField,
         includingText,
         excludingText,
-    } = props
+    } = useContext(FilterContext)
 
     function onSelect(ev) {
         ev.preventDefault()
-        updateFilterField(ev.target.value)
+        setFilterField(ev.target.value)
     }
     function onTextChange(ev) {
         ev.preventDefault()
@@ -42,8 +42,8 @@ export default function Filters(props) {
                 <DateFields
                     startDate={startDate}
                     endDate={endDate}
-                    updateStartDate={updateStartDate}
-                    updateEndDate={updateEndDate}
+                    updateStartDate={setStartDate}
+                    updateEndDate={setEndDate}
                 />
             </Row>
             <Row>

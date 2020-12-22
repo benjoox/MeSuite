@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { Button, Row, Col } from 'react-bootstrap'
 import TradeActionsModal from '../forms/TradeActionsModal'
-import SecurityContext from './Context'
 
 const sampleTrade = {
     ticker: '',
@@ -17,12 +16,9 @@ export default function AddWithModal(props) {
     const [title, setModalTitle] = useState('Add')
     const [action, setAction] = useState('add')
     const [error, setError] = useState(null)
-    const context = useContext(SecurityContext)
 
-    function save(param1, param2) {
-        console.warn('save the form ', param1)
-        console.warn('param2 ', param2)
-        console.warn('context ', context)
+    function save() {
+        // TODO: To be implemented
     }
 
     // eslint-disable-next-line no-shadow
