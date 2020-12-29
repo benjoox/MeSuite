@@ -35,10 +35,10 @@ export default function useFilter({ children, primaryList }: IProps) {
         )
     }
 
-    const isTextIncluded = (text) =>
+    const isTextIncluded = (text = '') =>
         text.toString().toLowerCase().includes(includingText.toLowerCase())
 
-    const isTextExcluded = (text) =>
+    const isTextExcluded = (text = '') =>
         !text.toString().toLowerCase().includes(excludingText.toLowerCase())
 
     function filterList() {
