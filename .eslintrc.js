@@ -22,7 +22,7 @@ module.exports = {
         ecmaVersion: 11,
         sourceType: 'module',
     },
-    plugins: ['react'],
+    plugins: ['react', 'react-hooks'],
     rules: {
         'react/prop-types': 0,
         'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
@@ -30,5 +30,7 @@ module.exports = {
             'error',
             { builtinGlobals: false, hoist: 'functions', allow: [] },
         ],
+        'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+        'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
     },
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { useEffect, useState, createContext } from 'react'
+import React, { useState, createContext } from 'react'
 import { today } from '../__utils'
 
 export const FilterContext = createContext('FilterContext')
@@ -16,19 +16,17 @@ type IProps = {
 }
 
 export default function useFilter({ children, primaryList }: IProps) {
-    const [filteredList, setFilteredList] = useState([])
     const [filterField, setFilterField] = useState('')
     const [includingText, setIncludingText] = useState('')
     const [excludingText, setExcludingText] = useState('')
     const [startDate, setStartDate] = useState(today)
     const [endDate, setEndDate] = useState(today)
     const [filterTags, setFilterTags] = useState([])
+    const [sortBy, setSortBy] = useState('date')
     /** date is timestamp */
-    const isDateIncluded = (date) => {
-        const startDateTimestamp = startDate.unix()
-        const endDateTimestamp = endDate.unix()
-        return startDateTimestamp <= date && date <= endDateTimestamp
-    }
+    const isDateIncluded = (date) =>
+        startDate.unix() <= parseInt(date, 10) &&
+        parseInt(date, 10) <= endDate.unix()
 
     const filteredByDate = () => {
         if (primaryList.name === '') return []
@@ -44,7 +42,7 @@ export default function useFilter({ children, primaryList }: IProps) {
         !text.toString().toLowerCase().includes(excludingText.toLowerCase())
 
     function filterList() {
-        const updatedFilterList = filteredByDate().filter((transaction) => {
+        return filteredByDate().filter((transaction) => {
             if (filterField === '') return true
 
             const hasAllsTags =
@@ -59,21 +57,33 @@ export default function useFilter({ children, primaryList }: IProps) {
                 hasAllsTags
             )
         })
-        setFilteredList(updatedFilterList)
     }
 
     function filterByTag(tag) {
         setFilterTags(filterTags.push(tag))
     }
-    useEffect(filterList, [
-        primaryList,
-        filterField,
-        includingText,
-        excludingText,
-        startDate,
-        endDate,
-        filterTags,
-    ])
+    function sortList(list) {
+        return list.sort((a, b) => {
+            if (sortBy === 'amount') {
+                const parsedA = parseInt(a[sortBy], 10)
+                const parsedB = parseInt(b[sortBy], 10)
+                if (parsedA > parsedB) return -1
+                if (parsedB > parsedA) return 1
+            } else {
+                if (a[sortBy] > b[sortBy]) return -1
+                if (b[sortBy] > a[sortBy]) return 1
+            }
+
+            return 0
+        })
+    }
+
+    function sort(param) {
+        setSortBy(param)
+    }
+
+    let filteredList = filterList()
+    filteredList = sortList(filteredList)
 
     const value = {
         filteredList,
@@ -82,13 +92,13 @@ export default function useFilter({ children, primaryList }: IProps) {
         excludingText,
         startDate,
         endDate,
-        setFilteredList,
         setFilterField,
         setIncludingText,
         setExcludingText,
         setStartDate,
         setEndDate,
         filterByTag,
+        sort,
     }
     return (
         <FilterContext.Provider value={value}>

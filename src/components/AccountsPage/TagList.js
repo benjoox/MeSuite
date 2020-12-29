@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Container, Row, Col, Badge } from 'react-bootstrap'
 import { FilterContext } from '../../store/FilterContextProvider'
+import { AccountsContext } from '../../store/AccountContextProvider'
 
-export default function Taglist(props) {
-    const { transactionList } = props
+export default function Taglist() {
     const [tagList, setTaglist] = useState([])
     const { filterByTag } = useContext(FilterContext)
+    const {
+        selectedAccount: { name, transactions },
+    } = useContext(AccountsContext)
 
     function extractTags() {
-        const newTagList = [
-            ...new Set(transactionList.map((item) => item.category)),
-        ].sort()
-        setTaglist(newTagList)
+        if (transactions.length > 0) {
+            const newTagList = [
+                ...new Set(transactions.map((item) => item.category)),
+            ].sort()
+            setTaglist(newTagList)
+        }
     }
 
-    useEffect(extractTags, [])
+    useEffect(extractTags, [name])
 
+    if (name === '') return ''
     return (
         <Container>
             <div style={{ marginBottom: '15px' }}>

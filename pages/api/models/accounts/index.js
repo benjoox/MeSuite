@@ -64,9 +64,9 @@ export function createAccountTransaction(params: IAccount[], user: IUser) {
     }
     if (params.length > 1) {
         const partitionArray = splitArray(params, 20)
-        const newAddedPromises = partitionArray.map(async (partition) => {
-            return dynamodb.batchWriteItem(batchPutParams(partition, user))
-        })
+        const newAddedPromises = partitionArray.map(async (partition) =>
+            dynamodb.batchWriteItem(batchPutParams(partition, user))
+        )
 
         return Promise.all(newAddedPromises)
     }

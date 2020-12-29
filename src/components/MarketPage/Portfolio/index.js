@@ -33,8 +33,6 @@ const column = [
 ]
 
 export default function Portfolio({ tradesMap }) {
-    if (!tradesMap) return ''
-
     const [loader, setLoader] = useState(false)
     const [outstandingSecurities, setOutstandingSecurties] = useState([])
 
@@ -55,8 +53,10 @@ export default function Portfolio({ tradesMap }) {
     }
 
     useEffect(() => {
-        fetchPrice()
+        if (tradesMap) fetchPrice()
     }, [tradesMap])
+
+    if (!tradesMap) return ''
 
     const updatePrice = (ev) => {
         ev.preventDefault()

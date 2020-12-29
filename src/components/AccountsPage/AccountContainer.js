@@ -5,7 +5,7 @@ import Filter from '../Filters'
 import Transactions from './Transactions'
 import { AccountsContext } from '../../store/AccountContextProvider'
 
-export default function AccountContainer({ transactions, name }) {
+export default function AccountContainer() {
     const {
         uploadAccountTransactionFile,
         deleteAccount,
@@ -13,6 +13,8 @@ export default function AccountContainer({ transactions, name }) {
     } = useContext(AccountsContext)
 
     if (!selectedAccount) return ''
+    const { transactions, name } = selectedAccount
+
     return (
         <Container>
             <Row>
@@ -27,10 +29,9 @@ export default function AccountContainer({ transactions, name }) {
             <div style={{ marginTop: '15px', marginBottom: '15px' }}>
                 <Row>
                     <Col md={4}>
-                        {' '}
-                        The number of transactions are {
-                            transactions.length
-                        }{' '}
+                        {transactions
+                            ? `The number of transactions are ${transactions.length}`
+                            : 'Select an account'}
                     </Col>
 
                     <Col md={4}>

@@ -7,18 +7,9 @@ export default function Transctions() {
     const [balance, setBalance] = useState(0)
     const [debit, setDebit] = useState(0)
     const [credit, setCredit] = useState(0)
-    const { setFilteredList, filteredList } = useContext(FilterContext)
+    const { filteredList, sort } = useContext(FilterContext)
 
     if (filteredList.length < 1) return ''
-
-    function sort(sortBy) {
-        const sortedArray = filteredList.sort((a, b) => {
-            if (a[sortBy] > b[sortBy]) return -1
-            if (b[sortBy] > a[sortBy]) return 1
-            return 0
-        })
-        setFilteredList([...sortedArray])
-    }
 
     function calcTotal() {
         const totalObj = filteredList.reduce(

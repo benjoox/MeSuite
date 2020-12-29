@@ -40,6 +40,7 @@ export default async (req, res) => {
             }
             default:
                 console.warn('The switch statement is fallen back to default')
+                throw Error('No valid HTTP header is present')
         }
     } catch (err) {
         if (err.message === 'invalid signature') {

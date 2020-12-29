@@ -23,12 +23,13 @@ export default function AccountContextProvider({ children }) {
     const [error, setError] = useState({ status: false, message: '' })
     const [selectedAccount, setSelectedAccount] = useState({
         name: '',
-        transactions: {},
+        transactions: [],
     })
 
     function resetError() {
         setError({ status: false, message: '' })
     }
+
     function getAccessToken() {
         return getAccessTokenSilently({
             audience: `https://${process.env.AUTH_DOMAIN}/api/v2/`,
@@ -43,7 +44,7 @@ export default function AccountContextProvider({ children }) {
             setAccounts(isEmpty(content) ? [] : content)
             const { name } = selectedAccount
 
-            setSelectedAccount({ name, transactions: content[name] })
+            setSelectedAccount({ name, transactions: content[name] || [] })
             setLoading(false)
             resetError()
         } catch (err) {
@@ -60,7 +61,7 @@ export default function AccountContextProvider({ children }) {
         } else {
             setAccounts([])
         }
-    }, [modeIsOnline])
+    }, [modeIsOnline, isAuthenticated])
 
     async function saveAccountTransaction(account) {
         const params = Array.isArray(account) ? account : [account]
@@ -90,7 +91,7 @@ export default function AccountContextProvider({ children }) {
     }
 
     async function deleteAccount() {
-        setLoading(true)
+        // setLoading(true)
         try {
             const accessToken = await getAccessToken()
             await API.deleteEntity(
@@ -98,6 +99,9 @@ export default function AccountContextProvider({ children }) {
                 accessToken,
                 ACCOUNTS
             )
+            // reset the selected account
+            setSelectedAccount({ name: '', transactions: [] })
+
             await fetchAccounts()
         } catch (err) {
             setError({
@@ -128,7 +132,7 @@ export default function AccountContextProvider({ children }) {
             ...el,
             datetimeDisplay: datetimeDisplay(el.date),
             datetimeObject: datetimeObject(el.date),
-            timestamp: timestamp(el.date),
+            timestamp: timestamp(el.date, 'DD/MM/YYYY hh:mm:ss'),
         }))
 
         if (modeIsOnline && isAuthenticated) {

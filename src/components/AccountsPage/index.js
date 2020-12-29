@@ -50,12 +50,7 @@ export default function AccountPage() {
                                 {isAccountSelected() ? (
                                     <>
                                         <Col sm={9}>
-                                            <AccountContainer
-                                                transactions={
-                                                    selectedAccount.transactions
-                                                }
-                                                name={selectedAccount.name}
-                                            />
+                                            <AccountContainer />
                                         </Col>
                                     </>
                                 ) : (
