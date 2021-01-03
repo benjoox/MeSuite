@@ -149,10 +149,6 @@ export default function AccountContextProvider({ children }) {
         })
     }
 
-    function filterByTag() {
-        console.log('')
-    }
-
     const value = {
         deleteAccountTransaction,
         updateAccountTransaction,
@@ -175,7 +171,6 @@ export default function AccountContextProvider({ children }) {
         selectedAccount,
         selectAccount,
         deleteAccount,
-        filterByTag,
     }
 
     return (

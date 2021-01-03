@@ -21,7 +21,6 @@ export default function useFilter({ children, primaryList }: IProps) {
     const [excludingText, setExcludingText] = useState('')
     const [startDate, setStartDate] = useState(today)
     const [endDate, setEndDate] = useState(today)
-    const [filterTags, setFilterTags] = useState([])
     const [sortBy, setSortBy] = useState('date')
     /** date is timestamp */
     const isDateIncluded = (date) =>
@@ -45,22 +44,18 @@ export default function useFilter({ children, primaryList }: IProps) {
         return filteredByDate().filter((transaction) => {
             if (filterField === '') return true
 
-            const hasAllsTags =
-                filterTags.length < 1 ||
-                filterTags.includes(transaction.category)
-
             return (
                 (includingText === '' ||
                     isTextIncluded(transaction[filterField])) &&
                 (excludingText === '' ||
-                    isTextExcluded(transaction[filterField])) &&
-                hasAllsTags
+                    isTextExcluded(transaction[filterField]))
             )
         })
     }
 
     function filterByTag(tag) {
-        setFilterTags(filterTags.push(tag))
+        setFilterField('category')
+        setIncludingText(tag)
     }
     function sortList(list) {
         return list.sort((a, b) => {
@@ -81,9 +76,37 @@ export default function useFilter({ children, primaryList }: IProps) {
     function sort(param) {
         setSortBy(param)
     }
+    function extractTags() {
+        const tagsMeta = new Map()
+        const { transactions } = primaryList
+        if (transactions.length > 0) {
+            const taglist = [
+                ...new Set(
+                    transactions.map((item) => {
+                        if (tagsMeta.has(item.category)) {
+                            const meta = tagsMeta.get(item.category)
+                            tagsMeta.set(item.category, {
+                                count: meta.count + 1,
+                                selected: item.category.includes(includingText),
+                            })
+                        } else {
+                            tagsMeta.set(item.category, {
+                                count: 1,
+                                selected: item.category.includes(includingText),
+                            })
+                        }
+                        return item.category
+                    })
+                ),
+            ].sort()
+            return { taglist, tagsMeta }
+        }
+        return { taglist: [], tagsMeta }
+    }
 
     let filteredList = filterList()
     filteredList = sortList(filteredList)
+    const { taglist, tagsMeta } = extractTags()
 
     const value = {
         filteredList,
@@ -97,6 +120,8 @@ export default function useFilter({ children, primaryList }: IProps) {
         setExcludingText,
         setStartDate,
         setEndDate,
+        taglist,
+        tagsMeta,
         filterByTag,
         sort,
     }

@@ -1,42 +1,34 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Container, Row, Col, Badge } from 'react-bootstrap'
 import { FilterContext } from '../../store/FilterContextProvider'
-import { AccountsContext } from '../../store/AccountContextProvider'
 
 export default function Taglist() {
-    const [tagList, setTaglist] = useState([])
-    const { filterByTag } = useContext(FilterContext)
-    const {
-        selectedAccount: { name, transactions },
-    } = useContext(AccountsContext)
+    const { taglist, tagsMeta, filterByTag } = useContext(FilterContext)
 
-    function extractTags() {
-        if (transactions.length > 0) {
-            const newTagList = [
-                ...new Set(transactions.map((item) => item.category)),
-            ].sort()
-            setTaglist(newTagList)
-        }
-    }
-
-    useEffect(extractTags, [name])
-
-    if (name === '') return ''
     return (
         <Container>
             <div style={{ marginBottom: '15px' }}>
                 <Row>
                     <Col>
-                        {tagList.map((tag) => (
-                            <Badge
-                                onClick={() => filterByTag(tag)}
-                                pill
-                                variant="info"
-                                key={tag}
-                            >
-                                {tag}
-                            </Badge>
-                        ))}
+                        {taglist.length > 0 &&
+                            taglist.map((tag) => (
+                                <Badge
+                                    onClick={() => filterByTag(tag)}
+                                    pill
+                                    // Since we are using 'includingText' and 'category' to filter the list by tag
+                                    variant={
+                                        tagsMeta.has(tag) &&
+                                        tagsMeta.get(tag).selected
+                                            ? 'primary'
+                                            : 'secondary'
+                                    }
+                                    key={tag}
+                                >
+                                    {tag}{' '}
+                                    {tagsMeta.has(tag) &&
+                                        tagsMeta.get(tag).count}
+                                </Badge>
+                            ))}
                     </Col>
                 </Row>
             </div>
