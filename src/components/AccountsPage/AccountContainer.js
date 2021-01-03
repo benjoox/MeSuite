@@ -4,6 +4,7 @@ import ReactCSVUploadTest from 'react-csv-upload-test'
 import Filter from '../Filters'
 import Transactions from './Transactions'
 import { AccountsContext } from '../../store/AccountContextProvider'
+import { FilterContext } from '../../store/FilterContextProvider'
 
 export default function AccountContainer() {
     const {
@@ -12,8 +13,10 @@ export default function AccountContainer() {
         selectedAccount,
     } = useContext(AccountsContext)
 
+    const { filteredList } = useContext(FilterContext)
+
     if (!selectedAccount) return ''
-    const { transactions, name } = selectedAccount
+    const { name } = selectedAccount
 
     return (
         <Container>
@@ -29,8 +32,8 @@ export default function AccountContainer() {
             <div style={{ marginTop: '15px', marginBottom: '15px' }}>
                 <Row>
                     <Col md={4}>
-                        {transactions
-                            ? `The number of transactions are ${transactions.length}`
+                        {filteredList
+                            ? `The number of transactions are ${filteredList.length}`
                             : 'Select an account'}
                     </Col>
 
