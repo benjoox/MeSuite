@@ -83,22 +83,29 @@ export default function useFilter({ children, primaryList }: IProps) {
             const taglist = [
                 ...new Set(
                     transactions.map((item) => {
-                        if (tagsMeta.has(item.category)) {
-                            const meta = tagsMeta.get(item.category)
-                            tagsMeta.set(item.category, {
+                        const itemCategory = item.category || 'unknown'
+
+                        if (tagsMeta.has(itemCategory)) {
+                            const meta = tagsMeta.get(itemCategory)
+                            tagsMeta.set(itemCategory, {
                                 count: meta.count + 1,
-                                selected: item.category.includes(includingText),
+                                selected: itemCategory.includes(includingText),
                             })
                         } else {
-                            tagsMeta.set(item.category, {
+                            tagsMeta.set(itemCategory, {
                                 count: 1,
-                                selected: item.category.includes(includingText),
+                                selected: itemCategory.includes(includingText),
                             })
                         }
-                        return item.category
+                        return itemCategory
                     })
                 ),
-            ].sort()
+            ].sort((a, b) => {
+                if (tagsMeta.get(a).count > tagsMeta.get(b).count) return -1
+                if (tagsMeta.get(b).count > tagsMeta.get(a).count) return 1
+                return 0
+            })
+
             return { taglist, tagsMeta }
         }
         return { taglist: [], tagsMeta }
