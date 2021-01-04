@@ -5,6 +5,8 @@ import Filter from '../Filters'
 import Transactions from './Transactions'
 import { AccountsContext } from '../../store/AccountContextProvider'
 import { FilterContext } from '../../store/FilterContextProvider'
+import { extractTags } from '../../store/__utils'
+import FilteredTransactionsTaglist from './taglist/FilteredTransactionsTaglist'
 
 export default function AccountContainer() {
     const {
@@ -17,6 +19,8 @@ export default function AccountContainer() {
 
     if (!selectedAccount) return ''
     const { name } = selectedAccount
+
+    const { taglist, tagsMeta } = extractTags(filteredList)
 
     return (
         <Container>
@@ -36,8 +40,13 @@ export default function AccountContainer() {
                             ? `The number of transactions are ${filteredList.length}`
                             : 'Select an account'}
                     </Col>
-
-                    <Col md={4}>
+                    <Col md={7}>
+                        <FilteredTransactionsTaglist
+                            taglist={taglist}
+                            tagsMeta={tagsMeta}
+                        />
+                    </Col>
+                    <Col md={1}>
                         <ReactCSVUploadTest
                             handleFile={(data) =>
                                 uploadAccountTransactionFile(data, name)

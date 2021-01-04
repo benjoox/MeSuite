@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import Taglist from '../TagList'
+import Taglist from '../taglist/MainTaglist'
 import { FilterContext } from '../../../store/FilterContextProvider'
 
 jest.mock('../../../store/FilterContextProvider')

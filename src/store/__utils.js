@@ -131,4 +131,43 @@ const averagePriceForEachTransaction = (tradelist) => {
     return result
 }
 
-export { isEmpty, sortTransactionsByDate, averagePriceForEachTransaction }
+function extractTags(transactions, match = '') {
+    const tagsMeta = new Map()
+    if (transactions.length > 0) {
+        const taglist = [
+            ...new Set(
+                transactions.map((item) => {
+                    const itemCategory = item.category || 'unknown'
+
+                    if (tagsMeta.has(itemCategory)) {
+                        const meta = tagsMeta.get(itemCategory)
+                        tagsMeta.set(itemCategory, {
+                            count: meta.count + 1,
+                            selected: itemCategory.includes(match),
+                        })
+                    } else {
+                        tagsMeta.set(itemCategory, {
+                            count: 1,
+                            selected: itemCategory.includes(match),
+                        })
+                    }
+                    return itemCategory
+                })
+            ),
+        ].sort((a, b) => {
+            if (tagsMeta.get(a).count > tagsMeta.get(b).count) return -1
+            if (tagsMeta.get(b).count > tagsMeta.get(a).count) return 1
+            return 0
+        })
+
+        return { taglist, tagsMeta }
+    }
+    return { taglist: [], tagsMeta }
+}
+
+export {
+    isEmpty,
+    sortTransactionsByDate,
+    averagePriceForEachTransaction,
+    extractTags,
+}

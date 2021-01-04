@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { Container, Row, Col, Badge } from 'react-bootstrap'
-import { FilterContext } from '../../store/FilterContextProvider'
+import { FilterContext } from '../../../store/FilterContextProvider'
 
-export default function Taglist() {
+export default function MainTaglist() {
     const { taglist, tagsMeta, filterByTag } = useContext(FilterContext)
 
     return (

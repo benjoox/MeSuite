@@ -2,6 +2,7 @@
 
 import React, { useState, createContext } from 'react'
 import { today } from '../__utils'
+import { extractTags } from './__utils'
 
 export const FilterContext = createContext('FilterContext')
 
@@ -76,44 +77,13 @@ export default function useFilter({ children, primaryList }: IProps) {
     function sort(param) {
         setSortBy(param)
     }
-    function extractTags() {
-        const tagsMeta = new Map()
-        const { transactions } = primaryList
-        if (transactions.length > 0) {
-            const taglist = [
-                ...new Set(
-                    transactions.map((item) => {
-                        const itemCategory = item.category || 'unknown'
-
-                        if (tagsMeta.has(itemCategory)) {
-                            const meta = tagsMeta.get(itemCategory)
-                            tagsMeta.set(itemCategory, {
-                                count: meta.count + 1,
-                                selected: itemCategory.includes(includingText),
-                            })
-                        } else {
-                            tagsMeta.set(itemCategory, {
-                                count: 1,
-                                selected: itemCategory.includes(includingText),
-                            })
-                        }
-                        return itemCategory
-                    })
-                ),
-            ].sort((a, b) => {
-                if (tagsMeta.get(a).count > tagsMeta.get(b).count) return -1
-                if (tagsMeta.get(b).count > tagsMeta.get(a).count) return 1
-                return 0
-            })
-
-            return { taglist, tagsMeta }
-        }
-        return { taglist: [], tagsMeta }
-    }
 
     let filteredList = filterList()
     filteredList = sortList(filteredList)
-    const { taglist, tagsMeta } = extractTags()
+    const { taglist, tagsMeta } = extractTags(
+        primaryList.transactions,
+        includingText
+    )
 
     const value = {
         filteredList,

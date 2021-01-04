@@ -5,6 +5,7 @@ import {
     getAverageAndOutstandingNumber,
     addAveragePriceAfterEachSell,
 } from '../../components/MarketPage/forms/_utils'
+import { extractTags } from '../__utils'
 
 describe('getSummaryForOneAsset', () => {
     const testData = [
@@ -311,5 +312,92 @@ describe('addAveragePriceAfterEachSell when prices and fees include $ sign', () 
         expect(result[2].outstandingNumberOfSecurity).toBe(0)
 
         expect(result[2]).toHaveProperty('profitAndLossBeforeFees')
+    })
+})
+
+describe('extractTags', () => {
+    it('should return a list of tags and a map of tagsMeta', () => {
+        expect.assertions(4)
+        const transcations = [
+            {
+                date: '1589875500',
+                username: 'test@gmail.com',
+                amount: '803.24',
+                id: 'test@gmail.com_accountName_1589875500_803.24',
+                description: '',
+                category: 'tag 1',
+            },
+            {
+                date: '1594973220',
+                username: 'test@gmail.com',
+                amount: '1015.74',
+                id: 'test@gmail.com_accountName_1594973220_1015.74',
+                description: '',
+                category: 'tag 1',
+            },
+            {
+                date: '1580893320',
+                username: 'test@gmail.com',
+                amount: '2000',
+                id: 'test@gmail.com_accountName_1580893320_2000',
+                description: '',
+                category: 'tag 1',
+            },
+            {
+                date: '1567411740',
+                username: 'test@gmail.com',
+                amount: '-605',
+                id: 'test@gmail.com_accountName_1567411740_-605',
+                description: '',
+                category: 'tag 2',
+            },
+            {
+                date: '1585728240',
+                username: 'test@gmail.com',
+                amount: '1606.48',
+                id: 'test@gmail.com_accountName_1585728240_1606.48',
+                description: '',
+                category: 'tag 2',
+            },
+            {
+                date: '1576055520',
+                username: 'test@gmail.com',
+                amount: '-2724.54',
+                id: 'test@gmail.com_accountName_1576055520_-2724.54',
+                description: '',
+                category: 'tag 2',
+            },
+            {
+                date: '1572858660',
+                username: 'test@gmail.com',
+                amount: '-183.5',
+                id: 'test@gmail.com_accountName_1572858660_-183.5',
+                description: '',
+                category: 'tag 3',
+            },
+            {
+                date: '1575018660',
+                username: 'test@gmail.com',
+                amount: '1587.6',
+                id: 'test@gmail.com_accountName_1575018660_1587.6',
+                description: '',
+                category: 'tag 3',
+            },
+            {
+                date: '1574673060',
+                username: 'test@gmail.com',
+                amount: '-146.96',
+                id: 'test@gmail.com_accountName_1574673060_-146.96',
+                description: '',
+                category: 'tag 4',
+            },
+        ]
+        const { taglist, tagsMeta } = extractTags(transcations)
+
+        const expectedTaglist = ['tag 1', 'tag 2', 'tag 3', 'tag 4']
+        expect(taglist).toEqual(expect.arrayContaining(expectedTaglist))
+        expect(tagsMeta instanceof Map).toBe(true)
+        expect(tagsMeta.has('tag 1')).toBe(true)
+        expect(tagsMeta.get('tag 1').count).toBe(3)
     })
 })

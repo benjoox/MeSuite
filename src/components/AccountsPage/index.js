@@ -5,7 +5,7 @@ import FilterContextProvider from '../../store/FilterContextProvider'
 import NavItems from './NavItems'
 import AccountContainer from './AccountContainer'
 import Spinner from '../shared/Spinner'
-import Taglist from './TagList'
+import MainTaglist from './taglist/MainTaglist'
 
 const container = {
     marginTop: '24px',
@@ -37,15 +37,7 @@ export default function AccountPage() {
                             <Row>
                                 <Col sm={3}>
                                     <NavItems accounts={accounts} />
-                                    {isAccountSelected() ? (
-                                        <Taglist
-                                            transactionList={
-                                                selectedAccount.transactions
-                                            }
-                                        />
-                                    ) : (
-                                        ''
-                                    )}
+                                    {isAccountSelected() ? <MainTaglist /> : ''}
                                 </Col>
                                 {isAccountSelected() ? (
                                     <>
