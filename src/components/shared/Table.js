@@ -174,6 +174,7 @@ function Table({ columns, data }) {
                     onBlur={(e) => {
                         setPageSize(Number(e.target.value))
                     }}
+                    onChange={() => console.log('To Be Implemented')}
                 >
                     {[10, 20, 30, 40, 50].map((size) => (
                         <option key={size} value={size}>

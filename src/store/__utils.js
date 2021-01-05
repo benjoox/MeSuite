@@ -144,11 +144,13 @@ function extractTags(transactions, match = '') {
                         tagsMeta.set(itemCategory, {
                             count: meta.count + 1,
                             selected: itemCategory.includes(match),
+                            sum: meta.sum + parseFloat(item.amount),
                         })
                     } else {
                         tagsMeta.set(itemCategory, {
                             count: 1,
                             selected: itemCategory.includes(match),
+                            sum: parseFloat(item.amount),
                         })
                     }
                     return itemCategory
