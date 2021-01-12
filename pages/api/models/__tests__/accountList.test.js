@@ -45,6 +45,7 @@ describe('accountList', () => {
     ]
 
     it('returns the correct number of individual accounts ', () => {
+        expect.assertions(3)
         const result = accountList(testCase)
 
         expect(typeof result).toBe('object')
@@ -53,6 +54,7 @@ describe('accountList', () => {
     })
 
     it('returns the correct number transactions for each account', () => {
+        expect.assertions(3)
         const result = accountList(testCase)
 
         expect(typeof result).toBe('object')

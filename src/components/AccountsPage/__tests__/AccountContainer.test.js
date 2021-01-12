@@ -1,15 +1,20 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import AccountContainer from '../AccountContainer'
 import { FilterContext } from '../../../store/FilterContextProvider'
 import { AccountsContext } from '../../../store/AccountContextProvider'
+import { datetimeObject } from '../../../__utils'
 
 jest.mock('../../Filters/DateFields.js', () => () => (
     <div>mock implementation</div>
 ))
 jest.mock('../../../store/FilterContextProvider')
 
+jest.mock('../../../__utils')
+
+const setStartDate = jest.fn()
+const setEndDate = jest.fn()
 const setup = (filteredList) =>
     render(
         <AccountsContext.Provider
@@ -23,6 +28,8 @@ const setup = (filteredList) =>
                 value={{
                     filteredList,
                     taglist: [],
+                    setEndDate,
+                    setStartDate,
                 }}
             >
                 <AccountContainer />
@@ -241,5 +248,32 @@ describe('Sum report', () => {
         expect(getByText(`Balance`)).toBeInTheDocument()
 
         expect(getByText(1607.57)).toBeInTheDocument()
+    })
+})
+
+describe('Financial year buttons', () => {
+    it('should call setStart and setEnd dates correctly', () => {
+        expect.assertions(7)
+        const { getByText } = setup([])
+
+        expect(getByText(`FY 17/18`)).toBeInTheDocument()
+        expect(getByText(`FY 18/19`)).toBeInTheDocument()
+        expect(getByText(`FY 19/20`)).toBeInTheDocument()
+        expect(getByText(`FY 20/21`)).toBeInTheDocument()
+
+        fireEvent.click(getByText(`FY 19/20`))
+
+        expect(datetimeObject).toHaveBeenCalledTimes(2)
+
+        expect(datetimeObject).toHaveBeenNthCalledWith(
+            1,
+            '01/07/2019 00:00:00',
+            'DD/MM/YYYY hh:mm:ss'
+        )
+        expect(datetimeObject).toHaveBeenNthCalledWith(
+            2,
+            '30/06/2020 23:59:59',
+            'DD/MM/YYYY hh:mm:ss'
+        )
     })
 })
