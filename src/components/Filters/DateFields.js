@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { InputGroup, Form } from 'react-bootstrap'
+import { InputGroup } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { datetimeObject } from '../../__utils'
@@ -34,7 +34,7 @@ const DateFields = ({
     }
 
     return (
-        <Form.Group controlId="exampleForm.ControlSelect1">
+        <>
             <InputGroup className="mb-3" size="md">
                 <InputGroup.Prepend>
                     <InputGroup.Text id="basic-addon1">
@@ -66,7 +66,7 @@ const DateFields = ({
                     />
                 </InputGroup.Prepend>
             </InputGroup>
-        </Form.Group>
+        </>
     )
 }
 
